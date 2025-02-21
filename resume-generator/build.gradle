@@ -59,7 +59,6 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.36'
 	compileOnly 'org.projectlombok:lombok:1.18.36'
 	annotationProcessor 'org.projectlombok:lombok:1.18.36'
-	implementation project(':resume-analyzer')
 }
 
 tasks.withType(Checkstyle) {

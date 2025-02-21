@@ -1,8 +1,12 @@
 package webapp.resumegenerator.domain.service;
 
-import webapp.resumeanalyzer.domain.model.Resume;
+import com.fasterxml.jackson.databind.JsonNode;
 
+/**
+ * Интерфейс для построения резюме.
+ * Определяет методы для обработки JSON-данных резюме и их преобразования в сгенерированное резюме.
+ */
 public interface ResumeBuilder {
 
-    Resume processResume(Resume resume);
+    JsonNode processResume(JsonNode resumeJson);
 }
