@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 import webapp.resumeanalyzer.domain.model.Department;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
+
 
 /**
  * Контроллер для управления сущностями Resume.
@@ -37,11 +39,12 @@ public class ResumeTestController {
 
     //сервис для выполнения бизнес-логики
     private final ResumeService resumeService;
-
+    private final WebClient.Builder webClientBuilder;
     //конструктор для внедрения зависимости
     @Autowired
-    public ResumeTestController(ResumeService resumeService) {
+    public ResumeTestController(ResumeService resumeService, WebClient.Builder webClientBuilder) {
         this.resumeService = resumeService;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @Operation(summary = "Получить резюме по ID",
@@ -87,7 +90,15 @@ public class ResumeTestController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Resume> createResume(@Valid @RequestBody Resume resume) {
         Resume savedResume = resumeService.createResume(resume);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedResume);
+        Resume generatedResume = webClientBuilder.build()
+                .post()
+                .uri("http://localhost:8082/builder")
+                .bodyValue(savedResume)
+                .retrieve()
+                .bodyToMono(Resume.class)
+                .block();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(generatedResume);
     }
 
     //метод удаления сущности по id
