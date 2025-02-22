@@ -1,12 +1,8 @@
 package webapp.resumeanalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,11 +24,19 @@ import lombok.ToString;
 public class Hobby {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(unique = true)
     private UUID id;
 
     private String hobby;
+
+    @PrePersist
+    private void generateUUID() {
+        if (id == null) {
+            id = UUID.randomUUID();
+            System.out.println("Generated UUID: " + id);
+        }
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -2,12 +2,9 @@ package webapp.resumeanalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +26,6 @@ import lombok.ToString;
 public class Education {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(unique = true)
     private UUID id;
 
@@ -38,12 +34,22 @@ public class Education {
     private String position;
 
     @JsonProperty("fromYear")
+    @Schema(type = "string", example = "1999")
     private String from_year;
 
     @JsonProperty("toYear")
+    @Schema(type = "string", example = "2000")
     private String to_year;
 
     private String name;
+
+    @PrePersist
+    private void generateUUID() {
+        if (id == null) {
+            id = UUID.randomUUID();
+            System.out.println("Generated UUID: " + id);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

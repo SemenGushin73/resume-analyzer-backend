@@ -2,12 +2,7 @@ package webapp.resumeanalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +28,6 @@ import lombok.ToString;
 public class PersonalData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(unique = true)
     private UUID id;
 
@@ -57,6 +51,14 @@ public class PersonalData {
     @Email
     @JsonProperty("mail")
     private String email;
+
+    @PrePersist
+    private void generateUUID() {
+        if (id == null) {
+            id = UUID.randomUUID();
+            System.out.println("Generated UUID: " + id);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
