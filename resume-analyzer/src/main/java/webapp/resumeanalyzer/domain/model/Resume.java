@@ -31,24 +31,23 @@ public class Resume {
     private UUID id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "personalData_id")
     @NotNull
     private PersonalData personalData;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "education_id")
+    @JoinColumn(name = "resume_id")
     private Set<Education> educations;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "experience_id")
+    @JoinColumn(name = "resume_id")
     private Set<Experience> experiences;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "socialLink_id")
+    @JoinColumn(name = "resume_id")
     private Set<SocialLink> socialLinks;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hobby_id")
+    @JoinColumn(name = "resume_id")
     private Set<Hobby> hobbies;
 
     private Department department;

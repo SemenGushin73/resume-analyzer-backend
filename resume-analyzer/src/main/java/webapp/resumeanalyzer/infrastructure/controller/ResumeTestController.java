@@ -99,7 +99,7 @@ public class ResumeTestController {
     }
 
     //метод обновления сущности
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Resume> updateResume(@PathVariable String id,
                                                @Valid @RequestBody Resume resume) {
         try {

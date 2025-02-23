@@ -2,6 +2,7 @@ package webapp.resumeanalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -50,6 +51,7 @@ public class PersonalData {
 
     @Email
     @JsonProperty("mail")
+    @Schema(type = "string", example = "string@mail.com")
     private String email;
 
     @PrePersist
