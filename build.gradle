@@ -45,6 +45,8 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.36'
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    implementation 'io.swagger.core.v3:swagger-gradle-plugin:2.2.28'
+
 }
 
 tasks.named('test') {
