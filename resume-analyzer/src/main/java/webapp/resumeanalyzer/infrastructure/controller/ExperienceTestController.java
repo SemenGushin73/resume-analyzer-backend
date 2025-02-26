@@ -89,7 +89,7 @@ public class ExperienceTestController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Experience.class)))
     @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
     @ApiResponse(responseCode = "404", description = "Сущность не найдена")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Experience> updateExperience(@PathVariable String id,
             @Valid @RequestBody Experience experience) {
         try {
