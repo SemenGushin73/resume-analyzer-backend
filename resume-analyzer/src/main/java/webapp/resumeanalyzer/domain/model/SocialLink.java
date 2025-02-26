@@ -25,19 +25,11 @@ public class SocialLink {
 
     @Id
     @Column(unique = true)
-    private UUID id;
+    private UUID id=UUID.randomUUID();
 
     private String link;
 
     private String name;
-
-    @PrePersist
-    private void generateUUID() {
-        if (id == null) {
-            id = UUID.randomUUID();
-            System.out.println("Generated UUID: " + id);
-        }
-    }
 
     @Override
     public boolean equals(Object o) {

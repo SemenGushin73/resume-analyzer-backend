@@ -28,7 +28,7 @@ public class Resume {
 
     @Id
     @Column(unique = true)
-    private UUID id;
+    private UUID id=UUID.randomUUID();
 
     @OneToOne(cascade = CascadeType.ALL)
     @NotNull
@@ -51,14 +51,6 @@ public class Resume {
     private Set<Hobby> hobbies;
 
     private Department department;
-
-    @PrePersist
-    private void generateUUID() {
-        if (id == null) {
-            id = UUID.randomUUID();
-            System.out.println("Generated UUID: " + id);
-        }
-    }
 
     @Override
     public boolean equals(Object o) {

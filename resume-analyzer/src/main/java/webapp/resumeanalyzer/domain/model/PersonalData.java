@@ -30,7 +30,7 @@ public class PersonalData {
 
     @Id
     @Column(unique = true)
-    private UUID id;
+    private UUID id=UUID.randomUUID();
 
     @NotBlank
     @NotNull
@@ -53,14 +53,6 @@ public class PersonalData {
     @JsonProperty("mail")
     @Schema(type = "string", example = "string@mail.com")
     private String email;
-
-    @PrePersist
-    private void generateUUID() {
-        if (id == null) {
-            id = UUID.randomUUID();
-            System.out.println("Generated UUID: " + id);
-        }
-    }
 
     @Override
     public boolean equals(Object o) {
