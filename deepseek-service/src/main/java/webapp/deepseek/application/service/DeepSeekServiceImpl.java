@@ -12,7 +12,7 @@ import webapp.deepseek.domain.service.DeepSeekService;
 import java.util.List;
 
 /**
- * • Основной сервис для анализа резюме.
+ * • Основной сервис для анализа и генерации резюме.
  * • Получает данные от пользователя, формирует запрос к AI, обрабатывает ответ
  */
 @Service
@@ -54,6 +54,28 @@ public class DeepSeekServiceImpl implements DeepSeekService {
     }
 
     @Override
+    public String generateResume(String template, String departmentDescription) {
+        String prompt = createPromptForGeneration(template, departmentDescription);
+
+        OpenRouterRequest request = createRequest(prompt);
+
+        try {
+            OpenRouterResponse response = openRouterApiClient.generateCompletion(
+                    "Bearer " + apiKey,
+                    aiModel,
+                    request
+            );
+            if (response != null && !response.getChoices().isEmpty()) {
+                return response.getChoices().getFirst().getMessage().getContent();
+            }
+            return "Не удалось проанализировать резюме.";
+        } catch (Exception e) {
+            log.error("API error: ", e);
+            return "Ошибка генерации: " + e.getMessage();
+        }
+    }
+
+    @Override
     public boolean isValidResumeOrJobDescription(String text) {
         if (text == null || text.trim().isEmpty()) {
             return false;
@@ -82,4 +104,12 @@ public class DeepSeekServiceImpl implements DeepSeekService {
                "того, насколько хорошо резюме соответствует описанию должности, и объясните свои доводы. " +
                "Resume:\n" + resumeText + "\n\nJob Description:\n" + jobDescription;
     }
+
+    private  String createPromptForGeneration (String template, String departmentDescription) {
+        return "Напиши профессиональное и привлекательно резюме на основе полученной от пользователя информации:" +
+                template + "и описания отдела на место в котором претендует соискатель" + departmentDescription +
+                "результат представь на русском языке в виде готового резюме без своих рассуждений";
+    }
+
+
 }
