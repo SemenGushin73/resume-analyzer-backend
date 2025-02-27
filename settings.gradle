@@ -1,7 +1,5 @@
 rootProject.name = 'resume-analyzer-backend'
-includeBuild 'resume-analyzer'
-includeBuild 'resume-generator'
-includeBuild 'deepseek-service'
-
-
-
+include 'resume-analyzer'
+include 'deepseek-service'
+include 'kafka-dto'
+//include 'resume-generator'
