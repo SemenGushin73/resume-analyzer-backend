@@ -90,7 +90,7 @@ public class PersonalDataTestController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonalData.class)))
     @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
     @ApiResponse(responseCode = "404", description = "Персональная информация не найдена")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<PersonalData> updatePersonalData(@PathVariable String id,
             @Valid @RequestBody PersonalData personalData) {
         try {

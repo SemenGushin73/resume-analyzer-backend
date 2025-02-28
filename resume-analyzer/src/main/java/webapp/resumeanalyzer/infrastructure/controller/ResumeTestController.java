@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 
+
 /**
  * Контроллер для управления сущностями Resume.
  */
@@ -81,7 +82,7 @@ public class ResumeTestController {
     }
 
     //метод обновления сущности
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Resume> updateResume(@PathVariable String id,
                                                @Valid @RequestBody Resume resume) {
         try {

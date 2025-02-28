@@ -89,7 +89,7 @@ public class HobbyTestController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Hobby.class)))
     @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
     @ApiResponse(responseCode = "404", description = "Сущность не найдена")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Hobby> updateHobby(@PathVariable String id,
             @Valid @RequestBody Hobby hobby) {
         try {

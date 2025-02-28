@@ -89,7 +89,7 @@ public class SocialLinkTestController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = SocialLink.class)))
     @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
     @ApiResponse(responseCode = "404", description = "Ссылка не найдена")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<SocialLink> updateSocialLink(@PathVariable String id,
             @Valid @RequestBody SocialLink socialLink) {
         try {

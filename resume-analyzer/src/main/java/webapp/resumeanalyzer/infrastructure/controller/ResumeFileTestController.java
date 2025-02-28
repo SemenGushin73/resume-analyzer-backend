@@ -45,8 +45,7 @@ public class ResumeFileTestController {
 
     @Operation(summary = "Загрузка резюме в БД",
             description = "Загружает файл резюме в формате .pdf или .docx в БД")
-    @ApiResponse(responseCode = "200", description = "Резюме успешно загружено",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Resume.class)))
+    @ApiResponse(responseCode = "200", description = "Резюме успешно загружено")
     @ApiResponse(responseCode = "400", description = "Недопустимый формат файла")
     @PostMapping(value = "/upload")
     public ResponseEntity<String> uploadResumeFile(@RequestPart("file") MultipartFile file,
@@ -68,8 +67,7 @@ public class ResumeFileTestController {
 
     @Operation(summary = "Получить инфо о всех резюме файлах",
             description = "Возвращает информацию о всех файлах резюме хранящихся в БД")
-    @ApiResponse(responseCode = "200", description = "Файлы найдены",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Resume.class)))
+    @ApiResponse(responseCode = "200", description = "Файлы найдены")
     @ApiResponse(responseCode = "204", description = "Еще нет загруженных резюме")
     @GetMapping("/all")
     public ResponseEntity<List<ResumeFile>> getResumeFile() {
@@ -82,8 +80,7 @@ public class ResumeFileTestController {
 
     @Operation(summary = "Удалить файл резюме по ID",
             description = "Удаление файла резюме из БД по ID")
-    @ApiResponse(responseCode = "200", description = "Файл удален",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Resume.class)))
+    @ApiResponse(responseCode = "200", description = "Файл удален")
     @ApiResponse(responseCode = "400", description = "Файл не найден")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteResumeFile(@PathVariable String id) {
@@ -97,8 +94,7 @@ public class ResumeFileTestController {
 
     @Operation(summary = "Загрузить файл резюме",
             description = "Загружает файл резюме из БД по идентификатору")
-    @ApiResponse(responseCode = "200", description = "Загрузка файла",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Resume.class)))
+    @ApiResponse(responseCode = "200", description = "Загрузка файла")
     @ApiResponse(responseCode = "400", description = "Файл не найден")
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> downloadResumeFile(@PathVariable String id) throws IOException {

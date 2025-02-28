@@ -89,7 +89,7 @@ public class EducationTestController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Education.class)))
     @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
     @ApiResponse(responseCode = "404", description = "Сущность не найдена")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Education> updateEducation(@PathVariable String id,
             @Valid @RequestBody Education education) {
         try {
