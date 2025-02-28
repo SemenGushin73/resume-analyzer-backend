@@ -1,45 +1,37 @@
 package webapp.deepseek.application.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
+import com.example.kafkadto.config.KafkaTopics;
+import com.example.kafkadto.dto.AnalysisRequest;
+import com.example.kafkadto.dto.AnalysisResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.stereotype.Component;
-import webapp.deepseek.infrastructure.client.model.Department;
+import org.springframework.stereotype.Service;
+import webapp.deepseek.domain.service.DeepSeekService;
 
-/**
- * Получение данных из Kafka
- */
-@Component
+@Service
 @Slf4j
 public class KafkaConsumerService {
 
-    private final DeepSeekServiceImpl deepSeekService;
-    private final KafkaProducerService kafkaProducerService;
+    private final DeepSeekService deepSeekService;
+    private final KafkaTemplate<String, AnalysisResult> kafkaTemplate;
 
-    @Autowired
-    public KafkaConsumerService(DeepSeekServiceImpl deepSeekService,
-                                KafkaProducerService kafkaProducerService) {
+    public KafkaConsumerService(DeepSeekService deepSeekService, KafkaTemplate<String, AnalysisResult> kafkaTemplate) {
         this.deepSeekService = deepSeekService;
-        this.kafkaProducerService = kafkaProducerService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    @KafkaListener(topics = "deepseek-generation-requests")
-    void listener(String jsonData, @Header(KafkaHeaders.RECEIVED_KEY) String key) {
-
-        ObjectMapper objectMapper = new ObjectMapper();
+    @KafkaListener(topics = KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS)
+    public void processRequest(@Header("kafka_receivedMessageKey") String requestId, AnalysisRequest request) {
+        log.info("processRequest: запрос по id: {}", requestId);
         try {
-            Map<String, String> data = objectMapper.readValue(jsonData, new TypeReference<Map<String, String>>() {});
-            log.info("Received message [{}]", data);
-            String response = deepSeekService.generateResume(data.get("content"),
-                    Department.getDepartment(data.get("department")).getDescription());
-            kafkaProducerService.sendToKafka(key, response);
+            String result = deepSeekService.analyzeResume(request.getResumeText(), request.getJobDescription());
+            log.info("processRequest: Результат анализа: {}", result);
+            kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, new AnalysisResult(requestId, result));
+            log.info("processRequest: отправка запроса в кафка: {}", requestId);
         } catch (Exception e) {
-            System.err.println("Error deserializing JSON: " + e.getMessage());
+            log.error("processRequest: Error processing request {}: {}", requestId, e.getMessage(), e);
         }
     }
 }

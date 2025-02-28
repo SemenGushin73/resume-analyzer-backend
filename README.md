@@ -94,6 +94,23 @@ MONGO_URI=mongodb://localhost:27017/resume_db
 KAFKA_BROKER=localhost:9092
 ``` 
 
+
+
+### **Запуск Анализа и оценки резюме с помощью DeepSeek**
+- Подключится к PostgreSql, в докере поднять zookeeper, Kafka
+- Запустить Api-Gateway 
+- Запустить микросервисы Resume-Analyzer и Deepseek- service
+- Проверить работоспособность через Postman 
+- Отправить Post запрос http://localhost:8765/api/ai/analyze , в ответе будет id
+- После, подождать секунд 20 и Отправить Get запрос http://localhost:8765/api/ai/status/{id} 
+- В логах можно увидеть оценку резюме от Deeepseek, в терминале можно увидеть рассуждения Deepseek
+
+
+- **Kafka**: Порт 9092
+- **zookeeper**: Порт 2181
+- **Postgre**: Порт 5434
+- **Api-Gateway**: Порт 8765
+
 ## **Тестирование**
 1. **Запустите тесты:**
    ```bash

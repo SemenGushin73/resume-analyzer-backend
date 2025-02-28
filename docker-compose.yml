@@ -37,20 +37,20 @@ services:
     networks:
       - app-network
 
-#  mongo-express:
-#    image: mongo-express
-#    container_name: mongo-express
-#    environment:
-#      ME_CONFIG_MONGODB_SERVER: mongodb
-#      ME_CONFIG_BASICAUTH_USERNAME: admin
-#      ME_CONFIG_BASICAUTH_PASSWORD: password
-#    ports:
-#      - '8081:8081'
-#    depends_on:
-#      - mongodb
-#    restart: always
-#    networks:
-#      - app-network
+  #  mongo-express:
+  #    image: mongo-express
+  #    container_name: mongo-express
+  #    environment:
+  #      ME_CONFIG_MONGODB_SERVER: mongodb
+  #      ME_CONFIG_BASICAUTH_USERNAME: admin
+  #      ME_CONFIG_BASICAUTH_PASSWORD: password
+  #    ports:
+  #      - '8081:8081'
+  #    depends_on:
+  #      - mongodb
+  #    restart: always
+  #    networks:
+  #      - app-network
 
 
   redis:
@@ -84,7 +84,7 @@ services:
   zookeeper:
     image: bitnami/zookeeper:latest
     ports:
-      - "2181:2181"
+      - "21810:2181"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
 

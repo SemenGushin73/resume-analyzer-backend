@@ -2,8 +2,6 @@ package webapp.resumeanalyzer.domain.service;
 
 import java.util.List;
 
-import webapp.resumeanalyzer.domain.model.Department;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import webapp.resumeanalyzer.domain.model.Resume;
@@ -31,8 +29,6 @@ public interface ResumeService {
     void deleteAll();
 
     List<Resume> getAllResumes();
-
-    List<Resume> getAllResumesByDepartment(Department department);
 
     //получение резюме по ключевым словам
     public Page<Resume> searchResumes(String query, Pageable pageable);

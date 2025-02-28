@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import webapp.resumeanalyzer.domain.model.Department;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.repository.ResumeRepository;
 import webapp.resumeanalyzer.domain.service.ResumeService;
@@ -102,20 +101,5 @@ public class ResumeServiceImpl implements ResumeService {
         return resumeRepository.findAll();
     }
 
-    @Transactional
-    @Override
-    public List<Resume> getAllResumesByDepartment(Department department) {
-        List<Resume> resumes = new ArrayList<>();
-
-        if (getAllResumes() != null) {
-            for (Resume resume : getAllResumes()) {
-                if (resume.getDepartment().equals(department)) {
-                    resumes.add(resume);
-                }
-            }
-        }
-
-        return resumes;
-    }
 
 }
