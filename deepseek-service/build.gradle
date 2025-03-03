@@ -36,8 +36,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'com.example.kafkadto:kafka-dto:1.0.1' // кафка дто
-
+	implementation project(':kafka-dto') // кафка дто
 }
 
 tasks.named('test') {

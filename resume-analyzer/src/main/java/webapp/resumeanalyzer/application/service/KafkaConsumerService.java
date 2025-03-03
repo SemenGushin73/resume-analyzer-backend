@@ -23,11 +23,30 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = KafkaTopics.RESUME_ANALYZE_REQUESTS)
     public void AnalysisRequest(@Header("kafka_receivedMessageKey") String requestId, AnalysisRequest request) {
+        log.info("Получен запрос для анализа. Topic: {}, requestId: {}, данные: {}",
+                KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);
+
         if (isValid(request.getResumeText()) && isValid(request.getJobDescription())) {
-            log.info("Request {} passed validation. Отправка в DeepSeek.", requestId);
-            kafkaTemplate.send(KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, requestId, request);
+            log.info("Request {} passed validation. Отправка в DeepSeek. Topic: {}, Data: {}",
+                    requestId, KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, request);
+
+            try {
+                kafkaTemplate.send(KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, requestId, request);
+                log.info("Request {} успешно отправлен в Kafka. Topic: {}, Data: {}",
+                        requestId, KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, request);
+            } catch (Exception e) {
+                log.error("Ошибка при отправке запроса {} в Kafka. Topic: {}, Data: {}",
+                        requestId, KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, request, e);
+            }
         } else {
-            log.warn("Request {} failed validation.", requestId);
+            if (!isValid(request.getResumeText())) {
+                log.warn("Request {} failed validation. Причина: некорректное поле 'ResumeText'. Data: {}",
+                        requestId, request);
+            }
+            if (!isValid(request.getJobDescription())) {
+                log.warn("Request {} failed validation. Причина: некорректное поле 'JobDescription'. Data: {}",
+                        requestId, request);
+            }
         }
     }
 

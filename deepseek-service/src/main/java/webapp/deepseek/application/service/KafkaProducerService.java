@@ -1,6 +1,7 @@
 package webapp.deepseek.application.service;
 
 
+import com.example.kafkadto.config.KafkaTopics;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,12 @@ public class KafkaProducerService {
 
     public void sendToKafka(String key, String data) {
         try {
-            kafkaTemplate.send("deepseek-generation-result", key, data);  // Отправка в Kafka
-            logger.info("Data successfully sent to Kafka: {}", data); // Логирование отправленных данных
+            kafkaTemplate.send(KafkaTopics.DEEPSEEK_GENERATION_RESULT, key, data);
+            log.info("Sending data to Kafka. Topic: {}, Key: {}, Data: {}",
+                    KafkaTopics.DEEPSEEK_GENERATION_RESULT, key, data);
         } catch (Exception e) {
-            logger.error("Error sending data to Kafka", e);  // Логирование ошибки
+            log.error("Error sending data to Kafka. Topic: {}, Key: {}, Data: {}",
+                    KafkaTopics.DEEPSEEK_GENERATION_RESULT, key, data, e);
         }
     }
 }
