@@ -8,25 +8,21 @@ pipeline {
     }
 
     environment {
+      	BITBUCKET_CREDS = credentials('bitbucket-credentials')
+        DOCKER_CREDS = credentials('dockerhub-creds')
 		DOCKER_IMAGE_NAME = "${params.DOCKER_REPO}:${env.BUILD_NUMBER}"
     }
 
     stages {
-		stage('SCM Checkout') {
-			steps {
-				script {
-					checkout([
-						$class: 'GitSCM',
-						branches: [[name: '*/main']],
-						extensions: [[$class: 'CleanCheckout']],
-						userRemoteConfigs: [[
-							credentialsId: 'bitbucket-credentials',
-							url: 'https://gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git'
-						]]
-					])
-				}
-			}
-		}
+		stage('Checkout') {
+            steps {
+                sh """
+                    git clone https://${BITBUCKET_CREDS_USR}:${BITBUCKET_CREDS_PSW}@gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git
+                    cd resume-analyzer-backend
+                    git checkout main
+                """
+            }
+        }
 
         stage('Build') {
 			steps {
