@@ -1,7 +1,6 @@
 pipeline {
 	agent {
 		label 'agent-docker'
-		customWorkspace "/workspace/${JOB_NAME}"
     }
 
     options {
