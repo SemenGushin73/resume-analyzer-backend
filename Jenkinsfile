@@ -15,7 +15,6 @@ pipeline {
 		stage('SCM Checkout') {
 			steps {
 				script {
-					sh 'git init'
 					checkout([
 						$class: 'GitSCM',
 						branches: [[name: '*/main']],
