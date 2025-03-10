@@ -6,17 +6,20 @@ pipeline {
     stages {
 		stage('SCM Checkout') {
 			steps {
-				checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    extensions: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'bitbucket-credentials',
-                        url: 'https://gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git'
-                    ]]
-                ])
-            }
-        }
+				script {
+					sh 'git init'
+					checkout([
+						$class: 'GitSCM',
+						branches: [[name: '*/main']],
+						extensions: [[$class: 'CleanCheckout']],
+						userRemoteConfigs: [[
+							credentialsId: 'bitbucket-credentials',
+							url: 'https://gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git'
+						]]
+					])
+				}
+			}
+		}
 
         stage('Build') {
 			steps {
