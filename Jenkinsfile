@@ -12,12 +12,6 @@ pipeline {
     }
 
     stages {
-      	stage('Prepare Workspace') {
-			steps {
-				deleteDir()
-            }
-        }
-      
 		stage('SCM Checkout') {
 			steps {
 				script {
