@@ -4,22 +4,17 @@ pipeline {
     }
 
     stages {
-		stage('Checkout') {
+		stage('SCM Checkout') {
 			steps {
-				script {
-					withCredentials([usernamePassword(
-						credentialsId: 'bitbucket-credentials',
-                    	usernameVariable: 'BITBUCKET_USER',
-                        passwordVariable: 'BITBUCKET_TOKEN'
-					)]) {
-						sh '''
-                            rm -rf resume-analyzer-backend
-                            git clone https://${BITBUCKET_USER}:${BITBUCKET_TOKEN}@gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git
-                            cd resume-analyzer-backend
-                            git checkout main
-                        '''
-                    }
-                }
+				checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        credentialsId: 'bitbucket-credentials',
+                        url: 'https://gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git'
+                    ]]
+                ])
             }
         }
 
