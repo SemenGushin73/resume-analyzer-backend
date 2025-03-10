@@ -1,9 +1,24 @@
 pipeline {
 	agent {
 		label 'agent-docker'
+		customWorkspace "/workspace/${JOB_NAME}"
+    }
+
+    options {
+		skipDefaultCheckout true
+    }
+
+    environment {
+		DOCKER_IMAGE_NAME = "${params.DOCKER_REPO}:${env.BUILD_NUMBER}"
     }
 
     stages {
+      	stage('Prepare Workspace') {
+			steps {
+				deleteDir()
+            }
+        }
+      
 		stage('SCM Checkout') {
 			steps {
 				script {
