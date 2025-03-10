@@ -41,6 +41,7 @@ dependencies {
     implementation group: 'com.github.loki4j', name: 'loki-logback-appender', version: '1.6.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    
 }
 
 tasks.named('test') {
