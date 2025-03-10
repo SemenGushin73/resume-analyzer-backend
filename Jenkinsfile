@@ -3,10 +3,6 @@ pipeline {
 		label 'agent-docker'
     }
 
-    environment {
-		DOCKER_IMAGE_NAME = "${params.DOCKER_REPO}:${env.BUILD_NUMBER}"
-    }
-
     stages {
 		stage('Checkout') {
 			steps {
