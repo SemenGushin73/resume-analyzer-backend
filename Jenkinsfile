@@ -55,11 +55,11 @@ pipeline {
                         usernameVariable: 'DOCKER_USERNAME',
                         passwordVariable: 'DOCKER_PASSWORD'
                     )]) {
-                        sh '''
-                            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                            docker build -t "$DOCKER_IMAGE_NAME" .
-                            docker push "$DOCKER_IMAGE_NAME"
-                        '''
+                        sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
+                        dir('resume-analyzer-backend') {
+							sh "docker build -t ${env.DOCKER_IMAGE_NAME} ."
+                            sh "docker push ${env.DOCKER_IMAGE_NAME}"
+                        }
                     }
                 }
             }
