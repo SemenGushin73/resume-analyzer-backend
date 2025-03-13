@@ -116,7 +116,6 @@ services:
       - "3000:3000"
     volumes:
       - ./grafana-provisioning:/etc/grafana/provisioning
-      - grafana-storage:/var/lib/grafana  # Том для хранения данных Grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Пароль для пользователя admin
     depends_on:
@@ -190,8 +189,7 @@ services:
 #      - "8765:8765"
 #    depends_on:
 #      - analytic-service
-volumes:
-  grafana-storage:
+
 
 networks:
   app-network:
