@@ -118,3 +118,21 @@ KAFKA_BROKER=localhost:9092
    ```
 2. **Покрытие кода:**
     - Отчёты доступны в каталоге `build/reports/tests`.
+
+## **Grafana UI**
+- Доступ к Grafana UI осуществляется после запуска docker compose по адресу http://localhost:3000/
+- login:admin ,password:admin.
+- Во вкладке Logs (через 20 секунд) появятся логи со всех микросервисов.
+- Во вкладке Metrics - все метрики отображаются загруженные с `/actuator/prometheus`
+- Во вкладке Dashboards - дашборды , находящиеся в пакете `grafana-provisioning`
+
+## **Prometheus UI**
+- Доступ к Prometheus осуществляется после запуска docker compose по адресу http://localhost:9099/
+- Вкладка alerts отображает алерты , которые находятся в конфигфайле `utils/alert.rules.yml`
+- Вкладка query позволяет ввести запрос для отображения метриков , например `rate(process_cpu_usage{job="resume-analyzer"}[1m])`
+
+## **Alertmanager UI**
+- Доступен по адресу http://localhost:9093/
+- Alertmanager позволяет добавить настройки для алертов
+- Способ оповещения можно настроить в конфигфайле `utils/alertmanager.yml`
+- Для оповещения по email требуется SMTP сервер

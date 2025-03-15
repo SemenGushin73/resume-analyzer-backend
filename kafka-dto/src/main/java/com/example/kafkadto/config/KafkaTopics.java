@@ -8,6 +8,8 @@ public class KafkaTopics {
 
     public static final String RESUME_ANALYZE_RESULTS = "resume-analyze-results";
 
+    public static final String DEEPSEEK_GENERATION_RESULT = "deepseek-generation-result";
+
     private KafkaTopics() {
     }
 }

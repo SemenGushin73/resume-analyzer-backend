@@ -102,6 +102,42 @@ services:
     depends_on:
       - elasticsearch
 
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./utils/loki-config.yaml:/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana-provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Пароль для пользователя admin
+    depends_on:
+      - loki
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9099:9090'
+    volumes:
+      - ./utils/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./utils/alert.rules.yml:/etc/prometheus/alert.rules.yml
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - '9093:9093'
+    volumes:
+      - ./utils/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+
+
 #  resume-analyzer:
 #    build:
 #      context: ./resume-analyzer
@@ -153,6 +189,7 @@ services:
 #      - "8765:8765"
 #    depends_on:
 #      - analytic-service
+
 
 networks:
   app-network:

@@ -19,28 +19,34 @@ import webapp.resumegenerator.domain.model.Template;
 @Slf4j
 public class KafkaConsumerService {
 
-    public final KafkaProducerService kafkaProducerService;
+    private final KafkaProducerService kafkaProducerService;
+    private static final String RESUME_GENERATION_REQUESTS = "resume-generation-requests";
 
     @Autowired
     public KafkaConsumerService(KafkaProducerService kafkaProducerService) {
         this.kafkaProducerService = kafkaProducerService;
     }
 
-    @KafkaListener(topics = "resume-generation-requests")
+    @KafkaListener(topics = RESUME_GENERATION_REQUESTS)
     void listener(String jsonData, @Header(KafkaHeaders.RECEIVED_KEY) String key) {
+        log.info("Processing message. Topic: {}, Key: {}, Data: {}", RESUME_GENERATION_REQUESTS, key, jsonData);
 
-        System.out.println(jsonData);
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
             Map<String, String> data = objectMapper.readValue(jsonData, new TypeReference<Map<String, String>>() {});
-            log.info("Received message [{}]", data);
+            log.info("Received message. Topic: {}, Key: {}, Data: {}", RESUME_GENERATION_REQUESTS, key, data);
+
             Template template = new Template();
             template.setContent(jsonData);
             template.setDepartment(Department.getDepartment(data.get("department")));
+
             kafkaProducerService.sendToKafka(key, template);
+            log.info("Message successfully sent to Kafka. Topic: {}, Key: {}, Data: {}", RESUME_GENERATION_REQUESTS,
+                    key, template);
         } catch (Exception e) {
-            System.err.println("Error deserializing JSON: " + e.getMessage());
+            log.error("Error processing message. Topic: {}, Key: {}, Data: {}", RESUME_GENERATION_REQUESTS,
+                    key, jsonData, e);
         }
     }
 }

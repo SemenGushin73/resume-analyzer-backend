@@ -11,3 +11,21 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 spring.kafka.consumer.properties.spring.json.trusted.packages: com.example.kafkadto.dto
+
+#Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true

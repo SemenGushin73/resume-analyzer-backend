@@ -16,9 +16,8 @@ import webapp.resumegenerator.domain.model.Template;
 @Slf4j
 public class KafkaProducerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(KafkaProducerService.class);
-
     private final KafkaTemplate <String, Template> kafkaTemplate;
+    private static final String DEEPSEEK_GENERATION_REQUESTS = "deepseek-generation-requests";
 
     @Autowired
     public KafkaProducerService(KafkaTemplate<String, Template> kafkaTemplate) {
@@ -26,11 +25,14 @@ public class KafkaProducerService {
     }
 
     public void sendToKafka(String key, Template data) {
+        log.info("Sending data to Kafka. Topic: {}, Key: {}, Data: {}", DEEPSEEK_GENERATION_REQUESTS, key, data);
         try {
             kafkaTemplate.send("deepseek-generation-requests", key, data);  // Отправка в Kafka
-            logger.info("Data successfully sent to Kafka: {}", data); // Логирование отправленных данных
+            log.info("Data successfully sent to Kafka. Topic: {}, Key: {}, Data: {}", DEEPSEEK_GENERATION_REQUESTS,
+                    key, data); // Логирование отправленных данных
         } catch (Exception e) {
-            logger.error("Error sending data to Kafka", e);  // Логирование ошибки
+            log.error("Error sending data to Kafka. Topic: {}, Key: {}, Data: {}", DEEPSEEK_GENERATION_REQUESTS,
+                    key, data, e);  // Логирование ошибки
         }
     }
 }

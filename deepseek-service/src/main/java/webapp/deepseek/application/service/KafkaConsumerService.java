@@ -24,14 +24,22 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS)
     public void processRequest(@Header("kafka_receivedMessageKey") String requestId, AnalysisRequest request) {
-        log.info("processRequest: запрос по id: {}", requestId);
+        log.info("processRequest: получено сообщение из топика: {}, requestId: {}, данные: {}",
+                KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, requestId, request);
+
+        long startTime = System.currentTimeMillis();
+
         try {
             String result = deepSeekService.analyzeResume(request.getResumeText(), request.getJobDescription());
-            log.info("processRequest: Результат анализа: {}", result);
+            log.info("processRequest: Результат анализа для requestId {}: {}", requestId, result);
+
             kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, new AnalysisResult(requestId, result));
-            log.info("processRequest: отправка запроса в кафка: {}", requestId);
+            log.info("processRequest: отправка результата в топик: {}, requestId: {}, результат: {}",
+                    KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, result);
+
+            log.info("processRequest: запрос успешно обработан, requestId: {}", requestId);
         } catch (Exception e) {
-            log.error("processRequest: Error processing request {}: {}", requestId, e.getMessage(), e);
+            log.error("processRequest: Ошибка при обработке запроса {}: {}", requestId, e.getMessage(), e);
         }
     }
 }
