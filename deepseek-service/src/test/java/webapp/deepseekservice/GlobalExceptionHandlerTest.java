@@ -10,6 +10,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import webapp.deepseek.DeepseekServiceApplication;
 
+/**
+ * Тестовый класс для проверки работы GlobalExceptionHandler.
+ *
+ * Данный класс выполняет интеграционные тесты, проверяя корректность
+ * обработки исключений в приложении с помощью MockMvc.
+ */
 @SpringBootTest(classes = DeepseekServiceApplication.class)
 @AutoConfigureMockMvc
 public class GlobalExceptionHandlerTest {

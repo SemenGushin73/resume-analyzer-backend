@@ -9,6 +9,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+/**
+ * Тестовый класс для проверки работы GlobalExceptionHandler.
+ *
+ * Данный класс выполняет интеграционные тесты, проверяя корректность
+ * обработки исключений в приложении с помощью MockMvc.
+ */
 @SpringBootTest(classes = ResumeGeneratorApplication.class)
 @AutoConfigureMockMvc
 public class GlobalExceptionHandlerTest {

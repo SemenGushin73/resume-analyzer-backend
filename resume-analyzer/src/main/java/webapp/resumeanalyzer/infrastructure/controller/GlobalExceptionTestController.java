@@ -7,7 +7,12 @@ import webapp.resumeanalyzer.exception.InvalidRequestException;
 import webapp.resumeanalyzer.exception.KafkaProcessingException;
 import webapp.resumeanalyzer.exception.ResourceNotFoundException;
 
-
+/**
+ * Контроллер для тестирования обработки глобальных исключений.
+ *
+ * Данный контроллер предоставляет эндпоинты, вызывающие различные исключения,
+ * чтобы проверить работу GlobalExceptionHandler.
+ */
 @RestController
 @RequestMapping("/test")
 public class GlobalExceptionTestController {

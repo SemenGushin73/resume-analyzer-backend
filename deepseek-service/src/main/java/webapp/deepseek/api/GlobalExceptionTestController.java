@@ -7,6 +7,12 @@ import webapp.deepseek.exception.InvalidRequestException;
 import webapp.deepseek.exception.KafkaProcessingException;
 import webapp.deepseek.exception.ResourceNotFoundException;
 
+/**
+ * Контроллер для тестирования обработки глобальных исключений.
+ *
+ * Данный контроллер предоставляет эндпоинты, вызывающие различные исключения,
+ * чтобы проверить работу GlobalExceptionHandler.
+ */
 @RestController
 @RequestMapping("/test")
 public class GlobalExceptionTestController {
