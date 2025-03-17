@@ -8,6 +8,11 @@ import java.util.UUID;
 
 import lombok.*;
 
+/**
+ * DTO класс для корректной передачи резюме через kafka.
+ * Необходим класс mapper в модуле, который передает резюме в Kafka, для преобразования entity в DTO.
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

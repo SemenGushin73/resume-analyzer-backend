@@ -3,6 +3,7 @@ package webapp.deepseek.application.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import webapp.deepseek.domain.exception.AIProcessingException;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterRequest;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
@@ -89,10 +90,10 @@ public class DeepSeekServiceImpl implements DeepSeekService {
             if (response != null && !response.getChoices().isEmpty()) {
                 return response.getChoices().getFirst().getMessage().getContent();
             }
-            return "Ошибка: AI не смог обработать запрос.";
+            throw new AIProcessingException("Ошибка: AI не смог обработать запрос.");
         } catch (Exception e) {
             log.error("Ошибка анализа резюме: ", e);
-            return "Ошибка анализа: " + e.getMessage();
+            throw new AIProcessingException("Ошибка анализа резюме", e);
         }
     }
 

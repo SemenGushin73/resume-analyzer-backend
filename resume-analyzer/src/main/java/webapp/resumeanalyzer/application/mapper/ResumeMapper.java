@@ -6,6 +6,11 @@ import webapp.resumeanalyzer.domain.model.*;
 
 import java.util.stream.Collectors;
 
+/**
+ * Класс для преобразования сущности Resume в ResumeDto для передачи через kafka.
+ * Преобразовывает как сам Resume, так и зависимые подклассы.
+ */
+
 @Component
 public class ResumeMapper {
 

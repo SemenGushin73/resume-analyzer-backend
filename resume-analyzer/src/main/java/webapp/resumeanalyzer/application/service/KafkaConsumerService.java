@@ -4,7 +4,6 @@ import com.example.kafkadto.config.KafkaTopics;
 import com.example.kafkadto.dto.AnalysisRequest;
 import com.example.kafkadto.dto.ResumeScoreAnalysisRequest;
 import com.example.kafkadto.dto.ResumeScoreRequest;
-import com.example.kafkadto.dto.ResumeScoreResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,6 @@ import webapp.resumeanalyzer.application.mapper.ResumeMapper;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 
-import java.util.Optional;
 
 @Service
 @Slf4j
