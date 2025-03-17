@@ -10,6 +10,10 @@ public class KafkaTopics {
 
     public static final String DEEPSEEK_GENERATION_RESULT = "deepseek-generation-result";
 
+    public static final String AI_RESUME_SCORE_REQUESTS = "ai-resume-score-requests";
+
+    public static final String AI_RESUME_SCORE_RESULTS = "ai-resume-score-results";
+
     private KafkaTopics() {
     }
 }
