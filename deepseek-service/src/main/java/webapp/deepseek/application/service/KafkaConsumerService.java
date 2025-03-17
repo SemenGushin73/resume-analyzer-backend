@@ -66,9 +66,9 @@ public class KafkaConsumerService {
 
             kafkaScoreTemplate.send(KafkaTopics.AI_RESUME_SCORE_RESULTS, result);
 
-            log.info("Отправлен результат анализа резюме {}", request.getResumeId());
+            log.info("Отправлен результат оценки резюме {}", request.getResumeId());
         } catch (Exception e) {
-            log.error("Ошибка анализа резюме: ", e);
+            log.error("Ошибка оценки резюме: ", e);
         }
     }
 }
