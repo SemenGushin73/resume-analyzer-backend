@@ -14,6 +14,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import webapp.deepseek.domain.service.DeepSeekService;
 
+/**
+ * Прослушивание и получение запросов из kafka
+ */
 @Service
 @Slf4j
 public class KafkaConsumerService {

@@ -16,7 +16,9 @@ import webapp.resumeanalyzer.application.mapper.ResumeMapper;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 
-
+/**
+ * Прослушивание и получение запросов из kafka.
+ */
 @Service
 @Slf4j
 public class KafkaConsumerService {

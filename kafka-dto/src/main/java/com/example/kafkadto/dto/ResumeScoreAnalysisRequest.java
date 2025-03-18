@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO для передачи запроса на оценку резюме между resume-analyser и deepseek-service.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

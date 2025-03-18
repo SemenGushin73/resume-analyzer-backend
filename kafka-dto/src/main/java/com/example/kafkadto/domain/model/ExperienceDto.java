@@ -9,7 +9,6 @@ import java.util.UUID;
 /**
  * DTO класс для корректной передачи компонента резюме "Experience" через kafka
  */
-
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

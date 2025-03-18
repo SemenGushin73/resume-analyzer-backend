@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO для передачи результата оценки резюме от DeepSeek в API Gateway.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

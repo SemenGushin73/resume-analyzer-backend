@@ -1,5 +1,8 @@
 package com.example.kafkadto.config;
 
+/**
+ * Топики для сообщений в kafka
+ */
 public class KafkaTopics {
 
     public static final String RESUME_ANALYZE_REQUESTS = "resume-analyze-requests";
