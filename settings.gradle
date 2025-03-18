@@ -1,5 +1,5 @@
 rootProject.name = 'resume-analyzer-backend'
 include 'resume-analyzer'
-//include 'deepseek-service'
+include 'deepseek-service'
 include 'kafka-dto'
 include 'resume-generator'

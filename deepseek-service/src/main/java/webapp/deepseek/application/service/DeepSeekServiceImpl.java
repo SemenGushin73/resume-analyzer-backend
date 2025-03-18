@@ -3,6 +3,7 @@ package webapp.deepseek.application.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import webapp.deepseek.domain.exception.AIProcessingException;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterRequest;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
@@ -75,6 +76,27 @@ public class DeepSeekServiceImpl implements DeepSeekService {
         }
     }
 
+    public String analyzeResumeScore(String resumeText) {
+        String prompt = createPromptForScoring(resumeText);
+
+        OpenRouterRequest request = createRequest(prompt);
+
+        try {
+            OpenRouterResponse response = openRouterApiClient.generateCompletion(
+                    "Bearer " + apiKey,
+                    aiModel,
+                    request
+            );
+            if (response != null && !response.getChoices().isEmpty()) {
+                return response.getChoices().getFirst().getMessage().getContent();
+            }
+            throw new AIProcessingException("Ошибка: AI не смог обработать запрос.");
+        } catch (Exception e) {
+            log.error("Ошибка анализа резюме: ", e);
+            throw new AIProcessingException("Ошибка анализа резюме", e);
+        }
+    }
+
     @Override
     public boolean isValidResumeOrJobDescription(String text) {
         if (text == null || text.trim().isEmpty()) {
@@ -109,6 +131,20 @@ public class DeepSeekServiceImpl implements DeepSeekService {
         return "Напиши профессиональное и привлекательно резюме на основе полученной от пользователя информации:" +
                 template + "и описания отдела на место в котором претендует соискатель" + departmentDescription +
                 "результат представь на русском языке в виде готового резюме без своих рассуждений";
+    }
+
+    /**
+     * Генерирует prompt для AI-анализа резюме (0-100)
+     */
+    private String createPromptForScoring(String resumeText) {
+        return "Руководствуясь параметрами ниже оцени резюме и дай оценку от 0 до 100, а также рекомендации для улучшения.\n" +
+                "Структура резюме: есть ли опыт, навыки, образование, хобби, социальные ссылки.\n" +
+                "Грамматика и стилистика: Оцени качество языка, наличие грамматических и стилистических ошибок.\n" +
+                "Полнота данных: Определи, насколько резюме заполнено, и если необходимо, дай рекомендации по улучшению.\n\n" +
+                "На основе анализа выведи результат в формате JSON следующим образом:\n" +
+                "{ \"resume_score\": <оценка от 0 до 100>, \"feedback\": [ \"Рекомендация 1\", \"Рекомендация 2\", ... ] }\n" +
+                "Количество рекомендаций может быть любым (включая 0 или более двух).\n\n" +
+                "Резюме:\n" + resumeText;
     }
 
 

@@ -2,23 +2,45 @@ package webapp.resumeanalyzer.application.service;
 
 import com.example.kafkadto.config.KafkaTopics;
 import com.example.kafkadto.dto.AnalysisRequest;
+import com.example.kafkadto.dto.ResumeScoreAnalysisRequest;
+import com.example.kafkadto.dto.ResumeScoreRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Header;
 
 import org.springframework.stereotype.Service;
+import webapp.resumeanalyzer.application.mapper.ResumeMapper;
+import webapp.resumeanalyzer.domain.model.Resume;
+import webapp.resumeanalyzer.domain.service.ResumeService;
 
+/**
+ * Прослушивание и получение запросов из kafka.
+ */
 @Service
 @Slf4j
 public class KafkaConsumerService {
 
     private final KafkaTemplate<String, AnalysisRequest> kafkaTemplate;
+    private final KafkaTemplate<String, ResumeScoreAnalysisRequest> kafkaScoreTemplate;
+    private final ResumeService resumeService;
+    private final ResumeMapper resumeMapper;
+
+    @Value("${kafka.topics.deepseek-analysis-requests}")
+    private String deepseekTopic;
 
     @Autowired
-    public KafkaConsumerService(KafkaTemplate<String, AnalysisRequest> kafkaTemplate) {
+    public KafkaConsumerService(KafkaTemplate<String, AnalysisRequest> kafkaTemplate,
+                                KafkaTemplate<String, ResumeScoreAnalysisRequest> kafkaScoreTemplate,
+                                ResumeService resumeService,
+                                ResumeMapper resumeMapper
+    ) {
         this.kafkaTemplate = kafkaTemplate;
+        this.kafkaScoreTemplate = kafkaScoreTemplate;
+        this.resumeService = resumeService;
+        this.resumeMapper = resumeMapper;
     }
 
     @KafkaListener(topics = KafkaTopics.RESUME_ANALYZE_REQUESTS)
@@ -47,6 +69,22 @@ public class KafkaConsumerService {
                 log.warn("Request {} failed validation. Причина: некорректное поле 'JobDescription'. Data: {}",
                         requestId, request);
             }
+        }
+    }
+
+    @KafkaListener(topics = KafkaTopics.AI_RESUME_SCORE_REQUESTS, groupId = "resume-score-group")
+    public void consume(ResumeScoreRequest request) {
+        try {
+            Resume resume = resumeService.getResumeById(request.getResumeId());
+            ResumeScoreAnalysisRequest analysisScoreRequest = new ResumeScoreAnalysisRequest(
+                    resume.getId().toString(),
+                    resumeMapper.toDto(resume)
+            );
+
+            kafkaScoreTemplate.send(deepseekTopic, analysisScoreRequest);
+            log.info("Отправлен запрос на анализ резюме {} в DeepSeek-service", request.getResumeId());
+        } catch (Exception e) {
+            log.error("Ошибка обработки запроса: ", e);
         }
     }
 
