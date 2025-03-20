@@ -1,31 +1,36 @@
-# Используем официальный образ OpenJDK для Java 21
-FROM openjdk:21-jdk-slim as build
+# 1. Этап сборки
+FROM eclipse-temurin:21-jdk-alpine AS build
 
-# Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-# Кэширование Gradle
+# Кэширование Gradle (ускоряет сборку)
 ENV GRADLE_USER_HOME=/app/.gradle
-RUN mkdir -p /app/.gradle && chmod -R 777 /app/.gradle
+RUN mkdir -p $GRADLE_USER_HOME && chmod -R 777 $GRADLE_USER_HOME
 
-# Копируем файл gradle wrapper и build.gradle в рабочую директорию
+# Копируем файлы Gradle перед кодом, чтобы кешировать зависимости
 COPY gradlew .
 COPY gradle ./gradle
-COPY gradle.properties .
 COPY build.gradle .
 COPY settings.gradle .
 
-# Копируем исходный код приложения
+# Предварительно загружаем зависимости (если код не изменился, это будет использовать кеш Docker)
+RUN ./gradlew dependencies --no-daemon
+
+# Копируем код после кеширования зависимостей
 COPY src ./src
 COPY kafka-dto ./kafka-dto
+COPY deepseek-service ./deepseek-service
+COPY grafana-provisioning ./grafana-provosioning
+COPY resume-analyzer ./resume-analyzer
+COPY resume-generator ./resume-generator
+COPY utils ./utils
 
-# Строим приложение
+# Собираем JAR
 RUN ./gradlew clean build --no-daemon
 
-# Используем минимальный образ OpenJDK для продакшн
-FROM openjdk:21-jdk-slim
+# 2. Минимальный финальный образ
+FROM eclipse-temurin:21-jre-alpine
 
-# Устанавливаем рабочую директорию
 WORKDIR /app
 
 # Копируем собранный JAR файл из предыдущего шага

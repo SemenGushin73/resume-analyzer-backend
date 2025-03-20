@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: host.docker.internal:9092
     consumer:
       group-id: resume-analyzer-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
