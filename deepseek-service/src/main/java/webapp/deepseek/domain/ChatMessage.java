@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 /**
  * Часть запроса (OpenRouterRequest), хранит роль отправителя (пользователь/ассистент) и текст сообщения
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -9,8 +9,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
-import webapp.resumegenerator.domain.model.Department;
 import webapp.resumegenerator.domain.model.Template;
+import webapp.common.model.Department;
+
 
 /**
  * Получение данных из Kafka

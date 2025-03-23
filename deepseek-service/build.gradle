@@ -36,7 +36,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation project(':kafka-dto')
+    implementation 'webapp.common:resume-analyzer-common:1.0.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.0'
     implementation group: 'com.github.loki4j', name: 'loki-logback-appender', version: '1.6.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

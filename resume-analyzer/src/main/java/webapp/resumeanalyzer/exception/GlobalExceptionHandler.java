@@ -4,6 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import webapp.common.exception.ExternalServiceException;
+import webapp.common.exception.InvalidRequestException;
+import webapp.common.exception.KafkaProcessingException;
+import webapp.common.exception.ResourceNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;

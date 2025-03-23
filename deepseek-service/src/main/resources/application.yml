@@ -1,32 +1,28 @@
 spring:
+  config:
+    import:
+      - optional:classpath:common-actuator.yml
+      - optional:classpath:common-kafka.yml
+  application:
+    name: deepseek-service
+
   kafka:
-    bootstrap-servers: localhost:9092
+
     consumer:
       group-id: deepseek-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.value.default.type: com.example.kafkadto.dto.AnalysisRequest
-        spring.json.trusted.packages: 'com.example.kafkadto.dto'
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-spring.kafka.consumer.properties.spring.json.trusted.packages: com.example.kafkadto.dto
+        fetch.max.bytes: 52428800
+        spring.json.value.default.type: webapp.common.kafka.AnalysisRequest
+        spring.json.trusted.packages: webapp.common.kafka
 
-#Actuator
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  metrics:
-    distribution:
-      percentiles-histogram:
-        http.server.requests: true
-  endpoint:
-    health:
-      show-details: always
-  prometheus:
-    metrics:
-      export:
-        enabled: true
+    template:
+      default-topic: resume-generation-request
+
+openrouter:
+  api-key: ${OPENROUTER_API_KEY}
+  model-name: deepseek/deepseek-r1-distill-llama-70b:free
+
+server:
+  port: 9090

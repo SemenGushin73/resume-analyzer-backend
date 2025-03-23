@@ -3,7 +3,7 @@ package webapp.deepseek.application.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import webapp.deepseek.domain.exception.AIProcessingException;
+import webapp.common.exception.annotations.ThrowsAIProcessingException;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterRequest;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
@@ -76,25 +76,20 @@ public class DeepSeekServiceImpl implements DeepSeekService {
         }
     }
 
+    @ThrowsAIProcessingException
     public String analyzeResumeScore(String resumeText) {
         String prompt = createPromptForScoring(resumeText);
-
         OpenRouterRequest request = createRequest(prompt);
 
-        try {
-            OpenRouterResponse response = openRouterApiClient.generateCompletion(
-                    "Bearer " + apiKey,
-                    aiModel,
-                    request
-            );
-            if (response != null && !response.getChoices().isEmpty()) {
-                return response.getChoices().getFirst().getMessage().getContent();
-            }
-            throw new AIProcessingException("Ошибка: AI не смог обработать запрос.");
-        } catch (Exception e) {
-            log.error("Ошибка анализа резюме: ", e);
-            throw new AIProcessingException("Ошибка анализа резюме", e);
+        OpenRouterResponse response = openRouterApiClient.generateCompletion(
+                "Bearer " + apiKey,
+                aiModel,
+                request
+        );
+        if (response != null && !response.getChoices().isEmpty()) {
+            return response.getChoices().getFirst().getMessage().getContent();
         }
+        throw new RuntimeException("Ошибка: AI не смог обработать запрос.");
     }
 
     @Override

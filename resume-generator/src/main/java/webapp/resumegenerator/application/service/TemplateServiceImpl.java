@@ -2,7 +2,7 @@ package webapp.resumegenerator.application.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import webapp.resumegenerator.domain.model.Department;
+import webapp.common.model.Department;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.repository.TemplateRepository;
 import java.time.LocalDate;

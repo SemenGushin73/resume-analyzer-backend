@@ -1,18 +1,17 @@
 package webapp.deepseek.application.service;
 
-import com.example.kafkadto.config.KafkaTopics;
-import com.example.kafkadto.domain.model.ResumeDto;
-import com.example.kafkadto.dto.AnalysisRequest;
-import com.example.kafkadto.dto.AnalysisResult;
-import com.example.kafkadto.dto.ResumeScoreAnalysisRequest;
-import com.example.kafkadto.dto.ResumeScoreResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
+import webapp.common.dto.resumeDto.ResumeDto;
 import webapp.deepseek.domain.service.DeepSeekService;
+import webapp.common.kafka.*;
+import webapp.common.kafka.config.KafkaTopics;
+
+
 
 /**
  * Прослушивание и получение запросов из kafka

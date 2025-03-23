@@ -1,9 +1,7 @@
 package webapp.resumeanalyzer.application.service;
 
-import com.example.kafkadto.config.KafkaTopics;
-import com.example.kafkadto.dto.AnalysisRequest;
-import com.example.kafkadto.dto.ResumeScoreAnalysisRequest;
-import com.example.kafkadto.dto.ResumeScoreRequest;
+import webapp.common.kafka.config.KafkaTopics;
+import webapp.common.kafka.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
