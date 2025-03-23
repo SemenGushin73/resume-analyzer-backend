@@ -26,9 +26,6 @@ public class KafkaConsumerService {
     private final ResumeService resumeService;
     private final ResumeMapper resumeMapper;
 
-    @Value("${kafka.topics.deepseek-analysis-requests}")
-    private String deepseekTopic;
-
     @Autowired
     public KafkaConsumerService(KafkaTemplate<String, AnalysisRequest> kafkaTemplate,
                                 KafkaTemplate<String, ResumeScoreAnalysisRequest> kafkaScoreTemplate,
@@ -79,7 +76,7 @@ public class KafkaConsumerService {
                     resumeMapper.toDto(resume)
             );
 
-            kafkaScoreTemplate.send(deepseekTopic, analysisScoreRequest);
+            kafkaScoreTemplate.send(KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, analysisScoreRequest);
             log.info("Отправлен запрос на анализ резюме {} в DeepSeek-service", request.getResumeId());
         } catch (Exception e) {
             log.error("Ошибка обработки запроса: ", e);
