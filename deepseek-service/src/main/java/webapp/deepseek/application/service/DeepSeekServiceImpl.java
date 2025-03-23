@@ -77,6 +77,7 @@ public class DeepSeekServiceImpl implements DeepSeekService {
     }
 
     @ThrowsAIProcessingException
+    @Override
     public String analyzeResumeScore(String resumeText) {
         String prompt = createPromptForScoring(resumeText);
         OpenRouterRequest request = createRequest(prompt);
