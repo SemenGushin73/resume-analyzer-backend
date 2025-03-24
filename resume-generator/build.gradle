@@ -2,23 +2,11 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
-//	id 'checkstyle'
 }
 group = 'ru.kata.project'
 version = '0.0.1-SNAPSHOT'
 
-//checkstyle {
-//	toolVersion = '10.12.1'
-//	configFile = file('config/checkstyle/google_checks.xml')
-//}
 
-//tasks.withType(Checkstyle) {
-//	reports {
-//		html.required = true
-//		xml.required = false
-//		//html.stylesheet = resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
-//	}
-//}
 
 java {
 	toolchain {
@@ -70,25 +58,7 @@ dependencies {
 
 }
 
-//tasks.withType(Checkstyle) {
-//	reports {
-//		html.required = true
-//		xml.required = false
-//	}
-//}
-//checkstyle {
-//	toolVersion '10.20.2'
-//	configFile file("\\src\\main\\java\\webapp\\resumegenerator\\config\\checkstyle\\checkstyle.xml ")
-//	ignoreFailures = true
-//	maxWarnings = 0
-//	maxErrors = 0
-//}
-//checkstyleMain {
-//	source ='src/main/java'
-//}
-//checkstyleTest {
-//	source ='src/test/java'
-//}
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

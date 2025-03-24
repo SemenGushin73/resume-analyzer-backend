@@ -1,18 +1,18 @@
-package ru.kata.project.resumegenerator;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import webapp.resumegenerator.domain.model.BlockElement;
-import webapp.resumegenerator.domain.model.Layout;
-import webapp.resumegenerator.domain.model.SectionElementProps;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
-
+//package ru.kata.project.resumegenerator;
+//
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import webapp.resumegenerator.domain.model.BlockElement;
+//import webapp.resumegenerator.domain.model.Layout;
+//import webapp.resumegenerator.domain.model.SectionElementProps;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.UUID;
+//import static org.junit.jupiter.api.Assertions.*;
+//
 //@DisplayName("тест для проверки класса BlockElement")
 //
 //public class BlockElementTest {
@@ -57,7 +57,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //        assertNull(deserializedBlock.getLayout());
 //    }
 //
-
+//
 //    private BlockElement createSampleBlockElement() {
 //        SectionElementProps props = new SectionElementProps(UUID.randomUUID(), "myKey", "My Text"
 //                , "wrapperStyle", "textStyle", "inputStyle", "http://example.com"

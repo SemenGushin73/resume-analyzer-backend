@@ -1,13 +1,13 @@
-package ru.kata.project.resumegenerator;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import webapp.resumegenerator.domain.model.SectionElementProps;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
-
+//package ru.kata.project.resumegenerator;
+//
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import webapp.resumegenerator.domain.model.SectionElementProps;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
+//import java.util.UUID;
+//import static org.junit.jupiter.api.Assertions.*;
+//
 //@DisplayName("тест для проверки класса SectionElementProps")
 //public class SectionElementPropsTest {
 //    private final ObjectMapper objectMapper = new ObjectMapper();
