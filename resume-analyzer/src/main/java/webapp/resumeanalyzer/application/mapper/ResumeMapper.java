@@ -1,8 +1,8 @@
 package webapp.resumeanalyzer.application.mapper;
 
-import com.example.kafkadto.domain.model.*;
 import org.springframework.stereotype.Component;
 import webapp.resumeanalyzer.domain.model.*;
+import webapp.common.dto.resumeDto.*;
 
 import java.util.stream.Collectors;
 

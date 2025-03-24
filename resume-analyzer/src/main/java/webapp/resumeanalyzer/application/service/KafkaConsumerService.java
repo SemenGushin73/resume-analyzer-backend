@@ -1,9 +1,7 @@
 package webapp.resumeanalyzer.application.service;
 
-import com.example.kafkadto.config.KafkaTopics;
-import com.example.kafkadto.dto.AnalysisRequest;
-import com.example.kafkadto.dto.ResumeScoreAnalysisRequest;
-import com.example.kafkadto.dto.ResumeScoreRequest;
+import webapp.common.kafka.config.KafkaTopics;
+import webapp.common.kafka.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +25,6 @@ public class KafkaConsumerService {
     private final KafkaTemplate<String, ResumeScoreAnalysisRequest> kafkaScoreTemplate;
     private final ResumeService resumeService;
     private final ResumeMapper resumeMapper;
-
-    @Value("${kafka.topics.deepseek-analysis-requests}")
-    private String deepseekTopic;
 
     @Autowired
     public KafkaConsumerService(KafkaTemplate<String, AnalysisRequest> kafkaTemplate,
@@ -81,7 +76,7 @@ public class KafkaConsumerService {
                     resumeMapper.toDto(resume)
             );
 
-            kafkaScoreTemplate.send(deepseekTopic, analysisScoreRequest);
+            kafkaScoreTemplate.send(KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, analysisScoreRequest);
             log.info("Отправлен запрос на анализ резюме {} в DeepSeek-service", request.getResumeId());
         } catch (Exception e) {
             log.error("Ошибка обработки запроса: ", e);
