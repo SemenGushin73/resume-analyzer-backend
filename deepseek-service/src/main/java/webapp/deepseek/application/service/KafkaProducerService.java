@@ -1,7 +1,7 @@
 package webapp.deepseek.application.service;
 
 
-import com.example.kafkadto.config.KafkaTopics;
+import webapp.common.kafka.config.KafkaTopics;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

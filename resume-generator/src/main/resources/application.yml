@@ -1,17 +1,35 @@
-#Actuator
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  metrics:
-    distribution:
-      percentiles-histogram:
-        http.server.requests: true
-  endpoint:
-    health:
-      show-details: always
-  prometheus:
-    metrics:
-      export:
-        enabled: true
+spring:
+  config:
+    import:
+      - optional:classpath:common-actuator.yml
+      - optional:classpath:common-kafka.yml
+  application:
+    name: resume-generator
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/ResumeGenerator
+      authentication-database: admin
+
+  kafka:
+
+    consumer:
+      group-id: generate-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        fetch.max.bytes: 52428800
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        max.request.size: 52428800
+
+    template:
+      default-topic: resume-generation-request
+
+server:
+  port: 8082
+  servlet:
+    context-path: /

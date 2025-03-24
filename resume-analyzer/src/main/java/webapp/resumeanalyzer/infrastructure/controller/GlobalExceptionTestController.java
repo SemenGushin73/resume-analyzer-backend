@@ -2,10 +2,10 @@ package webapp.resumeanalyzer.infrastructure.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import webapp.resumeanalyzer.exception.ExternalServiceException;
-import webapp.resumeanalyzer.exception.InvalidRequestException;
-import webapp.resumeanalyzer.exception.KafkaProcessingException;
-import webapp.resumeanalyzer.exception.ResourceNotFoundException;
+import webapp.common.exception.ExternalServiceException;
+import webapp.common.exception.InvalidRequestException;
+import webapp.common.exception.KafkaProcessingException;
+import webapp.common.exception.ResourceNotFoundException;
 
 /**
  * Контроллер для тестирования обработки глобальных исключений.

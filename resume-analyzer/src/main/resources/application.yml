@@ -1,31 +1,50 @@
 spring:
+  config:
+    import:
+      - optional:classpath:common-actuator.yml
+      - optional:classpath:common-kafka.yml
+  application:
+    name: resume-analyzer
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/test_db?autoReconnect=true
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 2000
+      maximum-pool-size: 90
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
+
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
       group-id: resume-analyzer-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.value.default.type: com.example.kafkadto.dto.AnalysisRequest
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-spring.kafka.consumer.properties.spring.json.trusted.packages: com.example.kafkadto.dto
-
-#Actuator
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  metrics:
-    distribution:
-      percentiles-histogram:
-        http.server.requests: true
-  endpoint:
-    health:
-      show-details: always
-  prometheus:
-    metrics:
-      export:
-        enabled: true
+        spring.json.value.default.type: webapp.common.kafka.AnalysisRequest
+    properties:
+      spring.json.trusted.packages: webapp.common.kafka

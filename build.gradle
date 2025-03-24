@@ -30,6 +30,7 @@ java {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -46,8 +47,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0'
     implementation 'org.projectlombok:lombok:1.18.36'
     compileOnly 'org.projectlombok:lombok:1.18.36'
-    implementation project(':kafka-dto')
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    implementation 'webapp.common:resume-analyzer-common:1.0.0'
 }
 
 tasks.named('test') {

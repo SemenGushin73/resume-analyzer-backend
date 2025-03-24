@@ -42,6 +42,13 @@ Resume Analyzer Backend — это набор микросервисов, кот
 - Docker (для баз данных)
 - PostgreSQL (локальный или в контейнере)
 - MongoDB (локальный или в контейнере)
+- Библиотека Resume-analyser-common (в локальном maven репозитории)
+  - Если нет - склонируйте репозиторий:
+
+    `git clone https://gitpacket.kata.academy/scm/fit/resume-analyzer-common.git`
+  - Выполните:
+
+    `./gradlew clean build publishToMavenLocal`
 
 ### **Шаги запуска**
 

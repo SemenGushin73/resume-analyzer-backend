@@ -22,6 +22,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven { url 'https://repo.spring.io/milestone' }
 }
 
@@ -46,11 +47,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-    implementation project(':kafka-dto')
+    implementation 'webapp.common:resume-analyzer-common:1.0.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.0'
     implementation group: 'com.github.loki4j', name: 'loki-logback-appender', version: '1.6.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.kafka:spring-kafka'
 
 }
 
