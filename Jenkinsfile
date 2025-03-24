@@ -20,7 +20,7 @@ pipeline {
                 	rm -rf resume-analyzer-backend || true
                     git clone https://${BITBUCKET_CREDS_USR}:${BITBUCKET_CREDS_PSW}@gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git
                     cd resume-analyzer-backend
-                    git checkout FIT-192
+                    git checkout main
                 """
             }
         }
