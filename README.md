@@ -7,15 +7,15 @@ Resume Analyzer Backend — это набор микросервисов, реа
 - **Язык**: Java 21
 - **Сборщик**: Gradle
 - **Фреймворки**:
-    - Spring Boot (REST API, JPA, Validation, WebFlux, Actuator)
-    - Spring Cloud (Gateway, LoadBalancer, Resilience4j)
+  - Spring Boot (REST API, JPA, Validation, WebFlux, Actuator)
+  - Spring Cloud (Gateway, LoadBalancer, Resilience4j)
 - **Базы данных**:
-    - PostgreSQL (основная база данных)
-    - MongoDB (хранение шаблонов резюме)
+  - PostgreSQL (основная база данных)
+  - MongoDB (хранение шаблонов резюме)
 - **Очереди сообщений**: Apache Kafka + Zookeeper
 - **Документация API**: Springdoc OpenAPI
 - **Контейнеризация и мониторинг**:
-    - Docker Compose (Prometheus, Grafana, Loki, Alertmanager, Kibana)
+  - Docker Compose (Prometheus, Grafana, Loki, Alertmanager, Kibana)
 - **Тестирование**: JUnit 5, Mockito, Testcontainers
 
 ## **Микросервисы**
