@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
-//    id 'checkstyle'
 }
 
 group = 'webapp'
@@ -31,29 +30,45 @@ ext {
 }
 
 dependencies {
+    // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.2'
-//    implementation 'com.puppycrawl.tools:checkstyle:10.20.2'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testImplementation 'io.projectreactor:reactor-test'
-    implementation 'com.zaxxer:HikariCP:6.2.1'
-    compileOnly 'org.projectlombok:lombok'
-    implementation 'org.postgresql:postgresql:42.7.4'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-    implementation 'webapp.common:resume-analyzer-common:1.0.0'
-    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.0'
-    implementation group: 'com.github.loki4j', name: 'loki-logback-appender', version: '1.6.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    // SpringDoc OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+    // Database & Connection Pool
+    implementation 'org.postgresql:postgresql:42.7.4'
+    implementation 'com.zaxxer:HikariCP:6.2.1'
+
+    // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
 
+    // Logging
+    implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
+    implementation 'com.github.loki4j:loki-logback-appender:1.6.0'
+
+    // Monitoring
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.2'
+
+    // Internal/Common Modules
+    implementation 'webapp.common:resume-analyzer-common:1.0.0'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 dependencyManagement {
@@ -61,22 +76,3 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
-
-//tasks.named('test') {
-//    useJUnitPlatform()
-//    dependsOn checkstyleMain, checkstyleTest
-//}
-
-//checkstyle {
-//    toolVersion '10.20.2'
-//    configFile file("\\src\\main\\java\\webapp\\resumeanalyzer\\config\\checkstyle\\checkstyle.xml")
-//    ignoreFailures = true
-//    maxWarnings = 0
-//    maxErrors = 0
-//}
-//checkstyleMain {
-//    source = 'src/main/java'
-//}
-//checkstyleTest {
-//    source = 'src/test/java'
-//}

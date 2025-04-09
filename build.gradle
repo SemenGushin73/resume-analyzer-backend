@@ -1,23 +1,9 @@
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'maven-publish'
-//    id 'checkstyle'
 }
-
-//checkstyle {
-//    toolVersion = '10.12.1'
-//    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-//}
-//
-//tasks.withType(Checkstyle) {
-//    reports {
-//        html.required = true
-//        xml.required = false
-//    }
-//}
 
 group = 'ru.kata.project'
 version = '0.0.1-SNAPSHOT'
@@ -34,23 +20,61 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
-    implementation 'org.springframework.boot:spring-boot-starter-validation' // Для валидации данных
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.4.0'
-    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
+
+    // Swagger/OpenAPI
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    // Jackson & JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0'
+
+    // MongoDB Test Support
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
+
+    // Networking
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    // Internal Modules
+    implementation 'webapp.common:resume-analyzer-common:1.0.0'
+
+    // Lombok
     implementation 'org.projectlombok:lombok:1.18.36'
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
-    implementation 'webapp.common:resume-analyzer-common:1.0.0'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.register("runAll") {
+    group = "application"
+    description = "Параллельно запускает resume-analyzer и resume-generator"
+
+    doLast {
+        def analyzerProcess = ["./gradlew", ":resume-analyzer:bootRun"].execute()
+        def generatorProcess = ["./gradlew", ":resume-generator:bootRun"].execute()
+
+        println "Запущены оба модуля. Логи ниже:"
+        println "Нажми Ctrl+C чтобы остановить."
+
+        Thread.start {
+            analyzerProcess.in.eachLine { println "[analyzer] $it" }
+        }
+        Thread.start {
+            generatorProcess.in.eachLine { println "[generator] $it" }
+        }
+
+        analyzerProcess.waitFor()
+        generatorProcess.waitFor()
+    }
 }
