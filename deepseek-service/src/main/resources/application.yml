@@ -21,7 +21,8 @@ spring:
       default-topic: resume-generation-request
 
 openrouter:
-  api-key: ${OPENROUTER_API_KEY}
+  # рабочий API ключ можно получить на сайте https://openrouter.ai/settings/keys
+  api-key: ${OPENROUTER_API_KEY}  
   model-name: deepseek/deepseek-r1-distill-llama-70b:free
 
 server:
