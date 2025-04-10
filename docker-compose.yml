@@ -1,126 +1,126 @@
-#
-#version: '3.8'
-#
-#services:
-#  postgres:
-#    image: postgres:15
-#    container_name: postgres
-#    environment:
-#      POSTGRES_DB: test_db
-#      POSTGRES_USER: root
-#      POSTGRES_PASSWORD: root
-#    ports:
-#      - "5434:5432"
-#    networks:
-#      - app-network
-#
-#  postgres-analytic:
-#    image: postgres:15
-#    container_name: postgres-analytic
-#    environment:
-#      POSTGRES_DB: analytics_db
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: root
-#    ports:
-#      - "5435:5432"
-#    networks:
-#      - app-network
-#    volumes:
-#      - ./data:/var/lib/postgresql/data
-#
-#
-#  mongodb:
-#    image: mongo:6
-#    container_name: mongodb
-#    ports:
-#      - "27017:27017"
-#    networks:
-#      - app-network
-#
-#  redis:
-#    image: redis:7.4.2
-#    container_name: redis-container
-#    restart: always
-#    ports:
-#      - "6379:6379"
-#    command: redis-server --save 60 1 --loglevel warning --requirepass root
-#    volumes:
-#      - ./data:/data
-#
-#  kafka:
-#    image: confluentinc/cp-kafka:latest
-#    ports:
-#      - "9092:9092"
-#    environment:
-#      KAFKA_BROKER_ID: 1
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-#      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-#      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-#    depends_on:
-#      - zookeeper
-#
-#  zookeeper:
-#    image: bitnami/zookeeper:latest
-#    ports:
-#      - "21810:2181"
-#    environment:
-#      - ALLOW_ANONYMOUS_LOGIN=yes
-#
-#  elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
-#    ports:
-#      - "9200:9200"
-#    environment:
-#      - discovery.type=single-node
-#
-#  kibana:
-#    image: bitnami/kibana
-#    ports:
-#      - "5601:5601"
-#    depends_on:
-#      - elasticsearch
-#
-#  loki:
-#    image: grafana/loki:latest
-#    ports:
-#      - "3100:3100"
-#    command: -config.file=/etc/loki/local-config.yaml
-#    volumes:
-#      - ./utils/loki-config.yaml:/etc/loki/local-config.yaml
-#
-#  grafana:
-#    image: grafana/grafana:latest
-#    ports:
-#      - "3000:3000"
-#    volumes:
-#      - ./grafana-provisioning:/etc/grafana/provisioning
-#    environment:
-#      - GF_SECURITY_ADMIN_PASSWORD=admin  # Пароль для пользователя admin
-#    depends_on:
-#      - loki
-#      - prometheus
-#
-#  prometheus:
-#    image: prom/prometheus:latest
-#    ports:
-#      - '9099:9090'
-#    volumes:
-#      - ./utils/prometheus.yml:/etc/prometheus/prometheus.yml
-#      - ./utils/alert.rules.yml:/etc/prometheus/alert.rules.yml
-#
-#  alertmanager:
-#    image: prom/alertmanager:latest
-#    ports:
-#      - '9093:9093'
-#    volumes:
-#      - ./utils/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-#
-#networks:
-#  app-network:
-#    driver: bridge
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5434:5432"
+    networks:
+      - app-network
+
+  postgres-analytic:
+    image: postgres:15
+    container_name: postgres-analytic
+    environment:
+      POSTGRES_DB: analytics_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5435:5432"
+    networks:
+      - app-network
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7.4.2
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning --requirepass root
+    volumes:
+      - ./data:/data
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    ports:
+      - "21810:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+
+  kibana:
+    image: bitnami/kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./utils/loki-config.yaml:/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana-provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Пароль для пользователя admin
+    depends_on:
+      - loki
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9099:9090'
+    volumes:
+      - ./utils/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./utils/alert.rules.yml:/etc/prometheus/alert.rules.yml
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - '9093:9093'
+    volumes:
+      - ./utils/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+
+networks:
+  app-network:
+    driver: bridge
