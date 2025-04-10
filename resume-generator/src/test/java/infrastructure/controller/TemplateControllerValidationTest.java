@@ -3,24 +3,22 @@ package infrastructure.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import webapp.resumegenerator.ResumeGeneratorApplication;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.service.TemplateService;
 import webapp.resumegenerator.infrastructure.controller.TemplateController;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest(classes = ResumeGeneratorApplication.class)
@@ -28,10 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class TemplateControllerValidationTest {
     private static final Logger log = LoggerFactory.getLogger(TemplateControllerValidationTest.class);
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @Mock
     private TemplateService templateService;
 
     @InjectMocks
@@ -45,7 +42,7 @@ public class TemplateControllerValidationTest {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
-        when(templateService.createTemplate(ArgumentMatchers.any(Template.class))).thenReturn(new Template());
+        mockMvc = MockMvcBuilders.standaloneSetup(templateController).build();
 
         log.info("Запуск теста: {}", testInfo.getDisplayName());
     }
