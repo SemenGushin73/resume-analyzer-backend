@@ -6,17 +6,16 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.kata.project.exception.ExternalServiceException;
-import ru.kata.project.exception.InvalidRequestException;
-import ru.kata.project.exception.KafkaProcessingException;
-import ru.kata.project.exception.ResourceNotFoundException;
+import webapp.common.exception.ExternalServiceException;
+import webapp.common.exception.InvalidRequestException;
+import webapp.common.exception.KafkaProcessingException;
+import webapp.common.exception.ResourceNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Глобальный обработчик исключений для всех контроллеров в приложении.
- * <p>
  * Этот класс перехватывает различные исключения, возникающие в процессе работы приложения,
  * и возвращает соответствующие HTTP-ответы с описанием ошибки и кодом статуса.
  */

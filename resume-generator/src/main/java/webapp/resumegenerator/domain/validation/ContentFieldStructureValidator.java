@@ -39,7 +39,7 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
             }
 
             for (JsonNode blockNode : blocksNode) {
-                if (!isValidBlock(blockNode, 1)) {
+                if (isUnvalidBlock(blockNode, 1)) {
                     return false;
                 }
             }
@@ -50,27 +50,27 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
         }
     }
 
-    private boolean isValidBlock(JsonNode blockNode, int depth) {
+    private boolean isUnvalidBlock(JsonNode blockNode, int depth) {
 
         if (depth > MAX_DEPTH) {
-            return false;
+            return true;
         }
 
         for (String field : FIELDS) {
             if (!blockNode.hasNonNull(field)) {
-                return false;
+                return true;
             }
         }
 
         JsonNode childrenNode = blockNode.get("children");
         if (childrenNode != null && !childrenNode.isArray()) {
             for (JsonNode childNode : childrenNode) {
-                if (!isValidBlock(childNode, depth + 1)) {
-                    return false;
+                if (isUnvalidBlock(childNode, depth + 1)) {
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
     }
 }
