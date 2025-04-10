@@ -21,6 +21,7 @@ import webapp.resumegenerator.domain.service.TemplateService;
 import webapp.resumegenerator.infrastructure.controller.TemplateController;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest(classes = ResumeGeneratorApplication.class)
 @AutoConfigureMockMvc
@@ -63,6 +64,7 @@ public class TemplateControllerValidationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validTemplate)))
+                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
@@ -75,6 +77,7 @@ public class TemplateControllerValidationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unvalidTemplate)))
+                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -87,6 +90,7 @@ public class TemplateControllerValidationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unvalidTemplate)))
+                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -99,6 +103,7 @@ public class TemplateControllerValidationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unvalidTemplate)))
+                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
