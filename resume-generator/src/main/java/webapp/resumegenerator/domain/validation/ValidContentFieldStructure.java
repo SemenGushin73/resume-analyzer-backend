@@ -14,7 +14,7 @@ public @interface ValidContentFieldStructure {
 
     String message() default "Некорректная структура JSON.";
 
-    Class<?>[] group() default {};
+    Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 }
