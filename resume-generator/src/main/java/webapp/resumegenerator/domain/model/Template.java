@@ -5,11 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,11 +12,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import ru.kata.project.model.Department;
+import webapp.common.model.Department;
+import webapp.resumegenerator.domain.validation.ValidContentFieldStructure;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Класс, представляющий шаблон резюме.
- * Данный класс хранит информацию о шаблоне,такую как название шаблона, описания,
+ * Данный класс хранит информацию о шаблоне, такую как название шаблона, описания,
  * контент и дату создания.
  */
 @Document(collection = "templates")
@@ -29,7 +29,9 @@ import ru.kata.project.model.Department;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//TODO проверить нужна ли @Builder и на что она влияет
+@Builder // в документации написано, что эта аннотация работает только если не создан не один конструктор
+        // и не используются другие аннотации @XArgsConstructor
 public class Template {
     /**
      * Уникальный идентификатор, генерируется при создании нового шаблона.
@@ -43,7 +45,7 @@ public class Template {
      * Не должно быть пустым.
      */
     @NotNull(message = "Имя шаблона не может быть пустым.")
-    @Size(min = 3, message = "Имя шаблона должно содержать 3 и более символов.")
+    @Size(min = 3, max = 100, message = "Имя шаблона должно содержать от 3 до 100 символов.")
     private String name;
 
     /**
@@ -51,7 +53,7 @@ public class Template {
      * Не должно быть пустым.
      */
     @NotNull(message = "Описание шаблона не может быть пустым.")
-    @Size(max = 500, message = "Содержание должно содержать не более 500 символов.")
+    @Size(max = 255, message = "Содержание должно содержать не более 255 символов.")
     private String description;
 
     /**
@@ -59,6 +61,8 @@ public class Template {
      * Не должен быть пустым.
      */
     @NotNull(message = "Контент шаблона не может быть пустым")
+    @Size(max = 100000, message = "Контент шаблона не должен превышать 100 000 символов.")
+    @ValidContentFieldStructure(message = "Некорректная структура JSON в поле content.")
     private String content;
 
     /**
@@ -81,9 +85,9 @@ public class Template {
     /**
      * Конструктор с параметрами для создания шаблона.
      *
-     * @param name        Название шаблона.
+     * @param name Название шаблона.
      * @param description Описание шаблона.
-     * @param content     Контент шаблона.
+     * @param content Контент шаблона.
      */
     public Template(String name, String description, String content) {
         this.id = UUID.randomUUID();
@@ -104,7 +108,7 @@ public class Template {
         }
         Template template = (Template) o;
         return Objects.equals(id, template.id) &&
-                Objects.equals(name, template.name);
+          Objects.equals(name, template.name);
     }
 
     @Override
