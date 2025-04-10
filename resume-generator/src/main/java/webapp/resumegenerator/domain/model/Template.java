@@ -53,7 +53,7 @@ public class Template {
      * Не должно быть пустым.
      */
     @NotNull(message = "Описание шаблона не может быть пустым.")
-    @Size(max = 255, message = "Содержание должно содержать не более 255 символов.")
+    @Size(max = 255, message = "Описание должно содержать не более 255 символов.")
     private String description;
 
     /**
