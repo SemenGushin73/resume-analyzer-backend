@@ -1,0 +1,8 @@
+rootProject.name = 'api-gateway'
+
+//includeBuild("../resume-analyzer-backend/resume-analyzer")
+//includeBuild("../resume-analyzer-backend/resume-generator")
+//includeBuild("../resume-analyzer-backend/deepseek-service")
+//includeBuild("../../../IdeaProjects/resume-analyzer-backend/analytics-message")
+
+
