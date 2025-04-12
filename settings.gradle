@@ -3,4 +3,5 @@ include 'resume-analyzer'
 include 'deepseek-service'
 include 'resume-generator'
 include 'api-gateway'
+include 'lib'
 

@@ -13,7 +13,6 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 /**
  * Сущность ResumeFile для хранения файлов резюме в базе данных.

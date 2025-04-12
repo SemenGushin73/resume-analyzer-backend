@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.github.loki4j:loki-logback-appender:1.6.0'
 
     // Project Modules
+    implementation(project(":lib"))
 //    implementation 'ru.kata.project:resume-generator:0.0.1-SNAPSHOT'
 //    implementation 'webapp:resume-analyzer'
 //    implementation 'webapp.common:resume-analyzer-common:1.0.0'
@@ -57,6 +58,9 @@ dependencies {
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.mockito:mockito-core:5.0.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Validation
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 }
 
 dependencyManagement {
