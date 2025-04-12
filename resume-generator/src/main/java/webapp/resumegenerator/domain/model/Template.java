@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import webapp.common.model.Department;
+import ru.kata.project.model.Department;
 import webapp.resumegenerator.domain.validation.ValidContentFieldStructure;
 
 import java.time.LocalDateTime;
@@ -30,8 +30,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 //TODO проверить нужна ли @Builder и на что она влияет
-@Builder // в документации написано, что эта аннотация работает только если не создан не один конструктор
-        // и не используются другие аннотации @XArgsConstructor
+// в документации написано, что эта аннотация работает только если не создан не один конструктор
+// и не используются другие аннотации @XArgsConstructor
+@Builder
 public class Template {
     /**
      * Уникальный идентификатор, генерируется при создании нового шаблона.

@@ -80,6 +80,7 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
         }
 
         JsonNode childrenNode = blockNode.get("children");
+
         if (childrenNode == null) {
             return false;
         }

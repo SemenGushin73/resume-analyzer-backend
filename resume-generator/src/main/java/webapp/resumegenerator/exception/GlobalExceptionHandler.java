@@ -6,10 +6,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import webapp.common.exception.ExternalServiceException;
-import webapp.common.exception.InvalidRequestException;
-import webapp.common.exception.KafkaProcessingException;
-import webapp.common.exception.ResourceNotFoundException;
+import ru.kata.project.exception.ExternalServiceException;
+import ru.kata.project.exception.InvalidRequestException;
+import ru.kata.project.exception.KafkaProcessingException;
+import ru.kata.project.exception.ResourceNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;

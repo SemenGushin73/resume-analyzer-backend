@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import webapp.common.model.Department;
+import ru.kata.project.model.Department;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.service.TemplateService;
 
