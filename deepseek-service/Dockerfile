@@ -1,16 +1,25 @@
-# Используем официальный образ OpenJDK для Java 21
-FROM openjdk:21-jdk-slim
-
-# Устанавливаем рабочую директорию
+FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Копируем JAR файл (имя меняйте под свой сервис)
-COPY build/libs/deepseek-service-0.0.1-SNAPSHOT.jar /app/deepseek.jar
+ENV GRADLE_USER_HOME=/app/.gradle
+RUN mkdir -p $GRADLE_USER_HOME && chmod -R 777 $GRADLE_USER_HOME
 
+COPY gradlew .
+COPY gradle gradle
+COPY gradle/wrapper gradle/wrapper
+COPY build.gradle settings.gradle ./
+COPY lib ./lib
+COPY deepseek-service ./deepseek-service
 
+RUN ./gradlew :lib:publishToMavenLocal --no-daemon
 
-# Запускаем приложение
+RUN ./gradlew :deepseek-service:bootJar --no-daemon
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+COPY --from=build /app/deepseek-service/build/libs/deepseek-service-*.jar /app/deepseek.jar
+
 ENTRYPOINT ["java", "-jar", "/app/deepseek.jar"]
 
 EXPOSE 9090
-

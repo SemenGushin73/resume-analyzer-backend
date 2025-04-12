@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * @author Ildar Khuzin
  * @version 1.0.0
- *  Настройки для отображения каждого блока (стили, текстовые данные).
+ * Настройки для отображения каждого блока (стили, текстовые данные).
  */
 @Document(collection = "section_element_props")
 @JsonInclude(JsonInclude.Include.NON_NULL)

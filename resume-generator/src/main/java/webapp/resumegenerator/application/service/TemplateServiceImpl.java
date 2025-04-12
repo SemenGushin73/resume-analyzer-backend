@@ -2,13 +2,15 @@ package webapp.resumegenerator.application.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import webapp.common.model.Department;
+import ru.kata.project.model.Department;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.repository.TemplateRepository;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import webapp.resumegenerator.domain.service.TemplateService;
@@ -53,7 +55,7 @@ public class TemplateServiceImpl implements TemplateService {
     public Template getTemplateById(String id) {
         UUID uuid = generateUUID(id);
         return templateRepository.findById(uuid)
-          .orElseThrow(() -> new RuntimeException("Шаблон не найден"));
+                .orElseThrow(() -> new RuntimeException("Шаблон не найден"));
     }
 
     /**
@@ -118,7 +120,7 @@ public class TemplateServiceImpl implements TemplateService {
      */
     @Override
     public List<Template> getTemplatesByDateRange(LocalDate startDate,
-                                                LocalDate endDate) {
+                                                  LocalDate endDate) {
         return templateRepository.findByDate(startDate, endDate);
     }
 

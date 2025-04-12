@@ -1,6 +1,7 @@
 package webapp.resumegenerator.domain.repository;
 
 import webapp.resumegenerator.domain.model.Template;
+
 import java.time.LocalDate;
 import java.util.List;
 

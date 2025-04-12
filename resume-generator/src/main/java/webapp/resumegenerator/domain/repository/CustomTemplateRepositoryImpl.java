@@ -1,14 +1,15 @@
 package webapp.resumegenerator.domain.repository;
 
 import webapp.resumegenerator.domain.model.Template;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import webapp.resumegenerator.domain.repository.CustomTemplateRepository;
 
 /**
  * Реализация пользовательского репозитория для работы с коллекцией шаблонов в MongoDB.
@@ -43,7 +44,7 @@ public class CustomTemplateRepositoryImpl implements CustomTemplateRepository {
      * Поиск шаблонов по дате.
      *
      * @param startDate Начальная дата диапазона.
-     * @param endDate Конечная дата диапазона.
+     * @param endDate   Конечная дата диапазона.
      * @return Список шаблонов, входящих в указанный диапазон дат.
      */
     @Override

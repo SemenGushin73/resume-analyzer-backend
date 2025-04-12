@@ -12,7 +12,7 @@ import webapp.deepseek.DeepseekServiceApplication;
 
 /**
  * Тестовый класс для проверки работы GlobalExceptionHandler.
- *
+ * <p>
  * Данный класс выполняет интеграционные тесты, проверяя корректность
  * обработки исключений в приложении с помощью MockMvc.
  */

@@ -68,7 +68,8 @@ public class Layout {
     @JsonProperty("isBounded")
     private Boolean isBounded;
 
-    public Layout() {}
+    public Layout() {
+    }
 
     public Layout(UUID id, String i, int x, int y, int w, int h, Integer minW, Integer maxW, Integer minH,
                   Integer maxH, Boolean moved, Boolean isStatic, Boolean isDraggable, Boolean isResizable,

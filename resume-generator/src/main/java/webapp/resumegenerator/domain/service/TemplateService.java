@@ -2,8 +2,9 @@ package webapp.resumegenerator.domain.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import webapp.common.model.Department;
+import ru.kata.project.model.Department;
 import webapp.resumegenerator.domain.model.Template;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,7 +30,8 @@ public interface TemplateService {
      */
     Template getTemplateById(String id);
 
-    /** Создание нового шаблона.
+    /**
+     * Создание нового шаблона.
      *
      * @param template Объект шаблона, который будет сохранен.
      * @return Сохраненный шаблон.

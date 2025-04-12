@@ -3,7 +3,7 @@ package webapp.deepseek.application.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import webapp.common.exception.annotations.ThrowsAIProcessingException;
+import ru.kata.project.exception.annotations.ThrowsAIProcessingException;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterRequest;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
@@ -101,12 +101,12 @@ public class DeepSeekServiceImpl implements DeepSeekService {
         String lowerCaseText = text.toLowerCase();
 
         return lowerCaseText.contains("опыт работы") ||
-               lowerCaseText.contains("навыки") ||
-               lowerCaseText.contains("образование") ||
-               lowerCaseText.contains("должностные обязанности") ||
-               lowerCaseText.contains("требования") ||
-               lowerCaseText.contains("резюме") ||
-               lowerCaseText.contains("вакансия");
+                lowerCaseText.contains("навыки") ||
+                lowerCaseText.contains("образование") ||
+                lowerCaseText.contains("должностные обязанности") ||
+                lowerCaseText.contains("требования") ||
+                lowerCaseText.contains("резюме") ||
+                lowerCaseText.contains("вакансия");
     }
 
     private OpenRouterRequest createRequest(String prompt) {
@@ -118,12 +118,12 @@ public class DeepSeekServiceImpl implements DeepSeekService {
 
     private String createPrompt(String resumeText, String jobDescription) {
         return "Вы полезный помощник, который анализирует резюме на предмет соответствия должности. " +
-               "Учитывая следующее резюме и описание должности, дайте оценку (0-100) " +
-               "того, насколько хорошо резюме соответствует описанию должности, и объясните свои доводы. " +
-               "Resume:\n" + resumeText + "\n\nJob Description:\n" + jobDescription;
+                "Учитывая следующее резюме и описание должности, дайте оценку (0-100) " +
+                "того, насколько хорошо резюме соответствует описанию должности, и объясните свои доводы. " +
+                "Resume:\n" + resumeText + "\n\nJob Description:\n" + jobDescription;
     }
 
-    private  String createPromptForGeneration (String template, String departmentDescription) {
+    private String createPromptForGeneration(String template, String departmentDescription) {
         return "Напиши профессиональное и привлекательно резюме на основе полученной от пользователя информации:" +
                 template + "и описания отдела на место в котором претендует соискатель" + departmentDescription +
                 "результат представь на русском языке в виде готового резюме без своих рассуждений";
@@ -142,6 +142,4 @@ public class DeepSeekServiceImpl implements DeepSeekService {
                 "Количество рекомендаций может быть любым (включая 0 или более двух).\n\n" +
                 "Резюме:\n" + resumeText;
     }
-
-
 }

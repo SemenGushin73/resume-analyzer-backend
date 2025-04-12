@@ -16,13 +16,11 @@ import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterRequest;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
 
-
 /**
  * Тестовый класс для проверки работы api-key от модели deepseek.
  */
 @SpringBootTest(classes = DeepseekServiceApplication.class)
 public class DeepseekAPIKeyTest {
-
 
     @Autowired
     private OpenRouterApiClient openRouterApiClient;

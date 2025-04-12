@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import webapp.common.model.Department;
+import ru.kata.project.model.Department;
 
 /**
  * Класс, представляющий шаблон резюме.
@@ -80,9 +81,9 @@ public class Template {
     /**
      * Конструктор с параметрами для создания шаблона.
      *
-     * @param name Название шаблона.
+     * @param name        Название шаблона.
      * @param description Описание шаблона.
-     * @param content Контент шаблона.
+     * @param content     Контент шаблона.
      */
     public Template(String name, String description, String content) {
         this.id = UUID.randomUUID();
@@ -103,7 +104,7 @@ public class Template {
         }
         Template template = (Template) o;
         return Objects.equals(id, template.id) &&
-          Objects.equals(name, template.name);
+                Objects.equals(name, template.name);
     }
 
     @Override

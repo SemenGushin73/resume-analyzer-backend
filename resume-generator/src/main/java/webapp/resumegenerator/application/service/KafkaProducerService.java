@@ -1,9 +1,6 @@
 package webapp.resumegenerator.application.service;
 
-
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -16,7 +13,7 @@ import webapp.resumegenerator.domain.model.Template;
 @Slf4j
 public class KafkaProducerService {
 
-    private final KafkaTemplate <String, Template> kafkaTemplate;
+    private final KafkaTemplate<String, Template> kafkaTemplate;
     private static final String DEEPSEEK_GENERATION_REQUESTS = "deepseek-generation-requests";
 
     @Autowired

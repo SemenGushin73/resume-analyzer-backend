@@ -6,19 +6,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 /**
  * Сущность ResumeFile для хранения файлов резюме в базе данных.
- *
- * TODO: Заменить поле owner на маппинг на пользователя
+ * <p>
  */
 @Entity
 @Table(name = "resume_file")
@@ -26,6 +26,8 @@ import org.hibernate.annotations.Type;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResumeFile {
+
+    //todo owner превратить в модель
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -43,7 +45,6 @@ public class ResumeFile {
 
     private LocalDateTime createdAt;
 
-    //В дальнейшем заменить на сущность пользователя с мапингом.
     private String owner;
 
     public ResumeFile(String filename) {
@@ -51,14 +52,11 @@ public class ResumeFile {
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         ResumeFile that = (ResumeFile) o;
@@ -71,8 +69,7 @@ public class ResumeFile {
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(id, filename, fileType, size, Arrays.hashCode(data), createdAt, owner);
     }
 }

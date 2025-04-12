@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 
-
 /**
  * Контроллер для управления сущностями Resume.
  */
@@ -94,7 +93,7 @@ public class ResumeTestController {
     }
 
     @Operation(summary = "Найти резюме соответсвующее запросу",
-              description = "Находит резюме по полям fullName, bio, position")
+            description = "Находит резюме по полям fullName, bio, position")
     @ApiResponse(responseCode = "200", description = "Резюме успешно найдено")
     @ApiResponse(responseCode = "404", description = "Резюме не найдено")
     @ApiResponse(responseCode = "400", description = "Некорректный query запрос")

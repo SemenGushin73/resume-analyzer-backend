@@ -1,22 +1,24 @@
-## Базовый образ Java
-#FROM openjdk:21-jdk-slim
-#
-## Устанавливаем рабочую директорию в контейнере
-#WORKDIR /app
-#
-## Копируем файлы Gradle Wrapper и проект в контейнер
-#COPY gradlew gradlew
-#COPY gradle gradle
-#COPY . .
-#
-## Устанавливаем права на выполнение Gradle Wrapper
-#RUN chmod +x gradlew
-#
-## Собираем приложение с использованием Gradle
-#RUN ./gradlew build -x test --no-daemon
-#
-## Экспонируем порт, на котором работает приложение
-#EXPOSE 8083
-#
-## Команда для запуска JAR-файла
-#CMD ["java", "-jar", "build/libs/resume-analyzer-0.0.1-SNAPSHOT.jar"]
+FROM eclipse-temurin:21-jdk-alpine AS build
+WORKDIR /app
+
+ENV GRADLE_USER_HOME=/app/.gradle
+RUN mkdir -p $GRADLE_USER_HOME && chmod -R 777 $GRADLE_USER_HOME
+
+COPY gradlew ./
+COPY gradle/wrapper gradle/wrapper
+COPY build.gradle settings.gradle ./
+COPY lib ./lib
+COPY resume-analyzer ./resume-analyzer
+
+RUN ./gradlew :lib:publishToMavenLocal --no-daemon
+
+RUN ./gradlew :resume-analyzer:bootJar --no-daemon
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+COPY --from=build /app/resume-analyzer/build/libs/resume-analyzer-*.jar /app/resume-analyzer.jar
+
+ENTRYPOINT ["java", "-jar", "resume-analyzer.jar"]
+
+EXPOSE 8083

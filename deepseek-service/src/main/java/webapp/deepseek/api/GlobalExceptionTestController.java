@@ -2,10 +2,10 @@ package webapp.deepseek.api;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import webapp.common.exception.ExternalServiceException;
-import webapp.common.exception.InvalidRequestException;
-import webapp.common.exception.KafkaProcessingException;
-import webapp.common.exception.ResourceNotFoundException;
+import ru.kata.project.exception.ExternalServiceException;
+import ru.kata.project.exception.InvalidRequestException;
+import ru.kata.project.exception.KafkaProcessingException;
+import ru.kata.project.exception.ResourceNotFoundException;
 
 /**
  * Контроллер для тестирования обработки глобальных исключений.

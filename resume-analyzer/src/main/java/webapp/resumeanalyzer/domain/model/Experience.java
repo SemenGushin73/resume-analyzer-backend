@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class Experience {
 
     @Id
     @Column(unique = true)
-    private UUID id=UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
     private String description;
 

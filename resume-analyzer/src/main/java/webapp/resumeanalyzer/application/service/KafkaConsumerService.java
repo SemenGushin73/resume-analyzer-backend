@@ -1,15 +1,16 @@
 package webapp.resumeanalyzer.application.service;
 
-import webapp.common.kafka.config.KafkaTopics;
-import webapp.common.kafka.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Header;
 
 import org.springframework.stereotype.Service;
+import ru.kata.project.kafka.AnalysisRequest;
+import ru.kata.project.kafka.ResumeScoreAnalysisRequest;
+import ru.kata.project.kafka.ResumeScoreRequest;
+import ru.kata.project.kafka.config.KafkaTopics;
 import webapp.resumeanalyzer.application.mapper.ResumeMapper;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;

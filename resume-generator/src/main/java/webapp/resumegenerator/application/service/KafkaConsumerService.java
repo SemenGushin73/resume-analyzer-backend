@@ -2,16 +2,17 @@ package webapp.resumegenerator.application.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+import ru.kata.project.model.Department;
 import webapp.resumegenerator.domain.model.Template;
-import webapp.common.model.Department;
-
 
 /**
  * Получение данных из Kafka
@@ -35,7 +36,8 @@ public class KafkaConsumerService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            Map<String, String> data = objectMapper.readValue(jsonData, new TypeReference<Map<String, String>>() {});
+            Map<String, String> data = objectMapper.readValue(jsonData, new TypeReference<Map<String, String>>() {
+            });
             log.info("Received message. Topic: {}, Key: {}, Data: {}", RESUME_GENERATION_REQUESTS, key, data);
 
             Template template = new Template();
