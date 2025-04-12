@@ -8,23 +8,23 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import webapp.resumegenerator.ResumeGeneratorApplication;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.service.TemplateService;
+import webapp.resumegenerator.infrastructure.controller.TemplateController;
 
 /**
  * Тестовый класс для проверки валидации поля content в классе {@link Template}
  */
-@SpringBootTest(classes = ResumeGeneratorApplication.class)
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = TemplateController.class)
+@ContextConfiguration(classes = {TemplateController.class})
 public class TemplateControllerValidationTest {
     private static final Logger log = LoggerFactory.getLogger(TemplateControllerValidationTest.class);
 
