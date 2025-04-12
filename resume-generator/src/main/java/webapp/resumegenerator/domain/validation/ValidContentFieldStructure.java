@@ -6,6 +6,9 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
+/**
+ * Аннотация для валидации поля content в классе Template
+ */
 @Documented
 @Constraint(validatedBy = ContentFieldStructureValidator.class)
 @Target({ElementType.FIELD})
