@@ -29,7 +29,7 @@ Resume Analyzer Backend — это микросервисное backend-прил
 
 ### 🔄 Клонирование и сборка:
 ```bash
-git clone https://github.com/your-org/resume-analyzer-backend.git
+git clone https://gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git
 cd resume-analyzer-backend
 ./gradlew clean build -x test
 ```
