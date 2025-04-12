@@ -4,17 +4,30 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Класс реализующий обработку @ValidContentFieldStructure
+ */
 @Component
 public class ContentFieldStructureValidator implements ConstraintValidator<ValidContentFieldStructure, String> {
 
     private static final int MAX_BLOCKS = 50;
     private static final int MAX_DEPTH = 5;
     private static final String[] FIELDS = new String[] {"name", "layout", "props"};
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    public ContentFieldStructureValidator() {
+        this.objectMapper = new ObjectMapper();
+    }
+
+    @Autowired
+    public ContentFieldStructureValidator(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
 
     @Override
@@ -28,8 +41,6 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
             JsonNode root = objectMapper.readTree(value);
             JsonNode blocksNode = root.get("blocks");
 
-            //TODO нужно проверить условие !blocksNode.isArray() в случае если
-            // content не имеет ни одного вложенного уровня
             if (blocksNode == null || !blocksNode.isArray()) {
                 return false;
             }
@@ -39,7 +50,7 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
             }
 
             for (JsonNode blockNode : blocksNode) {
-                if (isUnvalidBlock(blockNode, 1)) {
+                if (isInvalidBlock(blockNode, 1)) {
                     return false;
                 }
             }
@@ -50,7 +61,13 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
         }
     }
 
-    private boolean isUnvalidBlock(JsonNode blockNode, int depth) {
+    /**
+     * Метод валидирующий глубину вложения поля blocks
+     * @param blockNode поле для проверки
+     * @param depth текущая глубина вложенности
+     * @return false в случае не соответствия структуры заданным параметрам
+     */
+    private boolean isInvalidBlock(JsonNode blockNode, int depth) {
 
         if (depth > MAX_DEPTH) {
             return true;
@@ -63,9 +80,13 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
         }
 
         JsonNode childrenNode = blockNode.get("children");
-        if (childrenNode != null && !childrenNode.isArray()) {
+        if (childrenNode == null) {
+            return false;
+        }
+
+        if (childrenNode.isArray()) {
             for (JsonNode childNode : childrenNode) {
-                if (isUnvalidBlock(childNode, depth + 1)) {
+                if (isInvalidBlock(childNode, depth + 1)) {
                     return true;
                 }
             }
