@@ -1,0 +1,35 @@
+plugins {
+    id("java-library")
+}
+
+group = "ru.kata.project"
+version = "0.0.1-SNAPSHOT"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Core
+    implementation("org.springframework:spring-context:6.1.6")
+    implementation("org.springframework.boot:spring-boot-starter-aop:3.2.4")
+
+    // Kafka
+    implementation("org.springframework.kafka:spring-kafka:3.0.7")
+
+    // Jackson (для сериализации DTO)
+    api("com.fasterxml.jackson.core:jackson-databind:2.16.1")
+
+    // Валидация (например, для @NotNull, @Size и т.д.)
+    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok:1.18.32")
+    annotationProcessor("org.projectlombok:lombok:1.18.32")
+}
