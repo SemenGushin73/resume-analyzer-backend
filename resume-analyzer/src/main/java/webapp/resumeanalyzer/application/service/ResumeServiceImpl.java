@@ -2,8 +2,6 @@ package webapp.resumeanalyzer.application.service;
 
 import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -100,6 +98,4 @@ public class ResumeServiceImpl implements ResumeService {
     public List<Resume> getAllResumes() {
         return resumeRepository.findAll();
     }
-
-
 }

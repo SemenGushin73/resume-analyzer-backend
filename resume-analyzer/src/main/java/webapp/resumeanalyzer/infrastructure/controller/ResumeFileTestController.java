@@ -1,11 +1,9 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
-
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.io.IOException;
 
 import java.util.List;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.model.ResumeFile;
 import webapp.resumeanalyzer.domain.service.ResumeFileService;
 

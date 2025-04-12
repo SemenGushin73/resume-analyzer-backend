@@ -1,9 +1,7 @@
 package webapp.resumegenerator.application.service;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
-
 import webapp.resumegenerator.domain.service.ResumeBuilder;
 
 /**

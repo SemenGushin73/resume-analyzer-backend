@@ -1,9 +1,9 @@
 package webapp.resumeanalyzer.domain.service;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 import webapp.resumeanalyzer.domain.model.ResumeFile;
@@ -26,7 +26,7 @@ public interface ResumeFileService {
     List<ResumeFile> getResumeFileByOwner(String owner);
 
     //Метод для удаления ResumeFile
-    void deleteResumeFile (ResumeFile resumeFile);
+    void deleteResumeFile(ResumeFile resumeFile);
 
     //Получение всех ResumeFile
     List<ResumeFile> getAllResumeFiles();

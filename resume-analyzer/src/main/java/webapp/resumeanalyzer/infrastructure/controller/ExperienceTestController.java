@@ -6,7 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,7 +93,7 @@ public class ExperienceTestController {
     @ApiResponse(responseCode = "404", description = "Сущность не найдена")
     @PutMapping("/{id}")
     public ResponseEntity<Experience> updateExperience(@PathVariable String id,
-            @Valid @RequestBody Experience experience) {
+                                                       @Valid @RequestBody Experience experience) {
         try {
             experienceService.updateExperience(id, experience);
             return ResponseEntity.ok(experience);

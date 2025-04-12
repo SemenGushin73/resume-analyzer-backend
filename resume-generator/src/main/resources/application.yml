@@ -3,22 +3,23 @@ spring:
     import:
       - optional:classpath:common-actuator.yml
       - optional:classpath:common-kafka.yml
+
   application:
     name: resume-generator
 
   data:
     mongodb:
       uri: mongodb://localhost:27017/ResumeGenerator
-      authentication-database: admin
 
   kafka:
-
     consumer:
       group-id: generate-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         fetch.max.bytes: 52428800
+        spring.json.trusted.packages: ru.kata.project.kafka
+        spring.json.value.default.type: ru.kata.project.kafka.ResumeRequestDTO
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -31,5 +32,3 @@ spring:
 
 server:
   port: 8082
-  servlet:
-    context-path: /

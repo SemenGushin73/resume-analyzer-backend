@@ -6,16 +6,10 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
-import webapp.common.dto.resumeDto.ResumeDto;
+import ru.kata.project.kafka.*;
+import ru.kata.project.kafka.config.KafkaTopics;
 import webapp.deepseek.domain.service.DeepSeekService;
-import webapp.common.kafka.*;
-import webapp.common.kafka.config.KafkaTopics;
 
-
-
-/**
- * Прослушивание и получение запросов из kafka
- */
 @Service
 @Slf4j
 public class KafkaConsumerService {
@@ -37,38 +31,24 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS)
     public void processRequest(@Header("kafka_receivedMessageKey") String requestId, AnalysisRequest request) {
-        log.info("processRequest: получено сообщение из топика: {}, requestId: {}, данные: {}",
-                KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, requestId, request);
-
-        long startTime = System.currentTimeMillis();
-
+        log.info("Получено сообщение: requestId={}, данные={}", requestId, request);
         try {
             String result = deepSeekService.analyzeResume(request.getResumeText(), request.getJobDescription());
-            log.info("processRequest: Результат анализа для requestId {}: {}", requestId, result);
-
             kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, new AnalysisResult(requestId, result));
-            log.info("processRequest: отправка результата в топик: {}, requestId: {}, результат: {}",
-                    KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, result);
-
-            log.info("processRequest: запрос успешно обработан, requestId: {}", requestId);
+            log.info("Результат анализа отправлен: requestId={}, результат={}", requestId, result);
         } catch (Exception e) {
-            log.error("processRequest: Ошибка при обработке запроса {}: {}", requestId, e.getMessage(), e);
+            log.error("Ошибка обработки запроса {}: {}", requestId, e.getMessage(), e);
         }
     }
 
     @KafkaListener(topics = KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, groupId = "deepseek-analysis-group")
     public void consume(ResumeScoreAnalysisRequest request) {
         try {
-            ResumeDto resumeDto = request.getResume();
-            String resumeText = resumeDto.toString();
-            String analysis = deepSeekService.analyzeResumeScore(resumeText);
-
+            String analysis = deepSeekService.analyzeResumeScore(request.getResume().toString());
             ResumeScoreResult result = mapper.readValue(analysis, ResumeScoreResult.class);
             result.setResumeId(request.getResumeId());
-
             kafkaScoreTemplate.send(KafkaTopics.AI_RESUME_SCORE_RESULTS, result);
-
-            log.info("Отправлен результат оценки резюме {}", request.getResumeId());
+            log.info("Результат оценки отправлен: resumeId={}", request.getResumeId());
         } catch (Exception e) {
             log.error("Ошибка оценки резюме: ", e);
         }

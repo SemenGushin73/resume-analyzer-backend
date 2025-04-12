@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
  * Клиент для взаимодействия с API OpenRouter
  * Отправляет POST-запросы к эндпоинту /chat/completions
  */
-
 @FeignClient(name = "openrouter-api", url = "https://openrouter.ai/api/v1")
 public interface OpenRouterApiClient {
 

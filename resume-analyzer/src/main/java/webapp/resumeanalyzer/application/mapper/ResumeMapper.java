@@ -1,8 +1,8 @@
 package webapp.resumeanalyzer.application.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.kata.project.resumeDto.*;
 import webapp.resumeanalyzer.domain.model.*;
-import webapp.common.dto.resumeDto.*;
 
 import java.util.stream.Collectors;
 

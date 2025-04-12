@@ -7,22 +7,18 @@ spring:
     name: deepseek-service
 
   kafka:
-
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: deepseek-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         fetch.max.bytes: 52428800
-        spring.json.value.default.type: webapp.common.kafka.AnalysisRequest
-        spring.json.trusted.packages: webapp.common.kafka
-
-    template:
-      default-topic: resume-generation-request
+        spring.json.value.default.type: ru.kata.project.kafka.AnalysisRequest
+        spring.json.trusted.packages: ru.kata.project.kafka
 
 openrouter:
-  # рабочий API ключ можно получить на сайте https://openrouter.ai/settings/keys
-  api-key: ${OPENROUTER_API_KEY}  
+  api-key: ${OPENROUTER_API_KEY}
   model-name: deepseek/deepseek-r1-distill-llama-70b:free
 
 server:

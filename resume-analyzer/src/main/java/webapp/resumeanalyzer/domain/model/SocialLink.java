@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class SocialLink {
 
     @Id
     @Column(unique = true)
-    private UUID id=UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
     private String link;
 

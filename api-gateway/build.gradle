@@ -45,9 +45,6 @@ dependencies {
 
     // Project Modules
     implementation(project(":lib"))
-//    implementation 'ru.kata.project:resume-generator:0.0.1-SNAPSHOT'
-//    implementation 'webapp:resume-analyzer'
-//    implementation 'webapp.common:resume-analyzer-common:1.0.0'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.36'

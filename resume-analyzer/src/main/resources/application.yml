@@ -1,13 +1,17 @@
+server:
+  port: 8083
+
 spring:
   config:
     import:
       - optional:classpath:common-actuator.yml
       - optional:classpath:common-kafka.yml
+
   application:
     name: resume-analyzer
 
   datasource:
-    url: jdbc:postgresql://localhost:5434/test_db?autoReconnect=true
+    url: jdbc:postgresql://postgres:5432/test_db?autoReconnect=true
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
@@ -30,7 +34,7 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     generate-ddl: true
 
@@ -40,12 +44,11 @@ spring:
       max-request-size: 5MB
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: resume-analyzer-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.value.default.type: webapp.common.kafka.AnalysisRequest
-    properties:
-      spring.json.trusted.packages: webapp.common.kafka
+        spring.json.value.default.type: ru.kata.project.kafka.AnalysisRequest
+        spring.json.trusted.packages: ru.kata.project.kafka

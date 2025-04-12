@@ -1,142 +1,91 @@
 # Resume Analyzer Backend
 
-## **Описание проекта**
-Resume Analyzer Backend — это набор микросервисов, реализующих анализ, генерацию и маршрутизацию резюме, включая интеграцию с AI (DeepSeek) и средствами мониторинга.
+## 📝 Описание проекта
+Resume Analyzer Backend — это микросервисное backend-приложение для анализа и генерации резюме, включающее AI-интеграцию (DeepSeek), API Gateway и мониторинг инфраструктуры.
 
-## **Технологический стек**
-- **Язык**: Java 21
-- **Сборщик**: Gradle
-- **Фреймворки**:
-  - Spring Boot (REST API, JPA, Validation, WebFlux, Actuator)
-  - Spring Cloud (Gateway, LoadBalancer, Resilience4j)
-- **Базы данных**:
-  - PostgreSQL (основная база данных)
-  - MongoDB (хранение шаблонов резюме)
-- **Очереди сообщений**: Apache Kafka + Zookeeper
-- **Документация API**: Springdoc OpenAPI
-- **Контейнеризация и мониторинг**:
-  - Docker Compose (Prometheus, Grafana, Loki, Alertmanager, Kibana)
-- **Тестирование**: JUnit 5, Mockito, Testcontainers
+## 🧪 Технологии
+- **Java 21 + Gradle (многомодульный проект)**
+- **Spring Boot** (REST, Mongo, Kafka, Validation, Actuator)
+- **Spring Cloud Gateway** (WebFlux, CircuitBreaker, LoadBalancer)
+- **PostgreSQL** для анализа резюме
+- **MongoDB** для шаблонов
+- **Apache Kafka** + Zookeeper
+- **Prometheus + Grafana + Loki + Alertmanager** для мониторинга
+- **Docker + Docker Compose**
+- **JUnit5 / Mockito / Testcontainers**
 
-## **Микросервисы**
+## 🖨 Модули
+- `resume-analyzer` — анализ резюме, сохранение и Kafka-интеграция
+- `resume-generator` — генерация текста по шаблонам и через AI
+- `deepseek-service` — вызов AI-модели через OpenRouter API
+- `api-gateway` — маршрутизация, OpenAPI Proxy, CircuitBreaker
+- `lib` — общий модуль с DTO, исключениями и утилитами
 
-### **1. Resume Analyzer**
-- Парсинг и анализ резюме.
-- Оценка ключевых навыков и выявление слабых мест.
+## 🚀 Запуск проекта
 
-### **2. Resume Generator**
-- Генерация готовых резюме по шаблонам.
-- Интеграция с AI для улучшения текста.
-
-### **3. API Gateway**
-- Центральная маршрутизация запросов.
-- Интеграция с Swagger через прокси.
-
-### **4. Common Module**
-- Общие модели, утилиты и зависимости.
-
-### **5. DeepSeek Integration Service**
-- Генерация AI-оценки резюме.
-
-## **Как запустить проект локально**
-
-### **Требования**
+### 🛠️ Требования:
 - Java 21
-- Gradle
-- Docker & Docker Compose
+- Docker / Docker Compose
 
-### **Подготовка Resume-analyzer-common**
+### 🔄 Клонирование и сборка:
 ```bash
-git clone https://gitpacket.kata.academy/scm/fit/resume-analyzer-common.git
-cd resume-analyzer-common
-./gradlew clean build publishToMavenLocal
-```
-
-### **Запуск проекта**
-```bash
-git clone https://github.com/your-repo/resume-analyzer-backend.git
+git clone https://github.com/your-org/resume-analyzer-backend.git
 cd resume-analyzer-backend
+./gradlew clean build -x test
 ```
 
-1. **Запуск зависимостей(требовательно по RAM):**
+### 🚧 Запуск инфраструктуры:
 ```bash
-docker-compose up -d
+docker compose -f docker-compose.yml up -d
 ```
 
-лайт версия
-```bash
-docker compose -f docker-compose-dev.yml up -d
-```
-
-2. **Сборка проекта:**
-```bash
-./gradlew clean build
-```
-
-3. **Запуск всех микросервисов параллельно:**
-```bash
-./gradlew runAll
-```
-
-4. **Swagger UI:**
+### 📚 Документация Swagger:
 - [http://localhost:8765/analyzer/swagger-ui/index.html](http://localhost:8765/analyzer/swagger-ui/index.html)
 
-5. **Проверка API через Postman:**
-- POST `http://localhost:8765/api/ai/analyze`
-- GET `http://localhost:8765/api/ai/status/{id}`
+### 🔧 Примеры запросов:
+```http
+POST /api/ai/analyze
+GET /api/ai/status/{id}
+```
 
-## **Структура проекта**
-```plaintext
+## 🗂️ Структура проекта
+```
 resume-analyzer-backend/
-├── resume-analyzer/       # Анализ резюме
-├── resume-generator/      # Генерация резюме
-├── api-gateway/           # Gateway + Swagger Proxy
-├── common/                # Общие модули
-├── docker-compose.yml     # Инфраструктура
-└── README.md
+├── api-gateway/         # API Gateway с прокси и фолбэком
+├── resume-analyzer/     # Анализ резюме (PostgreSQL)
+├── resume-generator/    # Генератор резюме (MongoDB)
+├── deepseek-service/    # Интеграция с AI (OpenRouter)
+├── lib/                 # Общие DTO, утилиты, исключения
+├── docker-compose.yml   # Полный стек инфраструктуры
+└── utils/               # Настройки Prometheus, Loki, Grafana
 ```
 
-## **Переменные окружения**
-Создайте файл `.env`:
-```env
-POSTGRES_DB=resume_db
-POSTGRES_USER=resume_user
-POSTGRES_PASSWORD=resume_password
-MONGO_URI=mongodb://localhost:27017/resume_db
-KAFKA_BROKER=localhost:9092
-```
+## 🛠️ Конфигурация Kafka и БД (Docker Compose)
+- PostgreSQL: `localhost:5434`
+- MongoDB: `localhost:27017`
+- Kafka: `localhost:9092` внешний порт '29092'
+- Redis: `localhost:6379`
+- DeepSeek: `localhost:9090`
+- Resume Analyzer: `localhost:8083`
+- Resume Generator: `localhost:8082`
+- API Gateway: `localhost:8765`
 
-## **Порты сервисов**
-- Kafka: `9092`
-- Zookeeper: `2181`
-- PostgreSQL: `5434`
-- API Gateway: `8765`
-- Grafana: `3000`
-- Prometheus: `9099`
-- Alertmanager: `9093`
+## 🔍 Мониторинг
 
-## **Мониторинг и Логирование**
+### Grafana
+- [http://localhost:3000](http://localhost:3000)
+- Логин: `admin`, Пароль: `admin`
 
-### **Grafana**
-- [http://localhost:3000/](http://localhost:3000/)
-- Login: `admin`, Password: `admin`
-- Вкладка **Logs** — логи микросервисов
-- Вкладка **Metrics** — `/actuator/prometheus`
+### Prometheus
+- [http://localhost:9099](http://localhost:9099)
 
-### **Prometheus**
-- [http://localhost:9099/](http://localhost:9099/)
-- Вкладка Alerts — настраиваются через `utils/alert.rules.yml`
-- Пример запроса: `rate(process_cpu_usage{job="resume-analyzer"}[1m])`
+### Alertmanager
+- [http://localhost:9093](http://localhost:9093)
 
-### **Alertmanager**
-- [http://localhost:9093/](http://localhost:9093/)
-- Конфигурация: `utils/alertmanager.yml`
-- Email-оповещения требуют SMTP сервер
-
-## **Тестирование**
+## ✅ Тестирование
 ```bash
 ./gradlew test
 ```
-- Результаты: `build/reports/tests`
+- Репорты: `build/reports/tests`
 
 ---
