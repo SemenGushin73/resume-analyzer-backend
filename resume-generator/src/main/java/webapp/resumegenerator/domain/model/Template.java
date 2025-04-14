@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ru.kata.project.model.Department;
@@ -27,12 +24,6 @@ import java.util.UUID;
 @Document(collection = "templates")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-//TODO проверить нужна ли @Builder и на что она влияет
-// в документации написано, что эта аннотация работает только если не создан не один конструктор
-// и не используются другие аннотации @XArgsConstructor
-@Builder
 public class Template {
     /**
      * Уникальный идентификатор, генерируется при создании нового шаблона.
@@ -82,6 +73,29 @@ public class Template {
     private Integer version;
 
     private Department department;
+
+    public Template() {}
+
+    /**
+     * Конструктор со всеми параметрами класса
+     *
+     * @param id Уникальный идентификатор, генерируется при создании нового шаблона.
+     * @param name Название шаблона. Не должно быть пустым.
+     * @param description Описание шаблона.
+     * @param content Контент шаблона.
+     * @param createdAt Дата и время создания шаблона.
+     * @param version Версия шаблона.
+     * @param department Департамент
+     */
+    public Template(UUID id, String name, String description, String content, LocalDateTime createdAt, Integer version, Department department) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.version = version;
+        this.department = department;
+    }
 
     /**
      * Конструктор с параметрами для создания шаблона.

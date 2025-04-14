@@ -177,23 +177,6 @@ public class TemplateController {
         return ResponseEntity.ok(listTemplate);
     }
 
-//    /**
-//     * Обрабатывает исключений валидации.
-//     *
-//     * @param ex Содержит ошибки валидации.
-//     * @return {@link ResponseEntity} с картой ошибок (поле - сообщение).
-//     */
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-//        Map<String, String> errors = new HashMap<>();
-//        ex.getBindingResult().getAllErrors().forEach(error -> {
-//            String fieldName = ((FieldError) error).getField();
-//            String errorMessage = error.getDefaultMessage();
-//            errors.put(fieldName, errorMessage);
-//        });
-//        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-//    }
-
     @Operation(summary = "Загрузить все шаблоны",
             description = "Возвращает список всех шаблонов или список всех шаблонов по принадлежности к отделу")
     @ApiResponse(responseCode = "200", description = "Успешное выполнение запроса",
