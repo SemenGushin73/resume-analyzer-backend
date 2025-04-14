@@ -39,9 +39,6 @@ dependencies {
     // Networking
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
-    // Internal Modules
-    implementation 'webapp.common:resume-analyzer-common:1.0.0'
-
     // Lombok
     implementation 'org.projectlombok:lombok:1.18.36'
     compileOnly 'org.projectlombok:lombok:1.18.36'

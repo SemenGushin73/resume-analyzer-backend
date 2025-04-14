@@ -26,7 +26,7 @@ public interface TemplateService {
      *
      * @param id Идентификатор шаблона.
      * @return Шаблон, соответствующий переданному id.
-     * @throws RuntimeException Исключение, возникающее при условии что шаблон не найден.
+     * @throws RuntimeException Исключение, возникающее при условии, что шаблон не найден.
      */
     Template getTemplateById(String id);
 
@@ -39,7 +39,7 @@ public interface TemplateService {
     Template createTemplate(Template template);
 
     /**
-     * Обновление сущетсвующего шаблона.
+     * Обновление существующего шаблона.
      *
      * @param id       Уникальный идентификатор шаблона, который требуется обновить.
      * @param template Новый шаблон с обновленными данными.
