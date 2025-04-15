@@ -57,3 +57,14 @@ spring:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: ru.kata.project.kafka
         spring.json.value.default.type: ru.kata.project.kafka.AnalysisResult
+
+logging:
+  level:
+    root: INFO
+    org:
+      springdoc: TRACE
+      springframework:
+        web: DEBUG
+        boot:
+          autoconfigure: DEBUG
+      hibernate: ERROR
