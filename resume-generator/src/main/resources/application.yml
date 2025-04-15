@@ -9,7 +9,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/ResumeGenerator
+      uri: mongodb://mongodb:27017/ResumeGenerator
 
   kafka:
     bootstrap-servers: kafka:9092
