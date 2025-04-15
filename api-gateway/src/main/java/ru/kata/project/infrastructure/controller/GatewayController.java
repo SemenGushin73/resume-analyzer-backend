@@ -42,7 +42,7 @@ public class GatewayController {
         this.apiGatewayService = apiGatewayService;
         this.kafkaProducerService = kafkaProducerService;
         this.kafkaConsumerService = kafkaConsumerService;
-        this.webClient = webClientBuilder.baseUrl("http://localhost:9090/").build();
+        this.webClient = webClientBuilder.baseUrl("http://deepseek-service:9090/").build();
     }
 
     /**
