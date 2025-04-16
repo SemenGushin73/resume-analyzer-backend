@@ -62,6 +62,29 @@ services:
     mem_limit: 1g
     cpus: 1.0
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.92.0
+    command: ["--config=/etc/otel-config.yaml"]
+    volumes:
+      - ./utils/otel-config.yml:/etc/otel-config.yaml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8888:8888"
+      - "8889:8889"
+      - "13133:13133"
+      - "55679:55679"
+    depends_on:
+      - jaeger
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    ports:
+      - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+      - "6831:6831/udp"
+
   resume-analyzer:
     image: resume-analyzer
     container_name: resume-analyzer
@@ -71,6 +94,7 @@ services:
     ports:
       - "8083:8083"
     depends_on:
+      - otel-collector
       - postgres
       - kafka
     environment:
@@ -85,6 +109,7 @@ services:
     ports:
       - "8082:8082"
     depends_on:
+      - otel-collector
       - mongodb
       - kafka
     environment:
@@ -99,6 +124,7 @@ services:
     ports:
       - "9090:9090"
     depends_on:
+      - otel-collector
       - kafka
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -112,6 +138,7 @@ services:
     ports:
       - "8765:8765"
     depends_on:
+      - otel-collector
       - resume-analyzer
       - resume-generator
       - deepseek-service
