@@ -1,9 +1,5 @@
 package webapp.deepseekservice;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import java.util.Collections;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +11,11 @@ import webapp.deepseek.domain.ChatMessage;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterRequest;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
+
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Тестовый класс для проверки работы api-key от модели deepseek.

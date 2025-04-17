@@ -58,8 +58,8 @@ dependencies {
     // Jackson
     implementation 'com.fasterxml.jackson.core:jackson-core:2.18.2'
 
-    // Internal/Common Modules
-    implementation project(":lib")
+    // Project Modules
+    implementation(project(":lib"))
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'

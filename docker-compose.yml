@@ -102,6 +102,7 @@ services:
       - kafka
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9092
 
   api-gateway:
     image: api-gateway

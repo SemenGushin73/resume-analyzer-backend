@@ -1,0 +1,16 @@
+<configuration>
+    <appender name="MEMORY" class="ch.qos.logback.core.read.ListAppender">
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="MEMORY" />
+    </root>
+
+    <logger name="deepseek-service/src/main/java/webapp/deepseek/application/service/KafkaConsumerService.java"
+            level="info" additivity="false">
+        <appender-ref ref="MEMORY" />
+    </logger>
+</configuration>

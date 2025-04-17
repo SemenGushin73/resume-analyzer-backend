@@ -17,6 +17,8 @@ public class KafkaTopics {
 
     public static final String AI_RESUME_SCORE_RESULTS = "ai-resume-score-results";
 
+    public static final String DEEPSEEK_RESUME_SCORE_REQUESTS = "deepseek-resume-score-requests";
+
     private KafkaTopics() {
     }
 }
