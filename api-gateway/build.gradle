@@ -55,8 +55,6 @@ dependencies {
     implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0'
     implementation 'io.opentelemetry.instrumentation:opentelemetry-kafka-clients-2.6'
 
-
-
     // Project Modules
     implementation(project(":lib"))
 
