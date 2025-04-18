@@ -63,4 +63,10 @@ dependencies {
 
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'ch.qos.logback:logback-classic'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }
