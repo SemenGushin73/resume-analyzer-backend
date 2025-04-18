@@ -94,6 +94,7 @@ services:
     ports:
       - "8083:8083"
     depends_on:
+      - config-server
       - otel-collector
       - postgres
       - kafka
@@ -115,7 +116,7 @@ services:
       OTEL_JAVAAGENT_DEBUG: "false"
       OTEL_LOG_LEVEL: "info"
       OTEL_METRIC_EXPORT_INTERVAL: 60000
-      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_BSP_SCHEDULE_DELAY: 5000
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
 
 
@@ -128,6 +129,7 @@ services:
     ports:
       - "8082:8082"
     depends_on:
+      - config-server
       - otel-collector
       - mongodb
       - kafka
@@ -148,7 +150,7 @@ services:
       OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
       OTEL_LOG_LEVEL: "info"
       OTEL_METRIC_EXPORT_INTERVAL: 60000
-      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_BSP_SCHEDULE_DELAY: 5000
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
 
 
@@ -161,6 +163,7 @@ services:
     ports:
       - "9090:9090"
     depends_on:
+      - config-server
       - otel-collector
       - kafka
     environment:
@@ -181,7 +184,7 @@ services:
       OTEL_JAVAAGENT_DEBUG: "false"
       OTEL_LOG_LEVEL: "info"
       OTEL_METRIC_EXPORT_INTERVAL: 60000
-      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_BSP_SCHEDULE_DELAY: 5000
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
 
       SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9092
@@ -195,6 +198,7 @@ services:
     ports:
       - "8765:8765"
     depends_on:
+      - config-server
       - otel-collector
       - resume-analyzer
       - resume-generator
@@ -217,5 +221,18 @@ services:
       OTEL_JAVAAGENT_DEBUG: "false"
       OTEL_LOG_LEVEL: "info"
       OTEL_METRIC_EXPORT_INTERVAL: 60000
-      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_BSP_SCHEDULE_DELAY: 5000
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
+
+  config-server:
+    image: config-server
+    container_name: config-server
+    build:
+      context: ./bitbucket-config-server
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=v.sadykov
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${GIT_PASS}
+
