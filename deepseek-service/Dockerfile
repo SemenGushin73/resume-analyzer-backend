@@ -11,6 +11,8 @@ COPY build.gradle settings.gradle ./
 COPY lib ./lib
 COPY deepseek-service ./deepseek-service
 
+RUN wget -O /tmp/opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
+
 RUN ./gradlew :lib:publishToMavenLocal --no-daemon
 
 RUN ./gradlew :deepseek-service:bootJar --no-daemon
@@ -20,6 +22,8 @@ WORKDIR /app
 
 COPY --from=build /app/deepseek-service/build/libs/deepseek-service-*.jar /app/deepseek.jar
 
-ENTRYPOINT ["java", "-jar", "/app/deepseek.jar"]
+COPY --from=build /tmp/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
+
+ENTRYPOINT [ "java", "-javaagent:/opentelemetry-javaagent.jar", "-jar", "/app/deepseek.jar" ]
 
 EXPOSE 9090
