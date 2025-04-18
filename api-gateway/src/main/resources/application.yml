@@ -57,36 +57,3 @@ spring:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: ru.kata.project.kafka
         spring.json.value.default.type: ru.kata.project.kafka.AnalysisResult
-
-
-otel:
-  service:
-    name: api-gateway
-  sdk:
-    disabled: false
-
-  instrumentation:
-    kafka:
-      enabled: true
-      propagation: true
-    spring-web:
-      enabled: true
-    logback:
-      enabled: true
-
-  exporter:
-    otlp:
-      endpoint: http://otel-collector:4317
-      protocol: grpc
-      timeout: 10s
-      retry:
-        enabled: true
-        max-attempts: 5
-        initial-backoff: 1s
-        max-backoff: 10s
-
-management:
-  metrics:
-    export:
-      otlp:
-        enabled: true

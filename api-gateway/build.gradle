@@ -43,18 +43,6 @@ dependencies {
     implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
     implementation 'com.github.loki4j:loki-logback-appender:1.6.0'
 
-    // OpenTelemetry
-    implementation platform('io.opentelemetry:opentelemetry-bom:1.32.0')
-    implementation platform('io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:1.32.0-alpha')
-
-    implementation 'io.opentelemetry:opentelemetry-api'
-    implementation 'io.opentelemetry:opentelemetry-sdk'
-    implementation 'io.opentelemetry:opentelemetry-sdk-metrics'
-    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
-    implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
-    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0'
-    implementation 'io.opentelemetry.instrumentation:opentelemetry-kafka-clients-2.6'
-
     // Project Modules
     implementation(project(":lib"))
 
