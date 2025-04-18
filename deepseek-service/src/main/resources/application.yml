@@ -10,6 +10,7 @@ spring:
     bootstrap-servers: kafka:9092
     consumer:
       group-id: deepseek-group
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:

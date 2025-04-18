@@ -1,12 +1,15 @@
 package webapp.resumegenerator.application.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import ru.kata.project.model.Department;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.repository.TemplateRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +22,7 @@ import webapp.resumegenerator.domain.service.TemplateService;
  * Сервис для работы с шаблонами резюме.
  * Данный класс представляет бизнес-логику для реализации CRUD- операций.
  */
+@Slf4j
 @Service
 public class TemplateServiceImpl implements TemplateService {
     private final TemplateRepository templateRepository;
@@ -185,5 +189,21 @@ public class TemplateServiceImpl implements TemplateService {
         }
 
         return templates;
+    }
+
+    /**
+     * Производит автоматическую очистку неиспользуемых шаблонов старше 30 дней.
+     */
+    @Scheduled(cron = "${cleanup.cron}")
+    public void cleanupOldTemplates() {
+        log.info("Запуск задачи очистки старых шаблонов...");
+        LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
+        List<Template> oldTemplates = templateRepository.findByCreatedAtBefore(thresholdDate);
+
+        log.info("Найдено {} старых шаблонов для удаления", oldTemplates.size());
+
+        templateRepository.deleteAll(oldTemplates);
+
+        log.info("Удалено {} старых шаблонов", oldTemplates.size());
     }
 }

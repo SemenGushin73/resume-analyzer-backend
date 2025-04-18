@@ -35,3 +35,19 @@ spring:
 
 server:
   port: 8082
+
+cleanup:
+  cron: "0 00 12 * * *"
+
+logging:
+  level:
+    root: INFO
+    org:
+      springdoc: TRACE
+      springframework:
+        web: DEBUG
+        boot:
+          autoconfigure: DEBUG
+      hibernate: ERROR
+
+

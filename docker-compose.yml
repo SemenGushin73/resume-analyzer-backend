@@ -184,6 +184,7 @@ services:
       OTEL_BSP_SCHEDULE_DELAY: 5000 
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
 
+      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9092
 
   api-gateway:
     image: api-gateway

@@ -41,7 +41,7 @@ public class KafkaConsumerService {
         }
     }
 
-    @KafkaListener(topics = KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, groupId = "deepseek-analysis-group")
+    @KafkaListener(topics = KafkaTopics.DEEPSEEK_RESUME_SCORE_REQUESTS, groupId = "deepseek-analysis-group")
     public void consume(ResumeScoreAnalysisRequest request) {
         try {
             String analysis = deepSeekService.analyzeResumeScore(request.getResume().toString());

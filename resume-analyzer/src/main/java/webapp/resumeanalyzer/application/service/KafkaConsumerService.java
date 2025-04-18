@@ -72,12 +72,12 @@ public class KafkaConsumerService {
     public void consume(ResumeScoreRequest request) {
         try {
             Resume resume = resumeService.getResumeById(request.getResumeId());
-            ResumeScoreAnalysisRequest analysisScoreRequest = new ResumeScoreAnalysisRequest(
+            ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
                     resume.getId().toString(),
                     resumeMapper.toDto(resume)
             );
 
-            kafkaScoreTemplate.send(KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, analysisScoreRequest);
+            kafkaScoreTemplate.send(KafkaTopics.DEEPSEEK_RESUME_SCORE_REQUESTS, resumeScoreAnalysisRequest);
             log.info("Отправлен запрос на анализ резюме {} в DeepSeek-service", request.getResumeId());
         } catch (Exception e) {
             log.error("Ошибка обработки запроса: ", e);
