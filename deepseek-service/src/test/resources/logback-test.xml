@@ -1,8 +1,5 @@
 <configuration>
     <appender name="MEMORY" class="ch.qos.logback.core.read.ListAppender">
-        <encoder>
-            <pattern>%msg%n</pattern>
-        </encoder>
     </appender>
 
     <root level="info">

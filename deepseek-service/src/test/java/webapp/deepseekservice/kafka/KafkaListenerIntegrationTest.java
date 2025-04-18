@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.listener.MessageListenerContainer;
@@ -44,7 +43,6 @@ public class KafkaListenerIntegrationTest {
             org.slf4j.LoggerFactory.getLogger(KafkaListenerIntegrationTest.class);
 
     @Autowired
-    @Qualifier("embeddedKafka")
     private EmbeddedKafkaBroker embeddedKafkaBroker;
 
     @Autowired
