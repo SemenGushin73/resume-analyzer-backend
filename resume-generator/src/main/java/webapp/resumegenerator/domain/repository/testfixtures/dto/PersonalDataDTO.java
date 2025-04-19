@@ -19,49 +19,21 @@ import java.util.UUID;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PersonalDataDTO { @Id
-@Column(unique = true)
-private UUID id = UUID.randomUUID();
-
-    @NotBlank
+public class PersonalDataDTO {
+    @Id
+    @Column(unique = true)
+    private UUID id = UUID.randomUUID();
+    @NotBlank(message = "Full name is required")
     @NotNull
     @Size(min = 3)
     @JsonProperty("fullName")
     private String fullName;
-
-    @JsonProperty("adress")
+    @JsonProperty("address")
     private String address;
-
-    private String bio;
-
-    private String position;
-
-    private Long phone;
-
-    private String website;
-
     @Email
     @JsonProperty("mail")
     @Schema(type = "string", example = "string@mail.com")
     private String email;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        PersonalDataDTO that = (PersonalDataDTO) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
 }
 
 

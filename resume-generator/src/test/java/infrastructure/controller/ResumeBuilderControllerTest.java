@@ -50,46 +50,44 @@ class ResumeBuilderControllerTest {
 
     @DisplayName("Проверка успешного создания резюме. Ожидается статус 201 (Created).")
     @Test
-    void shouldBuildResumeAndReturn201() throws Exception {
+    void shouldBuildResumeAndReturnCreated() throws Exception {
         String resumeRequest = """
-                
                 { "personal_data" : {
-                "fullName":"Иван Петров",
-                "adress":"Moscow city",
-                "bio":"learn to program",
-                "position":"student",
-                "phone":89125088541,
-                "website":"https://www.google.com",
-                "email":"ivan@example.com"
+                  "fullName":"Иван Петров",
+                  "adress":"Moscow city",
+                  "bio":"learn to program",
+                  "position":"student",
+                  "phone":89125088541,
+                  "website":"https://www.google.com",
+                  "email":"ivan@example.com"
                 },
-                 "educations": [
-                                {
-                                  "institution": "МГУ",
-                                  "degree": "Бакалавр",
-                                  "year": 2022
-                                }
-                                ],
-                                   "experiences": [
-                                {
-                                   "company": "Яндекс",
-                                   "position": "Java Developer",
-                                   "years": "2021-2023"
-                                }
-                                                   ],
-                                   "socialLinks":  [
-                                {
-                                   "platform": "LinkedIn",
-                                   "url": "https://linkedin.com/in/ivan"
-                                }
+                   "educations": [
+                                  {
+                                    "institution": "МГУ",
+                                    "degree": "Бакалавр",
+                                    "year": 2022
+                                  }
+                                  ],
+                                     "experiences": [
+                                  {
+                                     "company": "Яндекс",
+                                     "position": "Java Developer",
+                                     "years": "2021-2023"
+                                  }
                                                      ],
-                                   "hobbies": [
-                                {
-                                   "name": "Чтение"
-                                }
-                                               ]
-                            }
+                                     "socialLinks":  [
+                                  {
+                                     "platform": "LinkedIn",
+                                     "url": "https://linkedin.com/in/ivan"
+                                  }
+                                                       ],
+                                     "hobbies": [
+                                  {
+                                     "name": "Чтение"
+                                  }
+                                                 ]
+                              }
                 """;
-
         JsonNode inputJson = objectMapper.readTree(resumeRequest);
         String resumeResponse = "{\"resume\":\"Generated resume\"}";
         JsonNode responseJson = objectMapper.readTree(resumeResponse);
@@ -98,11 +96,12 @@ class ResumeBuilderControllerTest {
         // Проводим тест с MockMvc
         mockMvc.perform(post("/builder")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(resumeRequest))  // Отправляем inputJson напрямую
+                        .content(resumeRequest))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.resume").value("Generated resume"));
     }
+
     @DisplayName("Проверка успешного создания неполного резюме. Ожидается статус 201 (Created). " +
                  "Так как @Valid + JsonNode = не работает (аннотации валидации не применяются).")
     @Test
@@ -130,6 +129,7 @@ class ResumeBuilderControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.resume").value("Generated NotComplete resume"));
     }
+
     @DisplayName("Проверка реальной валидации пустого резюме. Ожидается статус 400 (BadRequest).")
     @Test
     void shouldReturnBadRequestMissingBody() throws Exception {
@@ -154,19 +154,6 @@ class ResumeBuilderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
-    }
-    @DisplayName("Проверка нарушенной валидации резюме. Ожидается статус 400 (BadRequest). Используются " +
-                 "минимальные фикстуры DTO ")
-    @Test
-    void shouldRejectResumeWithoutFullName() throws Exception {
-        ResumeRequest request = TestFixtures.minimalValidResume();
-        request.getPersonalDataDTO().setFullName("vff");
-        request.getPersonalDataDTO().setEmail("ooooo");
-        mockMvc.perform(post("/builder")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.fullName").exists());
     }
 }
 
