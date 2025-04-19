@@ -1,4 +1,4 @@
-resume-generator/.env
+HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -36,3 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 /data/
+
+### Environment ###
+**/.env
+**/.env*
+!.env.example
