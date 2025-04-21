@@ -1,0 +1,18 @@
+services:
+  resume-analyzer:
+    build:
+      dockerfile: resume-analyzer/Dockerfile.dev
+
+
+  resume-generator:
+    build:
+      dockerfile: resume-generator/Dockerfile.dev
+
+
+  deepseek-service:
+    build:
+      dockerfile: deepseek-service/Dockerfile.dev
+
+  api-gateway:
+    build:
+      dockerfile: api-gateway/Dockerfile.dev
