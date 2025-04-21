@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+
 import webapp.deepseek.DeepseekServiceApplication;
 import webapp.deepseek.domain.ChatMessage;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Тестовый класс для проверки работы api-key от модели deepseek.
  */
 @SpringBootTest(classes = DeepseekServiceApplication.class)
+@EmbeddedKafka
 public class DeepseekAPIKeyTest {
 
     @Autowired
