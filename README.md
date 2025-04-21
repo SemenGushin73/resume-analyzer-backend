@@ -9,8 +9,9 @@ Resume Analyzer Backend — это микросервисное backend-прил
 - **Spring Cloud Gateway** (WebFlux, CircuitBreaker, LoadBalancer)
 - **PostgreSQL** для анализа резюме
 - **MongoDB** для шаблонов
-- **Apache Kafka** + Zookeeper
+- **Apache Kafka + Zookeeper**
 - **Prometheus + Grafana + Loki + Alertmanager** для мониторинга
+- **OpenTelemetry-Collector + Jaeger** для трейсов 
 - **Docker + Docker Compose**
 - **JUnit5 / Mockito / Testcontainers**
 
@@ -57,7 +58,7 @@ resume-analyzer-backend/
 ├── deepseek-service/    # Интеграция с AI (OpenRouter)
 ├── lib/                 # Общие DTO, утилиты, исключения
 ├── docker-compose.yml   # Полный стек инфраструктуры
-└── utils/               # Настройки Prometheus, Loki, Grafana
+└── utils/               # Настройки Prometheus, Loki, Grafana, otel-Collector
 ```
 
 ## 🛠️ Конфигурация Kafka и БД (Docker Compose)
@@ -81,6 +82,9 @@ resume-analyzer-backend/
 
 ### Alertmanager
 - [http://localhost:9093](http://localhost:9093)
+
+### Jaeger
+- [http://localhost:16686](http://localhost:16686)
 
 ## ✅ Тестирование
 ```bash
