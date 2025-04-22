@@ -27,11 +27,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ResumeBuilderController.class)
 @ContextConfiguration(classes = {ResumeBuilderController.class})
 class ResumeBuilderControllerTest {
+
     private static final Logger log = LoggerFactory.getLogger(ResumeBuilderController.class);
+
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
+
     @MockitoBean
     private ResumeBuilder resumeBuilder;
 
@@ -49,48 +53,47 @@ class ResumeBuilderControllerTest {
     @DisplayName("Проверка успешного создания резюме. Ожидается статус 201 (Created).")
     @Test
     void shouldBuildResumeAndReturnCreated() throws Exception {
+
         String resumeRequest = """
                 { "personal_data" : {
-                  "fullName":"Иван Петров",
-                  "adress":"Moscow city",
-                  "bio":"learn to program",
-                  "position":"student",
-                  "phone":89125088541,
-                  "website":"https://www.google.com",
-                  "email":"ivan@example.com"
-                },
-                   "educations": [
-                                  {
-                                    "institution": "МГУ",
-                                    "degree": "Бакалавр",
-                                    "year": 2022
-                                  }
-                                  ],
-                                     "experiences": [
-                                  {
-                                     "company": "Яндекс",
-                                     "position": "Java Developer",
-                                     "years": "2021-2023"
-                                  }
-                                                     ],
-                                     "socialLinks":  [
-                                  {
-                                     "platform": "LinkedIn",
-                                     "url": "https://linkedin.com/in/ivan"
-                                  }
-                                                       ],
-                                     "hobbies": [
-                                  {
-                                     "name": "Чтение"
-                                  }
-                                                 ]
-                              }
+                    "fullName":"Иван Петров",
+                    "adress":"Moscow city",
+                    "bio":"learn to program",
+                    "position":"student",
+                    "phone":89125088541,
+                    "website":"https://www.google.com",
+                    "email":"ivan@example.com"
+                    },
+                    "educations": [
+                        { "institution": "МГУ",
+                        "degree": "Бакалавр",
+                        "year": 2022
+                        }
+                    ],
+                    "experiences": [
+                        { "company": "Яндекс",
+                        "position": "Java Developer",
+                        "years": "2021-2023"
+                        }
+                    ],
+                    "socialLinks":  [
+                        { "platform": "LinkedIn",
+                        "url": "https://linkedin.com/in/ivan"
+                        }
+                    ],
+                    "hobbies": [
+                    { "name": "Чтение"
+                    }
+                    ]
+                }
                 """;
         JsonNode inputJson = objectMapper.readTree(resumeRequest);
         String resumeResponse = "{\"resume\":\"Generated resume\"}";
         JsonNode responseJson = objectMapper.readTree(resumeResponse);
+
         // Мокаем метод сервиса
         Mockito.when(resumeBuilder.processResume(Mockito.any(JsonNode.class))).thenReturn(responseJson);
+
         // Проводим тест с MockMvc
         mockMvc.perform(post("/builder")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,15 +108,15 @@ class ResumeBuilderControllerTest {
     @Test
     void shouldReturnBadRequestForNotCompleteEmptyResume() throws Exception {
         String invalidRequest = """
-                { "personal_data" : {
-                "fullName":" ",
-                "address":"Ivanov city",
-                "bio":"learn to program",
-                "position":"student",
-                "phone":89125088541,
-                "website":"https://www.google.com",
-                "email":"invalid"
-                }
+                { "personal_data" :
+                    { "fullName":"Maxim",
+                    "address":"Ivanov city",
+                    "bio":"learn to program",
+                    "position":"student",
+                    "phone":89125088541,
+                    "website":"https://www.google.com",
+                    "email":"invalid"
+                    }
                 }
                 """;
         JsonNode inputJson = objectMapper.readTree(invalidRequest);
@@ -142,53 +145,30 @@ class ResumeBuilderControllerTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
-    @DisplayName("Проверка минимальной валидации резюме. Ожидается статус 200 (Created). Используются " +
-                 "минимальные фикстуры DTO ")
+    @DisplayName("Проверка минимальной валидации резюме. Только имя ожидается статус 200 (Created). Используются " +
+                 "минимальная фикстура DTO ")
     @Test
     void shouldBuildNotCompleteResumeAndReturnCreated() throws Exception {
         String resumeRequest = """
-                { "personal_data" : {
-                  "fullName":"Иван Петров",
-                  "adress":"Moscow city",
-                  "bio":"learn to program",
-                  "position":"student",
-                  "phone":89125088541,
-                  "website":"https://www.google.com",
-                  "email":"ivan@example.com"
-                },
-                  "experiences": [
-                                  {
-                                     "company": "Яндекс",
-                                     "position": "Java Developer",
-                                     "years": "2021-2023"
-                                  }
-                                                     ],
-                                     "socialLinks":  [
-                                  {
-                                     "platform": "LinkedIn",
-                                     "url": "https://linkedin.com/in/ivan"
-                                  }
-                                                       ],
-                                     "hobbies": [
-                                  {
-                                     "name": "Чтение"
-                                  }
-                                                 ]
+                { "personal_data" :
+                    { "fullName":"Иван Петров"
+                    }
                 }
                 """;
         JsonNode inputJson = objectMapper.readTree(resumeRequest);
-        String resumeResponse = "{\"resume\":\"Generated resume\"}";
+        String resumeResponse = "{\"resume\":\"Generated minFixDto resume\"}";
         JsonNode responseJson = objectMapper.readTree(resumeResponse);
+
         // Мокаем метод сервиса
         Mockito.when(resumeBuilder.processResume(Mockito.any(JsonNode.class))).thenReturn(responseJson);
+
         // Проводим тест с MockMvc
         mockMvc.perform(post("/builder")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(resumeRequest))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.resume").value("Generated resume"));
+                .andExpect(jsonPath("$.resume").value("Generated minFixDto resume"));
     }
-
 }
 
