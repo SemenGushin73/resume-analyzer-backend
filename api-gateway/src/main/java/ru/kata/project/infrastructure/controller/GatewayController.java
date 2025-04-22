@@ -125,7 +125,7 @@ public class GatewayController {
      * @param resumeJson Данные для создания резюме, включая личные данные кандидата, образование и опыт.
      * @return ResponseEntity с результатом обработки запроса.
      */
-    @PostMapping("/api/resume/create")
+    @PostMapping("/resume/create")
     public ResponseEntity<JsonNode> createResume(@RequestBody JsonNode resumeJson) {
         return apiGatewayService.createResume(resumeJson);
     }
