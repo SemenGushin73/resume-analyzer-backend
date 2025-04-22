@@ -13,7 +13,7 @@ java {
     }
 }
 
-//sourceCompatibility = '21'
+sourceCompatibility = '21'
 
 repositories {
     mavenCentral()
