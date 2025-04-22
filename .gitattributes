@@ -1,7 +1,4 @@
 /gradlew text eol=lf
 *.bat text eol=crlf
 *.jar binary
-<<<<<<< HEAD
 * text=auto
-=======
->>>>>>> master

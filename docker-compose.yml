@@ -62,6 +62,29 @@ services:
     mem_limit: 1g
     cpus: 1.0
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.92.0
+    command: ["--config=/etc/otel-config.yaml"]
+    volumes:
+      - ./utils/otel-config.yml:/etc/otel-config.yaml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8888:8888"
+      - "8889:8889"
+      - "13133:13133"
+      - "55679:55679"
+    depends_on:
+      - jaeger
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    ports:
+      - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+      - "6831:6831/udp"
+
   resume-analyzer:
     image: resume-analyzer
     container_name: resume-analyzer
@@ -71,10 +94,30 @@ services:
     ports:
       - "8083:8083"
     depends_on:
+      - otel-collector
       - postgres
       - kafka
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      OTEL_SERVICE_NAME: "resume-analyzer"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_METRICS_EXPORTER: "otlp"
+      OTEL_LOGS_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_PROPAGATORS: "tracecontext,baggage,b3"
+      OTEL_RESOURCE_ATTRIBUTES: "service.version=1.0,deployment.environment=production"
+      OTEL_INSTRUMENTATION_KAFKA_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED: "true"
+      OTEL_INSTRUMENTATION_LOGBACK_ENABLED: "true"
+      OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
+      OTEL_JAVAAGENT_DEBUG: "false"
+      OTEL_LOG_LEVEL: "info"
+      OTEL_METRIC_EXPORT_INTERVAL: 60000
+      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
+
 
   resume-generator:
     image: resume-generator
@@ -85,10 +128,29 @@ services:
     ports:
       - "8082:8082"
     depends_on:
+      - otel-collector
       - mongodb
       - kafka
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      OTEL_SERVICE_NAME: "resume-generator"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_METRICS_EXPORTER: "otlp"
+      OTEL_LOGS_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_PROPAGATORS: "tracecontext,baggage,b3"
+      OTEL_RESOURCE_ATTRIBUTES: "service.version=1.0,deployment.environment=production"
+      OTEL_INSTRUMENTATION_KAFKA_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED: "true"
+      OTEL_INSTRUMENTATION_LOGBACK_ENABLED: "true"
+      OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
+      OTEL_LOG_LEVEL: "info"
+      OTEL_METRIC_EXPORT_INTERVAL: 60000
+      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
+
 
   deepseek-service:
     image: deepseek-service
@@ -99,9 +161,29 @@ services:
     ports:
       - "9090:9090"
     depends_on:
+      - otel-collector
       - kafka
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      OTEL_SERVICE_NAME: "deepseek-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_METRICS_EXPORTER: "otlp"
+      OTEL_LOGS_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_PROPAGATORS: "tracecontext,baggage,b3"
+      OTEL_RESOURCE_ATTRIBUTES: "service.version=1.0,deployment.environment=production"
+      OTEL_INSTRUMENTATION_KAFKA_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED: "true"
+      OTEL_INSTRUMENTATION_LOGBACK_ENABLED: "true"
+      OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
+      OTEL_JAVAAGENT_DEBUG: "false"
+      OTEL_LOG_LEVEL: "info"
+      OTEL_METRIC_EXPORT_INTERVAL: 60000
+      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
+
       SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9092
 
   api-gateway:
@@ -113,8 +195,27 @@ services:
     ports:
       - "8765:8765"
     depends_on:
+      - otel-collector
       - resume-analyzer
       - resume-generator
       - deepseek-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      OTEL_SERVICE_NAME: "api-gateway"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_METRICS_EXPORTER: "otlp"
+      OTEL_LOGS_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_PROPAGATORS: "tracecontext,baggage,b3"
+      OTEL_RESOURCE_ATTRIBUTES: "service.version=1.0,deployment.environment=production"
+      OTEL_INSTRUMENTATION_KAFKA_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED: "true"
+      OTEL_INSTRUMENTATION_LOGBACK_ENABLED: "true"
+      OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
+      OTEL_JAVAAGENT_DEBUG: "false"
+      OTEL_LOG_LEVEL: "info"
+      OTEL_METRIC_EXPORT_INTERVAL: 60000
+      OTEL_BSP_SCHEDULE_DELAY: 5000 
+      OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
