@@ -1,74 +1,15 @@
-server:
-  port: 8083
-
 spring:
-  config:
-    import:
-      - optional:classpath:common-actuator.yml
-      - optional:classpath:common-kafka.yml
-
   application:
     name: resume-analyzer
+  config:
+    import: "configserver:http://config-server:8888"
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-interval: 2000
+        max-attempts: 10
 
-  datasource:
-    url: jdbc:postgresql://postgres:5432/test_db?autoReconnect=true
-    username: root
-    password: root
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      connection-timeout: 2000
-      maximum-pool-size: 90
-      data-source-properties:
-        cachePrepStmts: true
-        prepStmtCacheSize: 250
-        prepStmtCacheSqlLimit: 2048
-        useServerPrepStmts: true
-        useLocalSessionState: true
-        rewriteBatchedStatements: true
-        cacheResultSetMetadata: true
-        cacheServerConfiguration: true
-        elideSetAutoCommits: true
-        maintainTimeStats: false
-
-  jpa:
-    properties:
-      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    generate-ddl: true
-
-  servlet:
-    multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
-
-  kafka:
-    bootstrap-servers: kafka:9092
-    consumer:
-      group-id: resume-analyzer-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.value.default.type: ru.kata.project.kafka.AnalysisRequest
-        spring.json.trusted.packages: ru.kata.project.kafka
-
-springdoc:
-    api-docs:
-      enabled: true
-      path: /v3/api-docs
-    swagger-ui:
-      enabled: true
-      url: /analyzer/v3/api-docs
-      config-url: /analyzer/v3/api-docs/swagger-config
-
-logging:
-    level:
-      root: INFO
-      org:
-        springdoc: TRACE
-        springframework:
-          web: DEBUG
-          boot:
-            autoconfigure: DEBUG
-        hibernate: ERROR
+server:
+  port: 8083
