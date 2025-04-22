@@ -3,7 +3,6 @@ package infrastructure.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import infrastructure.util.fixtures.TestFixtures;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import webapp.resumegenerator.domain.repository.testfixtures.dto.ResumeRequest;
 import webapp.resumegenerator.domain.service.ResumeBuilder;
 import webapp.resumegenerator.infrastructure.controller.ResumeBuilderController;
 import org.slf4j.Logger;
@@ -147,13 +145,50 @@ class ResumeBuilderControllerTest {
     @DisplayName("Проверка минимальной валидации резюме. Ожидается статус 200 (Created). Используются " +
                  "минимальные фикстуры DTO ")
     @Test
-    void shouldAcceptMinimalValidResume() throws Exception {
-        ResumeRequest request = TestFixtures.minimalValidResume();
-
+    void shouldBuildNotCompleteResumeAndReturnCreated() throws Exception {
+        String resumeRequest = """
+                { "personal_data" : {
+                  "fullName":"Иван Петров",
+                  "adress":"Moscow city",
+                  "bio":"learn to program",
+                  "position":"student",
+                  "phone":89125088541,
+                  "website":"https://www.google.com",
+                  "email":"ivan@example.com"
+                },
+                  "experiences": [
+                                  {
+                                     "company": "Яндекс",
+                                     "position": "Java Developer",
+                                     "years": "2021-2023"
+                                  }
+                                                     ],
+                                     "socialLinks":  [
+                                  {
+                                     "platform": "LinkedIn",
+                                     "url": "https://linkedin.com/in/ivan"
+                                  }
+                                                       ],
+                                     "hobbies": [
+                                  {
+                                     "name": "Чтение"
+                                  }
+                                                 ]
+                }
+                """;
+        JsonNode inputJson = objectMapper.readTree(resumeRequest);
+        String resumeResponse = "{\"resume\":\"Generated resume\"}";
+        JsonNode responseJson = objectMapper.readTree(resumeResponse);
+        // Мокаем метод сервиса
+        Mockito.when(resumeBuilder.processResume(Mockito.any(JsonNode.class))).thenReturn(responseJson);
+        // Проводим тест с MockMvc
         mockMvc.perform(post("/builder")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+                        .content(resumeRequest))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.resume").value("Generated resume"));
     }
+
 }
 
