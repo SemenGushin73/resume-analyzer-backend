@@ -19,6 +19,7 @@ import webapp.resumegenerator.domain.service.ResumeBuilder;
 @RestController
 @RequestMapping("/builder")
 public class ResumeBuilderController {
+
     private final ResumeBuilder resumeBuilder;
 
     @Autowired
