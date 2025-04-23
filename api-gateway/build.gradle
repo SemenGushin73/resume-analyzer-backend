@@ -13,8 +13,6 @@ java {
     }
 }
 
-sourceCompatibility = '21'
-
 repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/milestone" }
@@ -33,6 +31,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     // Kafka
     implementation 'org.apache.kafka:kafka-clients'

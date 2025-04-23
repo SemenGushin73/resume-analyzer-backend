@@ -5,39 +5,7 @@
         </encoder>
     </appender>
 
-    <!-- Loki-аппендор -->
-    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-        <http>
-            <url>http://localhost:3100/loki/api/v1/push</url>
-        </http>
-        <format>
-            <label>
-                <pattern>app=deepseek-service,host=${HOSTNAME}</pattern>
-            </label>
-            <message>
-                <pattern>%-5level [%thread] %logger{36} - %msg%n</pattern>
-            </message>
-        </format>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <pattern>
-                {
-                "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
-                "level": "%level",
-                "thread": "%thread",
-                "logger": "%logger{36}",
-                "message": "%msg"
-                }
-            </pattern>
-        </encoder>
-        <batch>
-            <size>1024</size>
-            <timeout>1s</timeout>
-        </batch>
-    </appender>
-
-    <!-- Настройка корневого логгера -->
     <root level="info">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="LOKI"/>
     </root>
 </configuration>

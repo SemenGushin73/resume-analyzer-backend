@@ -1,25 +1,18 @@
 spring:
-  config:
-    import:
-      - optional:classpath:common-actuator.yml
-      - optional:classpath:common-kafka.yml
   application:
     name: deepseek-service
-
-  kafka:
-    bootstrap-servers: kafka:9092
-    consumer:
-      group-id: deepseek-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        fetch.max.bytes: 52428800
-        spring.json.value.default.type: ru.kata.project.kafka.AnalysisRequest
-        spring.json.trusted.packages: ru.kata.project.kafka
-
-openrouter:
-  api-key: ${OPENROUTER_API_KEY}
-  model-name: deepseek/deepseek-r1-distill-llama-70b:free
+  config:
+    import: "configserver:http://config-server:8888"
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-interval: 2000
+        max-attempts: 10
 
 server:
   port: 9090
+
+
+

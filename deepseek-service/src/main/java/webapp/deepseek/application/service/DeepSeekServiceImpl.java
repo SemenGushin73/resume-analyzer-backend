@@ -124,9 +124,9 @@ public class DeepSeekServiceImpl implements DeepSeekService {
     }
 
     private String createPromptForGeneration(String template, String departmentDescription) {
-        return "Напиши профессиональное и привлекательно резюме на основе полученной от пользователя информации:" +
-                template + "и описания отдела на место в котором претендует соискатель" + departmentDescription +
-                "результат представь на русском языке в виде готового резюме без своих рассуждений";
+        return "Напиши профессиональное и привлекательное резюме на основе полученной от пользователя информации:" +
+                template + " и описания отдела на место в котором претендует соискатель " + departmentDescription +
+                " результат представь на русском языке в виде готового резюме без своих рассуждений";
     }
 
     /**
