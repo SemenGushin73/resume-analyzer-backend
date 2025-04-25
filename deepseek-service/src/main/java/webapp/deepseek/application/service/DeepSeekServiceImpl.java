@@ -44,7 +44,7 @@ public class DeepSeekServiceImpl implements DeepSeekService {
                     aiModel,
                     request
             );
-            if (response != null && !response.getChoices().isEmpty()) {
+            if (response != null && response.getChoices() != null && !response.getChoices().isEmpty()) {
                 return response.getChoices().getFirst().getMessage().getContent();
             }
             return "Не удалось проанализировать резюме.";
@@ -66,10 +66,10 @@ public class DeepSeekServiceImpl implements DeepSeekService {
                     aiModel,
                     request
             );
-            if (response != null && !response.getChoices().isEmpty()) {
+            if (response != null && response.getChoices() != null && !response.getChoices().isEmpty()) {
                 return response.getChoices().getFirst().getMessage().getContent();
             }
-            return "Не удалось проанализировать резюме.";
+            return "Не удалось сгенерировать резюме.";
         } catch (Exception e) {
             log.error("API error: ", e);
             return "Ошибка генерации: " + e.getMessage();
@@ -87,7 +87,7 @@ public class DeepSeekServiceImpl implements DeepSeekService {
                 aiModel,
                 request
         );
-        if (response != null && !response.getChoices().isEmpty()) {
+        if (response != null && response.getChoices() != null && !response.getChoices().isEmpty()) {
             return response.getChoices().getFirst().getMessage().getContent();
         }
         throw new RuntimeException("Ошибка: AI не смог обработать запрос.");
