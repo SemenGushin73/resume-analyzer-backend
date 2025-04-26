@@ -1,4 +1,4 @@
-package webapp.resumegenerator.PDFstuff;
+package webapp.resumegenerator.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

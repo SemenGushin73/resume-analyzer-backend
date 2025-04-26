@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.kata.project.resumeDto.ResumeDto;
 import ru.kata.project.resumeDto.TemplateDTO;
-import webapp.resumegenerator.PDFstuff.PdfGenerationService;
+import webapp.resumegenerator.domain.service.PdfGenerationService;
 
 @RestController
 @RequestMapping("/resumes")
