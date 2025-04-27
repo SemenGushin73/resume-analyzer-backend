@@ -56,7 +56,7 @@ public class TemplateControllerValidationTest {
     @Test
     @DisplayName("Проверка успешной валидации корректного шаблона. Ожидается статус 201 (Created).")
     public void testValidTemplate() throws Exception {
-        Template validTemplate = new Template("Valid Template", "Description",
+        final Template validTemplate = new Template("Valid Template", "Description",
                 "{\"blocks\": [{\"name\": \"block1\", \"layout\": \"layout1\", \"props\": {}}]}");
 
         Mockito.when(templateService.createTemplate(ArgumentMatchers.any(Template.class))).thenReturn(validTemplate);
@@ -71,7 +71,7 @@ public class TemplateControllerValidationTest {
     @Test
     @DisplayName("Проверка шаблона с контентом, превышающим максимальный размер. Ожидает статус 400 (Bad Request).")
     public void testTemplateExeedsSize() throws Exception {
-        String oversizedContent = new String(new char[100001]).replace("\0", "a");
+        final String oversizedContent = new String(new char[100001]).replace("\0", "a");
         Template invalidTemplate = new Template("Oversized Template", "Description", oversizedContent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
@@ -84,7 +84,7 @@ public class TemplateControllerValidationTest {
     @Test
     @DisplayName("Проверка шаблона, у которого отсутствует обязательное поле name. Ожидает статус 400 (Bad Request)")
     public void testTemplateMissingRequiredFieldName() throws Exception {
-        Template invalidTemplate = new Template(null, "Description",
+        final Template invalidTemplate = new Template(null, "Description",
                 "{\"blocks\": [{\"layout\": \"layout1\", \"props\": {}}]}");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
@@ -97,7 +97,7 @@ public class TemplateControllerValidationTest {
     @Test
     @DisplayName("Проверка шаблона, у которого отсутствует обязательное поле content. Ожидает статус 400 (Bad Request)")
     public void testTemplateMissingRequiredFieldContent() throws Exception {
-        Template invalidTemplate = new Template("Invalid Template", "Description",
+        final Template invalidTemplate = new Template("Invalid Template", "Description",
                 null);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
@@ -110,7 +110,7 @@ public class TemplateControllerValidationTest {
     @Test
     @DisplayName("Проверка шаблона с некорректной структурой JSON. Ожидает статус 400 (Bad Request)")
     public void testTemplateInvalidStructure() throws Exception {
-        Template invalidTemplate = new Template("Invalid Template", "Description",
+        final Template invalidTemplate = new Template("Invalid Template", "Description",
                 "{\"invalidField\": []}");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")

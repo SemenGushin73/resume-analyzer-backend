@@ -57,7 +57,7 @@ public class DeepseekAPIKeyTest {
     public void testPerformanceApiKey() throws Exception {
 
         //при неверном API ключе здесь выйдет исключение
-        OpenRouterResponse response = openRouterApiClient.generateCompletion(
+        final OpenRouterResponse response = openRouterApiClient.generateCompletion(
             "Bearer " + API_KEY,
             MODEL_NAME,
             testRequest

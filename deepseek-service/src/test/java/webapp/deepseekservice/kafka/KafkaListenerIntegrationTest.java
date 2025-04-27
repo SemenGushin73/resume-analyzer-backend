@@ -55,7 +55,7 @@ public class KafkaListenerIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        Logger logger = (Logger) LoggerFactory
+        final Logger logger = (Logger) LoggerFactory
                 .getLogger("deepseek-service/src/main/java/webapp/deepseek/" +
                         "application/service/KafkaConsumerService.java");
         memoryAppender = (ListAppender<ILoggingEvent>) logger.getAppender("MEMORY");
@@ -69,19 +69,19 @@ public class KafkaListenerIntegrationTest {
 
     @Test
     void shouldProcessAnalysisRequestAndLogCorrectly() throws Exception {
-        String requestId = UUID.randomUUID().toString();
-        String resumeText = "Java developer with Spring experience.";
-        String jobDescription = "Looking for a backend developer with Java 21, Kafka and PostgreSQL knowledge.";
-        AnalysisRequest analysisRequest = new AnalysisRequest(resumeText, jobDescription);
-        String messagePayload = objectMapper.writeValueAsString(analysisRequest);
+        final String requestId = UUID.randomUUID().toString();
+        final String resumeText = "Java developer with Spring experience.";
+        final String jobDescription = "Looking for a backend developer with Java 21, Kafka and PostgreSQL knowledge.";
+        final AnalysisRequest analysisRequest = new AnalysisRequest(resumeText, jobDescription);
+        final String messagePayload = objectMapper.writeValueAsString(analysisRequest);
 
-        Properties producerProps = new Properties();
+        final Properties producerProps = new Properties();
         producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, embeddedKafkaBroker.getBrokersAsString());
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        KafkaProducer<String, String> producer = new KafkaProducer<>(producerProps);
+        final KafkaProducer<String, String> producer = new KafkaProducer<>(producerProps);
 
-        ProducerRecord<String, String> record =
+        final ProducerRecord<String, String> record =
                 new ProducerRecord<>(KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, requestId, messagePayload);
         producer.send(record);
         producer.flush();
@@ -89,7 +89,7 @@ public class KafkaListenerIntegrationTest {
         log.info("Тестовое сообщение отправлено в топик {}: key={}, payload={}",
                 KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS, requestId, messagePayload);
 
-        MessageListenerContainer listenerContainer = kafkaListenerEndpointRegistry
+        final MessageListenerContainer listenerContainer = kafkaListenerEndpointRegistry
                 .getListenerContainers()
                 .stream()
                 .filter(container -> container.getGroupId() != null)
@@ -98,7 +98,7 @@ public class KafkaListenerIntegrationTest {
 
         Thread.sleep(5000);
 
-        List<String> loggedMessages = memoryAppender.list.stream()
+        final List<String> loggedMessages = memoryAppender.list.stream()
                 .map(ILoggingEvent::getFormattedMessage)
                 .toList();
 
