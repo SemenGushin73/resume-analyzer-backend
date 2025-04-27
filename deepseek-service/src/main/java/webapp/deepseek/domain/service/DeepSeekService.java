@@ -7,5 +7,5 @@ public interface DeepSeekService {
 
     String generateResume(String template, String departmentDescription);
 
-    public boolean isValidResumeOrJobDescription(String text);
+    boolean isValidResumeOrJobDescription(String text);
 }
