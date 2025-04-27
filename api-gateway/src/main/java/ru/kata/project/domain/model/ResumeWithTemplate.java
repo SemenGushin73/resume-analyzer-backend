@@ -45,7 +45,7 @@ public class ResumeWithTemplate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ResumeWithTemplate that = (ResumeWithTemplate) o;
+      final ResumeWithTemplate that = (ResumeWithTemplate) o;
         return Objects.equals(templates, that.templates) && Objects.equals(resume, that.resume);
     }
 

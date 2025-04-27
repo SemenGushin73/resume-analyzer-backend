@@ -15,7 +15,7 @@ public class FallbackController {
 
     @GetMapping("/analyzer")
     public ResponseEntity<Map<String, Object>> analyzerFallback() {
-        Map<String, Object> response = new HashMap<>();
+        final Map<String, Object> response = new HashMap<>();
         response.put("message", "Сервис resume-analyzer временно недоступен");
         response.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
 
@@ -24,7 +24,7 @@ public class FallbackController {
 
     @GetMapping("/generator")
     public ResponseEntity<Map<String, Object>> generatorFallback() {
-        Map<String, Object> response = new HashMap<>();
+        final Map<String, Object> response = new HashMap<>();
         response.put("message", "Сервис resume-generator временно недоступен");
         response.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
 

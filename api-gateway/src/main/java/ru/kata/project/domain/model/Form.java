@@ -52,7 +52,7 @@ public class Form {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Form form = (Form) o;
+        final Form form = (Form) o;
         return Objects.equals(personalData, form.personalData) &&
                 Objects.equals(educations, form.educations) &&
                 Objects.equals(experiences, form.experiences) &&
