@@ -38,8 +38,8 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
         }
 
         try {
-            JsonNode root = objectMapper.readTree(value);
-            JsonNode blocksNode = root.get("blocks");
+            final JsonNode root = objectMapper.readTree(value);
+            final JsonNode blocksNode = root.get("blocks");
 
             if (blocksNode == null || !blocksNode.isArray()) {
                 return false;
@@ -79,7 +79,7 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
             }
         }
 
-        JsonNode childrenNode = blockNode.get("children");
+        final JsonNode childrenNode = blockNode.get("children");
 
         if (childrenNode == null) {
             return false;

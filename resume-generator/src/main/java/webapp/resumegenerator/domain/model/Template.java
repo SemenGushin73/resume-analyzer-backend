@@ -121,7 +121,7 @@ public class Template {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Template template = (Template) o;
+        final Template template = (Template) o;
         return Objects.equals(id, template.id) &&
           Objects.equals(name, template.name);
     }

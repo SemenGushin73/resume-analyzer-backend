@@ -124,8 +124,12 @@ public class SectionElementProps {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SectionElementProps that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SectionElementProps that)) {
+            return false;
+        }
         return Objects.equals(getId(), that.getId());
     }
 
