@@ -105,7 +105,7 @@ public class ResumeFileServiceImpl implements ResumeFileService {
             filename = filename.replaceAll(".docx", "");
         }
 
-        char[] abcCyr = {' ', 'а', 'б', 'в', 'г', 'д', 'ѓ', 'е', 'ж', 'з', 'ѕ', 'и', 'ј', 'к', 'л', 'љ', 'м', 'н',
+        final char[] abcCyr = {' ', 'а', 'б', 'в', 'г', 'д', 'ѓ', 'е', 'ж', 'з', 'ѕ', 'и', 'ј', 'к', 'л', 'љ', 'м', 'н',
                 'њ', 'о', 'п', 'р', 'с', 'т', 'ќ', 'у', 'ф', 'х', 'ц', 'ч', 'џ', 'ш',
                 'А', 'Б', 'В', 'Г', 'Д', 'Ѓ', 'Е', 'Ж', 'З', 'Ѕ', 'И', 'Ј', 'К', 'Л', 'Љ', 'М', 'Н', 'Њ', 'О', 'П',
                 'Р', 'С', 'Т', 'Ќ', 'У', 'Ф', 'Х', 'Ц', 'Ч',
@@ -114,7 +114,7 @@ public class ResumeFileServiceImpl implements ResumeFileService {
                 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 '/', '-'};
-        String[] abcLat = {" ", "a", "b", "v", "g", "d", "]", "e", "zh", "z", "y", "i", "j", "c", "l", "q", "m", "n",
+        final String[] abcLat = {" ", "a", "b", "v", "g", "d", "]", "e", "zh", "z", "y", "i", "j", "c", "l", "q", "m", "n",
                 "w", "o", "p", "r", "s", "t", "'", "u", "f", "h", "c", ";", "x",
                 "{", "A", "B", "V", "G", "D", "}", "E", "Zh", "Z", "Y", "I", "J", "K", "L", "Q", "M", "N", "W", "O",
                 "P", "R", "S", "T", "KJ", "U", "F", "H", "C",
@@ -127,7 +127,7 @@ public class ResumeFileServiceImpl implements ResumeFileService {
             return filename;
         } else {
 
-            StringBuilder builder = new StringBuilder();
+            final StringBuilder builder = new StringBuilder();
             for (int i = 0; i < filename.length(); i++) {
                 for (int x = 0; x < abcCyr.length; x++) {
                     if (filename.charAt(i) == abcCyr[x]) {
@@ -141,7 +141,7 @@ public class ResumeFileServiceImpl implements ResumeFileService {
 
     @Override
     public HttpHeaders getHeaders(ResumeFile resumeFile) {
-        HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        final HttpHeaders headers = new org.springframework.http.HttpHeaders();
 
         if (resumeFile.getFileType().equals("application/pdf")) {
             headers.add(HttpHeaders.CONTENT_DISPOSITION,

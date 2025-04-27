@@ -40,9 +40,9 @@ public class SocialLinkServiceImpl implements SocialLinkService {
     @Transactional
     @Override
     public SocialLink updateSocialLink(String id, SocialLink socialLink) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         socialLink.setId(uuid);
-        Optional<SocialLink> existingSocialLink = socialLinkRepository.findById(uuid);
+        final Optional<SocialLink> existingSocialLink = socialLinkRepository.findById(uuid);
         if (existingSocialLink.isEmpty()) {
             throw new IllegalArgumentException("SocialLink with uuid " + uuid + " not found.");
         }
@@ -52,7 +52,7 @@ public class SocialLinkServiceImpl implements SocialLinkService {
     @Transactional
     @Override
     public void deleteSocialLink(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         socialLinkRepository.deleteById(uuid);
     }
 
@@ -67,7 +67,7 @@ public class SocialLinkServiceImpl implements SocialLinkService {
 
     @Override
     public SocialLink getSocialLink(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         return socialLinkRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("SocialLink with uuid " + uuid + " not found."));
     }
