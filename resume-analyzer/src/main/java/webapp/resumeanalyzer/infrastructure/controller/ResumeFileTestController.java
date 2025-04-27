@@ -99,8 +99,8 @@ public class ResumeFileTestController {
             return ResponseEntity.badRequest().build();
         } else {
 
-            ResumeFile resumeFile = resumeFileService.getResumeFileById(id);
-            Resource fileResource = new FileSystemResource(resumeFileService.getFile(id));
+            final ResumeFile resumeFile = resumeFileService.getResumeFileById(id);
+            final Resource fileResource = new FileSystemResource(resumeFileService.getFile(id));
 
             return ResponseEntity.ok()
                     .headers(resumeFileService.getHeaders(resumeFile))

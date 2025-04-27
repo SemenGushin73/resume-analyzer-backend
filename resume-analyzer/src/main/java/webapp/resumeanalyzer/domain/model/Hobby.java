@@ -39,7 +39,7 @@ public class Hobby {
             return false;
         }
 
-        Hobby hobby = (Hobby) o;
+        final Hobby hobby = (Hobby) o;
         return id.equals(hobby.id);
     }
 

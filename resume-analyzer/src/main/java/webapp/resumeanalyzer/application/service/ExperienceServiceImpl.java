@@ -43,9 +43,9 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Transactional
     @Override
     public Experience updateExperience(String id, Experience experience) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         experience.setId(uuid);
-        Optional<Experience> existingExperience = experienceRepository.findById(uuid);
+        final Optional<Experience> existingExperience = experienceRepository.findById(uuid);
         if (existingExperience.isEmpty()) {
             throw new IllegalArgumentException("Experience with uuid " + uuid + " not found.");
         }
@@ -58,7 +58,7 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Transactional
     @Override
     public void deleteExperience(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         experienceRepository.deleteById(uuid);
     }
 
@@ -73,7 +73,7 @@ public class ExperienceServiceImpl implements ExperienceService {
 
     @Override
     public Experience getExperienceById(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         return experienceRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Experience with uuid " + uuid + " not found."));
     }

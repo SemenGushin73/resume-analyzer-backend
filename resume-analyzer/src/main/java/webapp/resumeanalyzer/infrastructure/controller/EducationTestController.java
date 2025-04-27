@@ -48,7 +48,7 @@ public class EducationTestController {
     @ApiResponse(responseCode = "404", description = "Сущность не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<Education> getEducation(@PathVariable String id) {
-        Education education = educationService.getEducationById(id);
+        final Education education = educationService.getEducationById(id);
         if (education == null) {
             return ResponseEntity.notFound().build();
         }
@@ -71,7 +71,7 @@ public class EducationTestController {
     @ApiResponse(responseCode = "400", description = "Некорректные данные для создания сущности")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Education> createEducation(@Valid @RequestBody Education education) {
-        Education savedEducation = educationService.createEducation(education);
+        final Education savedEducation = educationService.createEducation(education);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEducation);
     }
 

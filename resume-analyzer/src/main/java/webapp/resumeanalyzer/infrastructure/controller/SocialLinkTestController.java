@@ -48,7 +48,7 @@ public class SocialLinkTestController {
     @ApiResponse(responseCode = "404", description = "Ссылка не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<SocialLink> getSocialLink(@PathVariable String id) {
-        SocialLink socialLink = socialLinkService.getSocialLink(id);
+        final SocialLink socialLink = socialLinkService.getSocialLink(id);
         if (socialLink == null) {
             return ResponseEntity.notFound().build();
         }
@@ -71,7 +71,7 @@ public class SocialLinkTestController {
     @ApiResponse(responseCode = "400", description = "Некорректные данные для создания ссылки")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<SocialLink> createSocialLink(@Valid @RequestBody SocialLink socialLink) {
-        SocialLink savedSocialLink = socialLinkService.createSocialLink(socialLink);
+        final SocialLink savedSocialLink = socialLinkService.createSocialLink(socialLink);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSocialLink);
     }
 

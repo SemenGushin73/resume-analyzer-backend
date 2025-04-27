@@ -48,7 +48,7 @@ public class ExperienceTestController {
     @ApiResponse(responseCode = "404", description = "Сущность не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<Experience> getExperience(@PathVariable String id) {
-        Experience experience = experienceService.getExperienceById(id);
+        final Experience experience = experienceService.getExperienceById(id);
         if (experience == null) {
             return ResponseEntity.notFound().build();
         }
@@ -71,7 +71,7 @@ public class ExperienceTestController {
     @ApiResponse(responseCode = "400", description = "Некорректные данные для создания сущности")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Experience> createExperience(@Valid @RequestBody Experience experience) {
-        Experience savedExperience = experienceService.createExperience(experience);
+        final Experience savedExperience = experienceService.createExperience(experience);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedExperience);
     }
 

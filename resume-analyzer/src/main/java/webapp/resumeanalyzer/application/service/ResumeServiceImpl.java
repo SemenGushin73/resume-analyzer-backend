@@ -44,9 +44,9 @@ public class ResumeServiceImpl implements ResumeService {
     @Transactional
     @Override
     public Resume updateResume(String id, Resume resume) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         resume.setId(uuid);
-        Optional<Resume> existingResume = resumeRepository.findById(uuid);
+        final Optional<Resume> existingResume = resumeRepository.findById(uuid);
         if (existingResume.isEmpty()) {
             throw new IllegalArgumentException("Resume with uuid " + uuid + " not found.");
         }
@@ -56,7 +56,7 @@ public class ResumeServiceImpl implements ResumeService {
     @Transactional
     @Override
     public void deleteResume(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         resumeRepository.deleteById(uuid);
     }
 
@@ -71,7 +71,7 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Resume getResumeById(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         return resumeRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Resume with uuid " + uuid + " not found."));
     }
