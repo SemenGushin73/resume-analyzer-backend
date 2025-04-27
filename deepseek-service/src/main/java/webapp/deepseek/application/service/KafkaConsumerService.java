@@ -33,7 +33,7 @@ public class KafkaConsumerService {
     public void processRequest(@Header("kafka_receivedMessageKey") String requestId, AnalysisRequest request) {
         log.info("Получено сообщение: requestId={}, данные={}", requestId, request);
         try {
-            String result = deepSeekService.analyzeResume(request.getResumeText(), request.getJobDescription());
+            final String result = deepSeekService.analyzeResume(request.getResumeText(), request.getJobDescription());
             kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, new AnalysisResult(requestId, result));
             log.info("Результат анализа отправлен: requestId={}, результат={}", requestId, result);
         } catch (Exception e) {
@@ -44,8 +44,8 @@ public class KafkaConsumerService {
     @KafkaListener(topics = KafkaTopics.DEEPSEEK_RESUME_SCORE_REQUESTS, groupId = "deepseek-analysis-group")
     public void consume(ResumeScoreAnalysisRequest request) {
         try {
-            String analysis = deepSeekService.analyzeResumeScore(request.getResume().toString());
-            ResumeScoreResult result = mapper.readValue(analysis, ResumeScoreResult.class);
+            final String analysis = deepSeekService.analyzeResumeScore(request.getResume().toString());
+            final ResumeScoreResult result = mapper.readValue(analysis, ResumeScoreResult.class);
             result.setResumeId(request.getResumeId());
             kafkaScoreTemplate.send(KafkaTopics.AI_RESUME_SCORE_RESULTS, result);
             log.info("Результат оценки отправлен: resumeId={}", request.getResumeId());

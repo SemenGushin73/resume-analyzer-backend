@@ -34,12 +34,12 @@ public class DeepSeekServiceImpl implements DeepSeekService {
 
     @Override
     public String analyzeResume(String resumeText, String jobDescription) {
-        String prompt = createPrompt(resumeText, jobDescription);
+       final String prompt = createPrompt(resumeText, jobDescription);
 
-        OpenRouterRequest request = createRequest(prompt);
+        final OpenRouterRequest request = createRequest(prompt);
 
         try {
-            OpenRouterResponse response = openRouterApiClient.generateCompletion(
+            final OpenRouterResponse response = openRouterApiClient.generateCompletion(
                     "Bearer " + apiKey,
                     aiModel,
                     request
@@ -56,12 +56,12 @@ public class DeepSeekServiceImpl implements DeepSeekService {
 
     @Override
     public String generateResume(String template, String departmentDescription) {
-        String prompt = createPromptForGeneration(template, departmentDescription);
+        final String prompt = createPromptForGeneration(template, departmentDescription);
 
-        OpenRouterRequest request = createRequest(prompt);
+        final OpenRouterRequest request = createRequest(prompt);
 
         try {
-            OpenRouterResponse response = openRouterApiClient.generateCompletion(
+           final OpenRouterResponse response = openRouterApiClient.generateCompletion(
                     "Bearer " + apiKey,
                     aiModel,
                     request
@@ -79,10 +79,10 @@ public class DeepSeekServiceImpl implements DeepSeekService {
     @ThrowsAIProcessingException
     @Override
     public String analyzeResumeScore(String resumeText) {
-        String prompt = createPromptForScoring(resumeText);
-        OpenRouterRequest request = createRequest(prompt);
+        final String prompt = createPromptForScoring(resumeText);
+        final OpenRouterRequest request = createRequest(prompt);
 
-        OpenRouterResponse response = openRouterApiClient.generateCompletion(
+        final OpenRouterResponse response = openRouterApiClient.generateCompletion(
                 "Bearer " + apiKey,
                 aiModel,
                 request
@@ -98,7 +98,7 @@ public class DeepSeekServiceImpl implements DeepSeekService {
         if (text == null || text.trim().isEmpty()) {
             return false;
         }
-        String lowerCaseText = text.toLowerCase();
+        final String lowerCaseText = text.toLowerCase();
 
         return lowerCaseText.contains("опыт работы") ||
                 lowerCaseText.contains("навыки") ||
@@ -110,7 +110,7 @@ public class DeepSeekServiceImpl implements DeepSeekService {
     }
 
     private OpenRouterRequest createRequest(String prompt) {
-        OpenRouterRequest request = new OpenRouterRequest();
+        final OpenRouterRequest request = new OpenRouterRequest();
         request.setModel(aiModel);
         request.setMessages(List.of(new ChatMessage("user", prompt)));
         return request;
