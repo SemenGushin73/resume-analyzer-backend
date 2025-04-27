@@ -53,15 +53,6 @@ spring:
         spring.json.value.default.type: ru.kata.project.kafka.AnalysisRequest
         spring.json.trusted.packages: ru.kata.project.kafka
 
-springdoc:
-    api-docs:
-      enabled: true
-      path: /v3/api-docs
-    swagger-ui:
-      enabled: true
-      url: /analyzer/v3/api-docs
-      config-url: /analyzer/v3/api-docs/swagger-config
-
 logging:
     level:
       root: INFO

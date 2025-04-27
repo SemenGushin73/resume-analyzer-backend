@@ -15,6 +15,22 @@ spring:
       httpclient:
         response-timeout: 5s
       routes:
+        - id: api-gateway-route
+          uri: http://api-gateway:8765
+          predicates:
+            - Path=/gateway/**
+          filters:
+            - RewritePath=/gateway/(?<segment>.*), /${segment}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET, POST
+            - name: CircuitBreaker
+              args:
+                name: apiGatewayCircuitBreaker
+                fallbackUri: forward:/fallback/gateway
+
         - id: resume-analyzer-route
           uri: http://resume-analyzer:8083
           predicates:
@@ -47,6 +63,22 @@ spring:
                 name: resumeGeneratorCircuitBreaker
                 fallbackUri: forward:/fallback/generator
 
+        - id: deepseek-service-route
+          uri: http://deepseek-service:9090
+          predicates:
+            - Path=/deepseek/**
+          filters:
+            - RewritePath=/deepseek/(?<segment>.*), /${segment}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET, POST
+            - name: CircuitBreaker
+              args:
+                name: deepseekServiceCircuitBreaker
+                fallbackUri: forward:/fallback/deepseek
+
   kafka:
     bootstrap-servers: kafka:9092
     consumer:
@@ -65,13 +97,17 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     enabled: true
-#    url: /v3/api-docs
+    path: /swagger-ui.html
     config-url: /v3/api-docs/swagger-config
     urls:
-      -   name: gateway
-          url: /v3/api-docs
-      -   name: resume-analyzer
+      -   name: api gateway
+          url: /gateway/v3/api-docs
+      -   name: resume analyzer
           url: /analyzer/v3/api-docs
+      -   name: resume generator
+          url: /generator/v3/api-docs
+      -   name: deepseek service
+          url: /deepseek/v3/api-docs
 
 logging:
   level:
