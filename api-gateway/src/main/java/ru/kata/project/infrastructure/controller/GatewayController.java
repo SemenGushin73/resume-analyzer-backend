@@ -110,7 +110,7 @@ public class GatewayController {
      */
     @GetMapping("/ai/resume-score")
     public ResponseEntity<ResumeScoreResult> getResumeScore(@RequestParam String resumeId) {
-        ResumeScoreResult result = kafkaConsumerService.getScoreResult(resumeId);
+        final ResumeScoreResult result = kafkaConsumerService.getScoreResult(resumeId);
         if (result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
