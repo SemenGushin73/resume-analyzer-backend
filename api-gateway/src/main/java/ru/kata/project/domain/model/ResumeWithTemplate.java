@@ -39,8 +39,12 @@ public class ResumeWithTemplate {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ResumeWithTemplate that = (ResumeWithTemplate) o;
         return Objects.equals(templates, that.templates) && Objects.equals(resume, that.resume);
     }
