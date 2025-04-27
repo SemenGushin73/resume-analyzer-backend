@@ -9,8 +9,9 @@ Resume Analyzer Backend — это микросервисное backend-прил
 - **Spring Cloud Gateway** (WebFlux, CircuitBreaker, LoadBalancer)
 - **PostgreSQL** для анализа резюме
 - **MongoDB** для шаблонов
-- **Apache Kafka** + Zookeeper
+- **Apache Kafka + Zookeeper**
 - **Prometheus + Grafana + Loki + Alertmanager** для мониторинга
+- **OpenTelemetry-Collector + Jaeger** для трейсов 
 - **Docker + Docker Compose**
 - **JUnit5 / Mockito / Testcontainers**
 
@@ -20,6 +21,7 @@ Resume Analyzer Backend — это микросервисное backend-прил
 - `deepseek-service` — вызов AI-модели через OpenRouter API
 - `api-gateway` — маршрутизация, OpenAPI Proxy, CircuitBreaker
 - `lib` — общий модуль с DTO, исключениями и утилитами
+- `bitbucket-config-server` — централизованная конфигурация микросервисов для удобства поддержки и масштабирования
 
 ## 🚀 Запуск проекта
 
@@ -51,13 +53,14 @@ GET /api/ai/status/{id}
 ## 🗂️ Структура проекта
 ```
 resume-analyzer-backend/
-├── api-gateway/         # API Gateway с прокси и фолбэком
-├── resume-analyzer/     # Анализ резюме (PostgreSQL)
-├── resume-generator/    # Генератор резюме (MongoDB)
-├── deepseek-service/    # Интеграция с AI (OpenRouter)
-├── lib/                 # Общие DTO, утилиты, исключения
-├── docker-compose.yml   # Полный стек инфраструктуры
-└── utils/               # Настройки Prometheus, Loki, Grafana
+├── api-gateway/                # API Gateway с прокси и фолбэком
+├── bitbucket-config-server/    # Централизованная конфигурация микросервисов Spring Cloud Config
+├── resume-analyzer/            # Анализ резюме (PostgreSQL)
+├── resume-generator/           # Генератор резюме (MongoDB)
+├── deepseek-service/           # Интеграция с AI (OpenRouter)
+├── lib/                        # Общие DTO, утилиты, исключения
+├── docker-compose.yml          # Полный стек инфраструктуры
+└── utils/                      # Настройки Prometheus, Loki, Grafana, otel-Collector
 ```
 
 ## 🛠️ Конфигурация Kafka и БД (Docker Compose)
@@ -69,6 +72,7 @@ resume-analyzer-backend/
 - Resume Analyzer: `localhost:8083`
 - Resume Generator: `localhost:8082`
 - API Gateway: `localhost:8765`
+- Config Server: `localhost:8888`
 
 ## 🔍 Мониторинг
 
@@ -81,6 +85,9 @@ resume-analyzer-backend/
 
 ### Alertmanager
 - [http://localhost:9093](http://localhost:9093)
+
+### Jaeger
+- [http://localhost:16686](http://localhost:16686)
 
 ## ✅ Тестирование
 ```bash

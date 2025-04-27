@@ -1,121 +1,15 @@
-server:
-  port: 8765
-
 spring:
-  config:
-    import:
-      - optional:classpath:common-actuator.yml
-      - optional:classpath:common-kafka.yml
-
   application:
     name: api-gateway
-
+  config:
+    import: "configserver:http://config-server:8888"
   cloud:
-    gateway:
-      httpclient:
-        response-timeout: 5s
-      routes:
-        - id: api-gateway-route
-          uri: http://api-gateway:8765
-          predicates:
-            - Path=/gateway/**
-          filters:
-            - RewritePath=/gateway/(?<segment>.*), /${segment}
-            - name: Retry
-              args:
-                retries: 3
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
-                methods: GET, POST
-            - name: CircuitBreaker
-              args:
-                name: apiGatewayCircuitBreaker
-                fallbackUri: forward:/fallback/gateway
+    config:
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-interval: 2000
+        max-attempts: 10
 
-        - id: resume-analyzer-route
-          uri: http://resume-analyzer:8083
-          predicates:
-            - Path=/analyzer/**
-          filters:
-            - RewritePath=/analyzer/(?<segment>.*), /${segment}
-            - name: Retry
-              args:
-                retries: 3
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
-                methods: GET, POST
-            - name: CircuitBreaker
-              args:
-                name: resumeAnalyzerCircuitBreaker
-                fallbackUri: forward:/fallback/analyzer
-
-        - id: resume-generator-route
-          uri: http://resume-generator:8082
-          predicates:
-            - Path=/generator/**
-          filters:
-            - RewritePath=/generator/(?<segment>.*), /${segment}
-            - name: Retry
-              args:
-                retries: 3
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
-                methods: GET, POST
-            - name: CircuitBreaker
-              args:
-                name: resumeGeneratorCircuitBreaker
-                fallbackUri: forward:/fallback/generator
-
-        - id: deepseek-service-route
-          uri: http://deepseek-service:9090
-          predicates:
-            - Path=/deepseek/**
-          filters:
-            - RewritePath=/deepseek/(?<segment>.*), /${segment}
-            - name: Retry
-              args:
-                retries: 3
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
-                methods: GET, POST
-            - name: CircuitBreaker
-              args:
-                name: deepseekServiceCircuitBreaker
-                fallbackUri: forward:/fallback/deepseek
-
-  kafka:
-    bootstrap-servers: kafka:9092
-    consumer:
-      group-id: api-gateway-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.trusted.packages: ru.kata.project.kafka
-        spring.json.value.default.type: ru.kata.project.kafka.AnalysisResult
-
-springdoc:
-  api-docs:
-    enabled: true
-    path: /v3/api-docs
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
-    config-url: /v3/api-docs/swagger-config
-    urls:
-      -   name: api gateway
-          url: /gateway/v3/api-docs
-      -   name: resume analyzer
-          url: /analyzer/v3/api-docs
-      -   name: resume generator
-          url: /generator/v3/api-docs
-      -   name: deepseek service
-          url: /deepseek/v3/api-docs
-
-logging:
-  level:
-    root: INFO
-    org:
-      springdoc: TRACE
-      springframework:
-        web: DEBUG
-        boot:
-          autoconfigure: DEBUG
-      hibernate: ERROR
+server:
+  port: 8765
