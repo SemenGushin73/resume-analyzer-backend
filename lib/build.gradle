@@ -3,6 +3,11 @@ plugins {
     id("maven-publish")
     id 'checkstyle'
 }
+checkstyle {
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    toolVersion = "9.3"
+    ignoreFailures = false  // остановить сборку при ошибках
+}
 
 group = "ru.kata.project"
 version = "0.0.1-SNAPSHOT"
