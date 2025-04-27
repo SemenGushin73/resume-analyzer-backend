@@ -72,7 +72,7 @@ public class TemplateControllerValidationTest {
     @DisplayName("Проверка шаблона с контентом, превышающим максимальный размер. Ожидает статус 400 (Bad Request).")
     public void testTemplateExeedsSize() throws Exception {
         final String oversizedContent = new String(new char[100001]).replace("\0", "a");
-        Template invalidTemplate = new Template("Oversized Template", "Description", oversizedContent);
+        final Template invalidTemplate = new Template("Oversized Template", "Description", oversizedContent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
                     .contentType(MediaType.APPLICATION_JSON)
