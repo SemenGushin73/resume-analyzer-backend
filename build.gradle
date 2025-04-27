@@ -26,9 +26,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.4.0'
 
-    // Swagger/OpenAPI
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
-
     // Jackson & JSON
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0'

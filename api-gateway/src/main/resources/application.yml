@@ -59,6 +59,20 @@ spring:
         spring.json.trusted.packages: ru.kata.project.kafka
         spring.json.value.default.type: ru.kata.project.kafka.AnalysisResult
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+#    url: /v3/api-docs
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      -   name: gateway
+          url: /v3/api-docs
+      -   name: resume-analyzer
+          url: /analyzer/v3/api-docs
+
 logging:
   level:
     root: INFO
