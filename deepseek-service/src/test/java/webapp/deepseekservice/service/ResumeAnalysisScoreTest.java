@@ -42,17 +42,17 @@ public class ResumeAnalysisScoreTest {
 
     @Test
     void analyzeResumeScore_ShouldReturnSuccessResult() {
-        OpenRouterResponse response = TestDataBuilder.createMockResponse("AI resume score");
+        final OpenRouterResponse response = TestDataBuilder.createMockResponse("AI resume score");
         when(apiClient.generateCompletion(any(), any(), any())).
                 thenReturn(response);
 
-        String result = service.analyzeResumeScore(RESUME_TEXT);
+        final String result = service.analyzeResumeScore(RESUME_TEXT);
 
         assertEquals("AI resume score", result);
     }
 
     private static Stream<Arguments> errorResponses() {
-        OpenRouterResponse responseWithEmptyChoices = new OpenRouterResponse();
+        final OpenRouterResponse responseWithEmptyChoices = new OpenRouterResponse();
         responseWithEmptyChoices.setChoices(List.of());
 
         return Stream.of(
@@ -68,7 +68,7 @@ public class ResumeAnalysisScoreTest {
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenReturn(response);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> service.analyzeResumeScore(RESUME_TEXT));
+        final Exception exception = assertThrows(RuntimeException.class, () -> service.analyzeResumeScore(RESUME_TEXT));
         assertEquals("Ошибка: AI не смог обработать запрос.", exception.getMessage());
     }
 }

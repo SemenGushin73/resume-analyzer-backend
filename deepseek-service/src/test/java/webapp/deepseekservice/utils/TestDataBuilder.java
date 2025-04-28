@@ -64,13 +64,13 @@ public class TestDataBuilder {
     }
 
     public static OpenRouterResponse createMockResponse(String content) {
-        OpenRouterResponse.Message message = new OpenRouterResponse.Message();
+        final OpenRouterResponse.Message message = new OpenRouterResponse.Message();
         message.setContent(content);
 
-        OpenRouterResponse.Choice choice = new OpenRouterResponse.Choice();
+        final OpenRouterResponse.Choice choice = new OpenRouterResponse.Choice();
         choice.setMessage(message);
 
-        OpenRouterResponse mockResponse = new OpenRouterResponse();
+        final OpenRouterResponse mockResponse = new OpenRouterResponse();
         mockResponse.setChoices(List.of(choice));
 
         return mockResponse;
