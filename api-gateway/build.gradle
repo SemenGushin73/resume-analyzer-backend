@@ -37,8 +37,8 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.6'
 
     // Kafka
-    implementation 'org.apache.kafka:kafka-clients'
-    implementation 'org.springframework.kafka:spring-kafka:3.3.0'
+//    implementation 'org.apache.kafka:kafka-clients'
+    implementation 'org.springframework.kafka:spring-kafka'
 
     // Monitoring and Logging
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'

@@ -1,17 +1,15 @@
 package ru.kata.project.exception;
 
 import feign.FeignException;
-import org.springframework.web.client.RestClientException;
-
-import java.util.concurrent.TimeoutException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -48,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneralException(Exception ex) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", "Внутренняя ошибка API Gateway");
+        errorResponse.put("message", ex.getMessage());
         errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(info =
 @Info(title = "API Gateway", version = "1.0.0", description = "Documentation API Gateway API v1.0.0")
 )
-public class Main {
+public class ApiGatewayApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(ApiGatewayApplication.class, args);
     }
 }
