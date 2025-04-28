@@ -1,4 +1,4 @@
-package webapp.deepseekservice.kafka;
+package webapp.deepseekservice.service.kafka;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
