@@ -18,12 +18,11 @@ import webapp.resumeanalyzer.domain.service.ResumeFileService;
 
 /**
  * Сервис CRUD методов сущности ResumeFile.
+ * TODO: рефакторинг фул класса
  */
 @Service
 @Transactional
 public class ResumeFileServiceImpl implements ResumeFileService {
-
-    //todo рефакторинг фул класса
 
     private final ResumeFileRepository resumeFileRepository;
 

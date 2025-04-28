@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 /**
  * Сущность ResumeFile для хранения файлов резюме в базе данных.
  * <p>
+ * TODO: owner превратить в модель
  */
 @Entity
 @Table(name = "resume_file")
@@ -26,8 +27,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResumeFile {
-
-    //todo owner превратить в модель
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
