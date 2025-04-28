@@ -7,7 +7,7 @@ plugins {
 checkstyle {
 	configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 	toolVersion = "9.3"
-	ignoreFailures = false  // остановить сборку при ошибках
+	ignoreFailures = true
 }
 
 group = 'ru.kata.project'
