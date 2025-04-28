@@ -21,7 +21,7 @@ import ru.kata.project.resumeDto.TemplateDTO;
 public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     public <T> Mono<List<T>> makeRequest(String uri, Class<T> elementClass) {
-       final WebClient webClient = WebClient.create();
+        final WebClient webClient = WebClient.create();
 
         return webClient.get()
                 .uri(uri)
@@ -32,8 +32,8 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     public Mono<List<ResumeWithTemplate>> getListOfResumeWithTemplates(Department department) {
 
-       final Mono<List<TemplateDTO>> templates = makeRequest("http://localhost:8765/generator/templates/all?department=" + department, TemplateDTO.class);
-       final Mono<List<ResumeDto>> resumes = makeRequest("http://localhost:8765/analyzer/resumes/all?department=" + department, ResumeDto.class);
+        final Mono<List<TemplateDTO>> templates = makeRequest("http://localhost:8765/generator/templates/all?department=" + department, TemplateDTO.class);
+        final Mono<List<ResumeDto>> resumes = makeRequest("http://localhost:8765/analyzer/resumes/all?department=" + department, ResumeDto.class);
 
         return Mono.zip(resumes, templates)
                 .map(tuple -> {
