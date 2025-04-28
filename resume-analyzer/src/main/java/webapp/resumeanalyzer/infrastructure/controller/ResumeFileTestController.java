@@ -50,8 +50,8 @@ public class ResumeFileTestController {
             throws IOException {
 
         if (file.getContentType().equals("application/pdf") ||
-                file.getContentType()
-                        .equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+            file.getContentType()
+                    .equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
 
             resumeFileService.uploadResumeFile(
                     resumeFileService.createResumeFile(file, ownersName));

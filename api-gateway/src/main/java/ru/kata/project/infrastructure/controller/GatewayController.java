@@ -47,6 +47,7 @@ public class GatewayController {
 
     /**
      * Обработчик GET-запроса.
+     *
      * @return строка "OK", указывающая, что шлюз работает корректно.
      */
     @GetMapping("/status")
@@ -57,7 +58,7 @@ public class GatewayController {
     /**
      * Маршрутизация запроса на анализ резюме в deepseek-service
      *
-     * @param resumeText текст резюме, который нужно проанализировать
+     * @param resumeText     текст резюме, который нужно проанализировать
      * @param jobDescription описание вакансии требуемое контроллером deepseek-service
      * @return возвращает результат работы deepseek-service
      */

@@ -5,28 +5,28 @@
 
 <module name="Checker">
 
-  <!-- LineLength — вне TreeWalker -->
-  <module name="LineLength">
-    <property name="max" value="160"/>
-  </module>
-
-  <!-- TreeWalker + его вложенные проверки -->
-  <module name="TreeWalker">                     <!--TreeWalker -->
-    <module name="WhitespaceAfter"/>             <!--Пробелы обязательны после символов -->
-    <module name="FinalLocalVariable"/>          <!--Локальные переменные должны быть final -->
-    <module name="EmptyBlock"/>                  <!--{} не должно быть пустым -->
-    <module name="NeedBraces"/>                  <!--Обязательные фигурные скобки {} даже для однострочных блоков. -->
-    <module name="EqualsHashCode"/>              <!--Если есть equals(), должен быть и hashCode(). -->
-    <module name="AvoidInlineConditionals"/>     <!--Запрещает тернарные операторы (a ? b : c). -->
-    <module name="MethodParamPad"/>              <!--Пробелы после открывающей ( и перед закрывающей ) скобками в объявлениях методов. -->
-    <module name="NoWhitespaceBefore"/>          <!--запрещает пробелы перед символами (например, ;). -->
-    <module name="NoWhitespaceAfter"/>           <!--запрещает пробелы после символов (например, @). -->
-    <module name="VariableDeclarationUsageDistance"/>  <!--Максимальное расстояние между объявлением переменной и её использованием. -->
-    <module name="ModifierOrder"/>               <!--порядок модификаторов (public static final вместо static public final). -->
-    <module name="RedundantModifier"/>           <!--избыточные модификаторы (например, final в interface). -->
-    <module name="OuterTypeFilename"/>           <!--Имя файла .java должно совпадать с именем публичного класса в нём. -->
-    <module name="MethodLength">                 <!--Максимальное количество строк в методе. -->
-      <property name="max" value="50"/>
+    <!-- LineLength — вне TreeWalker -->
+    <module name="LineLength">
+        <property name="max" value="160"/>
     </module>
-  </module>
+
+    <!-- TreeWalker + его вложенные проверки -->
+    <module name="TreeWalker">                     <!--TreeWalker -->
+        <module name="WhitespaceAfter"/>             <!--Пробелы обязательны после символов -->
+        <module name="FinalLocalVariable"/>          <!--Локальные переменные должны быть final -->
+        <module name="EmptyBlock"/>                  <!--{} не должно быть пустым -->
+        <module name="NeedBraces"/>                  <!--Обязательные фигурные скобки {} даже для однострочных блоков. -->
+        <module name="EqualsHashCode"/>              <!--Если есть equals(), должен быть и hashCode(). -->
+        <module name="AvoidInlineConditionals"/>     <!--Запрещает тернарные операторы (a ? b : c). -->
+        <module name="MethodParamPad"/>              <!--Пробелы после открывающей ( и перед закрывающей ) скобками в объявлениях методов. -->
+        <module name="NoWhitespaceBefore"/>          <!--запрещает пробелы перед символами (например, ;). -->
+        <module name="NoWhitespaceAfter"/>           <!--запрещает пробелы после символов (например, @). -->
+        <module name="VariableDeclarationUsageDistance"/>  <!--Максимальное расстояние между объявлением переменной и её использованием. -->
+        <module name="ModifierOrder"/>               <!--порядок модификаторов (public static final вместо static public final). -->
+        <module name="RedundantModifier"/>           <!--избыточные модификаторы (например, final в interface). -->
+        <module name="OuterTypeFilename"/>           <!--Имя файла .java должно совпадать с именем публичного класса в нём. -->
+        <module name="MethodLength">                 <!--Максимальное количество строк в методе. -->
+            <property name="max" value="50"/>
+        </module>
+    </module>
 </module>

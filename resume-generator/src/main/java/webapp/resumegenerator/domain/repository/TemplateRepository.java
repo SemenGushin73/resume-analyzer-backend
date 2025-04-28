@@ -16,5 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TemplateRepository extends MongoRepository<Template, UUID>, CustomTemplateRepository {
     List<Template> findByNameOrderByVersionDesc(String name);
+
     List<Template> findByCreatedAtBefore(LocalDateTime dateTime);
 }

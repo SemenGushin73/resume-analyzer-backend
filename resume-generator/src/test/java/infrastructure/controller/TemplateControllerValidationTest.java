@@ -62,8 +62,8 @@ public class TemplateControllerValidationTest {
         Mockito.when(templateService.createTemplate(ArgumentMatchers.any(Template.class))).thenReturn(validTemplate);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(validTemplate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validTemplate)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -75,8 +75,8 @@ public class TemplateControllerValidationTest {
         final Template invalidTemplate = new Template("Oversized Template", "Description", oversizedContent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(invalidTemplate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidTemplate)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -88,8 +88,8 @@ public class TemplateControllerValidationTest {
                 "{\"blocks\": [{\"layout\": \"layout1\", \"props\": {}}]}");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(invalidTemplate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidTemplate)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -101,8 +101,8 @@ public class TemplateControllerValidationTest {
                 null);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
-                   .contentType(MediaType.APPLICATION_JSON)
-                   .content(objectMapper.writeValueAsString(invalidTemplate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidTemplate)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -114,8 +114,8 @@ public class TemplateControllerValidationTest {
                 "{\"invalidField\": []}");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/templates")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(invalidTemplate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidTemplate)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }

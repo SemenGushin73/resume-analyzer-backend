@@ -31,7 +31,7 @@ public class ResumeController {
             @RequestParam("jobDescription") String jobDescription) {
 
         if (!deepSeekService.isValidResumeOrJobDescription(resumeText) ||
-                !deepSeekService.isValidResumeOrJobDescription(jobDescription)) {
+            !deepSeekService.isValidResumeOrJobDescription(jobDescription)) {
             return ResponseEntity.badRequest().body("Некорректный текст резюме или описания вакансии.");
         }
 

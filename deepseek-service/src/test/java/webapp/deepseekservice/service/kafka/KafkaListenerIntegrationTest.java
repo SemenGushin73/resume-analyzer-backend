@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = DeepseekServiceApplication.class)
 @EmbeddedKafka(topics = KafkaTopics.DEEPSEEK_ANALYSIS_REQUESTS,
         brokerProperties = {
-            "listeners=PLAINTEXT://localhost:9092",
+                "listeners=PLAINTEXT://localhost:9092",
                 "port=9092"
         })
 @DirtiesContext
@@ -57,7 +57,7 @@ public class KafkaListenerIntegrationTest {
     public void setup() {
         final Logger logger = (Logger) LoggerFactory
                 .getLogger("deepseek-service/src/main/java/webapp/deepseek/" +
-                        "application/service/KafkaConsumerService.java");
+                           "application/service/KafkaConsumerService.java");
         memoryAppender = (ListAppender<ILoggingEvent>) logger.getAppender("MEMORY");
 
         if (memoryAppender != null) {
@@ -103,7 +103,7 @@ public class KafkaListenerIntegrationTest {
                 .toList();
 
         assertThat(loggedMessages).anyMatch(msg -> msg.contains("Получено сообщение: requestId="
-                + requestId));
+                                                                + requestId));
         assertThat(loggedMessages).anyMatch(msg -> msg.contains("данные=" + analysisRequest));
         assertThat(loggedMessages).noneMatch(msg -> msg.contains("Ошибка обработки запроса"));
     }
