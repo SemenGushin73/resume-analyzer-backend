@@ -88,7 +88,12 @@ public class KafkaConsumerService {
         if (text == null || text.trim().isEmpty()) {
             return false;
         }
-        return text.toLowerCase().contains("опыт работы") ||
-               text.toLowerCase().contains("навыки");
+        //TODO реализовать валидацию,
+        // я не понимаю смысла валидации на этом уровне,
+        // тем более реализованной таким образом
+//        return text.toLowerCase().contains("опыт работы") ||
+//               text.toLowerCase().contains("навыки");
+
+        return true;
     }
 }

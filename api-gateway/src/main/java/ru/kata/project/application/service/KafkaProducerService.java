@@ -4,6 +4,7 @@ package ru.kata.project.application.service;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.kata.project.kafka.AnalysisRequest;
@@ -25,6 +26,7 @@ public class KafkaProducerService {
     private final KafkaTemplate<String, AnalysisRequest> kafkaTemplate;
     private final KafkaTemplate<String, ResumeScoreRequest> kafkaScoreTemplate;
 
+    @Autowired
     public KafkaProducerService(KafkaTemplate<String, AnalysisRequest> kafkaTemplate,
                                 KafkaTemplate<String, ResumeScoreRequest> kafkaScoreTemplate) {
         this.kafkaTemplate = kafkaTemplate;

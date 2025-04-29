@@ -1,23 +1,26 @@
 package ru.kata.project.infrastructure.controller;
 
-import ru.kata.project.application.service.KafkaConsumerService;
-import ru.kata.project.application.service.KafkaProducerService;
-import ru.kata.project.domain.service.ApiGatewayService;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ru.kata.project.application.service.KafkaConsumerService;
+import ru.kata.project.application.service.KafkaProducerService;
+import ru.kata.project.domain.service.ApiGatewayService;
+import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
+import ru.kata.project.kafka.config.KafkaTopics;
+
+import java.util.UUID;
 
 
 /**
@@ -25,6 +28,7 @@ import ru.kata.project.kafka.ResumeScoreResult;
  */
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Контроллер API Gateway.", description = "Осуществляет взаимодействие между сервисами.")
 public class GatewayController {
 
     private final ApiGatewayService apiGatewayService;
@@ -118,7 +122,6 @@ public class GatewayController {
         return ResponseEntity.ok(result);
     }
 
-
     /**
      * Добавляет маршрут для создания нового резюме.
      * Этот метод будет обрабатывать POST-запросы для создания резюме.
@@ -129,5 +132,28 @@ public class GatewayController {
     @PostMapping("/api/resume/create")
     public ResponseEntity<JsonNode> createResume(@RequestBody JsonNode resumeJson) {
         return apiGatewayService.createResume(resumeJson);
+    }
+
+    /**
+     * POST запрос на отправку AnalysisRequest в kafka топик RESUME_ANALYZE_REQUESTS,
+     * для последующего анализа резюме сервисом Resume-Analyzer
+     *
+     * @param analysisRequest DTO для передачи данных между API Gateway и Resume-Analyzer
+     * @return ResponseEntity с результатом обработки запроса.
+     */
+    @PostMapping("/analyze")
+    @Operation(summary = "Отправка AnalysisRequest в kafka топик RESUME_ANALYZE_REQUESTS")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Успешная отправка"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+    })
+    public ResponseEntity<AnalysisRequest> sendAnalysisRequestToKafka(@RequestBody AnalysisRequest analysisRequest) {
+        log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}",
+                analysisRequest, KafkaTopics.RESUME_ANALYZE_REQUESTS);
+        kafkaProducerService.sendAnalysisRequest(UUID.randomUUID().toString(),
+                analysisRequest);
+
+        return ResponseEntity.ok(analysisRequest);
     }
 }
