@@ -35,7 +35,7 @@ public class ResumeBuilderController {
      */
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<JsonNode> buildResume(@Valid @RequestBody JsonNode resumeJson) {
-        JsonNode generatedResume = resumeBuilder.processResume(resumeJson);
+        final JsonNode generatedResume = resumeBuilder.processResume(resumeJson);
         return ResponseEntity.status(HttpStatus.CREATED).body(generatedResume);
     }
 }

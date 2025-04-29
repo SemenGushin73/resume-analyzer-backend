@@ -40,9 +40,9 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     @Transactional
     @Override
     public PersonalData updatePersonalData(String id, PersonalData personalData) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         personalData.setId(uuid);
-        Optional<PersonalData> existingPersonalData = personalDataRepository.findById(uuid);
+        final Optional<PersonalData> existingPersonalData = personalDataRepository.findById(uuid);
         if (existingPersonalData.isEmpty()) {
             throw new IllegalArgumentException("PersonalData with uuid " + uuid + " not found.");
         }
@@ -52,7 +52,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     @Transactional
     @Override
     public void deletePersonalData(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         personalDataRepository.deleteById(uuid);
     }
 
@@ -68,7 +68,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
 
     @Override
     public PersonalData getPersonalDataById(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         return personalDataRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException(
                         "PersonalData with uuid " + uuid + " not found."));

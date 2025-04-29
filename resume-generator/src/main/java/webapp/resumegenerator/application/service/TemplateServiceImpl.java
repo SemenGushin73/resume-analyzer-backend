@@ -57,7 +57,7 @@ public class TemplateServiceImpl implements TemplateService {
      */
     @Override
     public Template getTemplateById(String id) {
-        UUID uuid = generateUUID(id);
+        final UUID uuid = generateUUID(id);
         return templateRepository.findById(uuid)
                 .orElseThrow(() -> new RuntimeException("Шаблон не найден"));
     }
@@ -82,7 +82,7 @@ public class TemplateServiceImpl implements TemplateService {
      */
     @Override
     public void updateTemplate(String id, Template template) {
-        UUID uuid = generateUUID(id);
+        final UUID uuid = generateUUID(id);
         if (!templateRepository.existsById(uuid)) {
             throw new RuntimeException();
         }
@@ -98,7 +98,7 @@ public class TemplateServiceImpl implements TemplateService {
      */
     @Override
     public void deleteTemplate(String id) {
-        UUID uuid = generateUUID(id);
+        final UUID uuid = generateUUID(id);
         if (!templateRepository.existsById(uuid)) {
             throw new RuntimeException();
         }
@@ -158,7 +158,7 @@ public class TemplateServiceImpl implements TemplateService {
      */
     @Override
     public Template createNewTemplateVersion(Template template) {
-        Template newTemplate = new Template(template.getName(), template.getContent(),
+        final Template newTemplate = new Template(template.getName(), template.getContent(),
                 template.getDescription());
         newTemplate.setVersion(template.getVersion() + 1);
         return newTemplate;
@@ -178,7 +178,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public List<Template> getAllTemplatesByDepartment(Department department) {
-        List<Template> templates = new ArrayList<>();
+        final List<Template> templates = new ArrayList<>();
 
         if (getAllTemplates() != null) {
             for (Template template : getAllTemplates()) {
@@ -197,8 +197,8 @@ public class TemplateServiceImpl implements TemplateService {
     @Scheduled(cron = "${cleanup.cron}")
     public void cleanupOldTemplates() {
         log.info("Запуск задачи очистки старых шаблонов...");
-        LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
-        List<Template> oldTemplates = templateRepository.findByCreatedAtBefore(thresholdDate);
+        final LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
+        final List<Template> oldTemplates = templateRepository.findByCreatedAtBefore(thresholdDate);
 
         log.info("Найдено {} старых шаблонов для удаления", oldTemplates.size());
 

@@ -32,16 +32,20 @@ public class ResumeWithTemplate {
     @Override
     public String toString() {
         return "ResumeWithTemplate{" +
-                "templates=" + templates +
-                ", resume=" + resume +
-                '}';
+               "templates=" + templates +
+               ", resume=" + resume +
+               '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ResumeWithTemplate that = (ResumeWithTemplate) o;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ResumeWithTemplate that = (ResumeWithTemplate) o;
         return Objects.equals(templates, that.templates) && Objects.equals(resume, that.resume);
     }
 

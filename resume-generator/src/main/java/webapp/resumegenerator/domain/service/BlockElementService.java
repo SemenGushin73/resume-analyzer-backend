@@ -34,7 +34,7 @@ public class BlockElementService {
     // Обновление существующего блока
     @Transactional
     public BlockElement updateBlock(UUID id, BlockElement updatedBlock) {
-        BlockElement existingBlock = repository.findById(id)
+        final BlockElement existingBlock = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Block with ID '" + id + "' not found"));
 
         // Обновляем поля
@@ -53,7 +53,7 @@ public class BlockElementService {
     // Удаление блока
     @Transactional
     public void deleteBlock(UUID id) {
-        BlockElement blockElement = repository.findById(id)
+        final BlockElement blockElement = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Block with ID '" + id + "' not found"));
 
         repository.delete(blockElement);

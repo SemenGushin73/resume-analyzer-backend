@@ -1,9 +1,12 @@
 # Resume Analyzer Backend
 
 ## 📝 Описание проекта
-Resume Analyzer Backend — это микросервисное backend-приложение для анализа и генерации резюме, включающее AI-интеграцию (DeepSeek), API Gateway и мониторинг инфраструктуры.
+
+Resume Analyzer Backend — это микросервисное backend-приложение для анализа и генерации резюме, включающее
+AI-интеграцию (DeepSeek), API Gateway и мониторинг инфраструктуры.
 
 ## 🧪 Технологии
+
 - **Java 21 + Gradle (многомодульный проект)**
 - **Spring Boot** (REST, Mongo, Kafka, Validation, Actuator)
 - **Spring Cloud Gateway** (WebFlux, CircuitBreaker, LoadBalancer)
@@ -11,11 +14,12 @@ Resume Analyzer Backend — это микросервисное backend-прил
 - **MongoDB** для шаблонов
 - **Apache Kafka + Zookeeper**
 - **Prometheus + Grafana + Loki + Alertmanager** для мониторинга
-- **OpenTelemetry-Collector + Jaeger** для трейсов 
+- **OpenTelemetry-Collector + Jaeger** для трейсов
 - **Docker + Docker Compose**
 - **JUnit5 / Mockito / Testcontainers**
 
 ## 🖨 Модули
+
 - `resume-analyzer` — анализ резюме, сохранение и Kafka-интеграция
 - `resume-generator` — генерация текста по шаблонам и через AI
 - `deepseek-service` — вызов AI-модели через OpenRouter API
@@ -26,10 +30,12 @@ Resume Analyzer Backend — это микросервисное backend-прил
 ## 🚀 Запуск проекта
 
 ### 🛠️ Требования:
+
 - Java 21
 - Docker / Docker Compose
 
 ### 🔄 Клонирование и сборка:
+
 ```bash
 git clone https://gitpacket.kata.academy/scm/fit/resume-analyzer-backend.git
 cd resume-analyzer-backend
@@ -37,14 +43,17 @@ cd resume-analyzer-backend
 ```
 
 ### 🚧 Запуск инфраструктуры:
+
 ```bash
 docker compose -f docker-compose.yml up -d
 ```
 
-### 📚 Документация Swagger со всех сервисов:
+### 📚 Документация Swagger:
+
 - [http://localhost:8765/swagger-ui/index.html](http://localhost:8765/analyzer/swagger-ui/index.html)
 
 ### 🔧 Примеры запросов:
+
 #### 1. Документация Gateway API
 ```http
 POST /api/analyze
@@ -66,6 +75,7 @@ processRequest() в сервисе Deepseek Service. Он в свою очере
 
 
 ## 🗂️ Структура проекта
+
 ```
 resume-analyzer-backend/
 ├── api-gateway/                # API Gateway с прокси и фолбэком
@@ -79,6 +89,7 @@ resume-analyzer-backend/
 ```
 
 ## 🛠️ Конфигурация Kafka и БД (Docker Compose)
+
 - PostgreSQL: `localhost:5434`
 - MongoDB: `localhost:27017`
 - Kafka: `localhost:9092` внешний порт '29092'
@@ -92,22 +103,28 @@ resume-analyzer-backend/
 ## 🔍 Мониторинг
 
 ### Grafana
+
 - [http://localhost:3000](http://localhost:3000)
 - Логин: `admin`, Пароль: `admin`
 
 ### Prometheus
+
 - [http://localhost:9099](http://localhost:9099)
 
 ### Alertmanager
+
 - [http://localhost:9093](http://localhost:9093)
 
 ### Jaeger
+
 - [http://localhost:16686](http://localhost:16686)
 
 ## ✅ Тестирование
+
 ```bash
 ./gradlew test
 ```
+
 - Репорты: `build/reports/tests`
 
 ---

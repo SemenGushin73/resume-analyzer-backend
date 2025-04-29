@@ -40,7 +40,7 @@ public class DeepseekAPIKeyTest {
         testRequest = new OpenRouterRequest();
         testRequest.setModel(MODEL_NAME);
         testRequest.setMessages(Collections.singletonList(
-            new ChatMessage("user", "Hello, how are you?"))
+                new ChatMessage("user", "Hello, how are you?"))
         );
 
     }
@@ -57,10 +57,10 @@ public class DeepseekAPIKeyTest {
     public void testPerformanceApiKey() throws Exception {
 
         //при неверном API ключе здесь выйдет исключение
-        OpenRouterResponse response = openRouterApiClient.generateCompletion(
-            "Bearer " + API_KEY,
-            MODEL_NAME,
-            testRequest
+        final OpenRouterResponse response = openRouterApiClient.generateCompletion(
+                "Bearer " + API_KEY,
+                MODEL_NAME,
+                testRequest
         );
 
         //проверка ответа

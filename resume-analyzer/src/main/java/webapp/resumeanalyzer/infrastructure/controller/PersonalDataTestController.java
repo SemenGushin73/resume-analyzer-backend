@@ -48,7 +48,7 @@ public class PersonalDataTestController {
     @ApiResponse(responseCode = "404", description = "Персональная информация не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<PersonalData> getPersonalData(@PathVariable String id) {
-        PersonalData personalData = personalDataService.getPersonalDataById(id);
+        final PersonalData personalData = personalDataService.getPersonalDataById(id);
         if (personalData == null) {
             return ResponseEntity.notFound().build();
         }
@@ -72,7 +72,7 @@ public class PersonalDataTestController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<PersonalData> createPersonalData(
             @Valid @RequestBody PersonalData personalData) {
-        PersonalData savedPersonalData = personalDataService.createPersonalData(personalData);
+        final PersonalData savedPersonalData = personalDataService.createPersonalData(personalData);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPersonalData);
     }
 

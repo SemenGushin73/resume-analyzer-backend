@@ -71,8 +71,8 @@ public class KafkaConsumerService {
     @KafkaListener(topics = KafkaTopics.AI_RESUME_SCORE_REQUESTS, groupId = "resume-score-group")
     public void consume(ResumeScoreRequest request) {
         try {
-            Resume resume = resumeService.getResumeById(request.getResumeId());
-            ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
+            final Resume resume = resumeService.getResumeById(request.getResumeId());
+            final ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
                     resume.getId().toString(),
                     resumeMapper.toDto(resume)
             );

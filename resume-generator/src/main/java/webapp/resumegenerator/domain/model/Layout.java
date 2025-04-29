@@ -222,8 +222,12 @@ public class Layout {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Layout layout)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Layout layout)) {
+            return false;
+        }
         return Objects.equals(getId(), layout.getId());
     }
 

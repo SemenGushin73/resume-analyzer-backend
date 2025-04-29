@@ -65,7 +65,7 @@ public class PersonalData {
             return false;
         }
 
-        PersonalData that = (PersonalData) o;
+        final PersonalData that = (PersonalData) o;
         return id.equals(that.id);
     }
 

@@ -50,7 +50,7 @@ public class ResumeTestController {
     @ApiResponse(responseCode = "404", description = "Резюме не найдено")
     @GetMapping("/{id}")
     public ResponseEntity<Resume> getResume(@PathVariable String id) {
-        Resume resume = resumeService.getResumeById(id);
+        final Resume resume = resumeService.getResumeById(id);
         if (resume == null) {
             return ResponseEntity.notFound().build();
         }
@@ -69,7 +69,7 @@ public class ResumeTestController {
     //метод добавления новой сущности
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Resume> createResume(@Valid @RequestBody Resume resume) {
-        Resume savedResume = resumeService.createResume(resume);
+        final Resume savedResume = resumeService.createResume(resume);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedResume);
     }
 
@@ -104,7 +104,7 @@ public class ResumeTestController {
         if (query == null || query.trim().isEmpty() || query.length() > 255) {
             return ResponseEntity.badRequest().build();
         }
-        Page<Resume> resumes = resumeService.searchResumes(query, pageable);
+        final Page<Resume> resumes = resumeService.searchResumes(query, pageable);
         return ResponseEntity.ok(resumes);
     }
 }

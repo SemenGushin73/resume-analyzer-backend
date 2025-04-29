@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<Map<String, Object>> handleFeignException(FeignException ex) {
-        Map<String, Object> errorResponse = new HashMap<>();
+        final Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", "Ошибка при вызове удаленного сервиса");
         errorResponse.put("status", ex.status());
         errorResponse.put("error", ex.contentUTF8());
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RestClientException.class)
     public ResponseEntity<Map<String, Object>> handleRestClientException(RestClientException ex) {
-        Map<String, Object> errorResponse = new HashMap<>();
+        final Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", ex.getMessage());
         errorResponse.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
 
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TimeoutException.class)
     public ResponseEntity<Map<String, Object>> handleTimeoutException(TimeoutException ex) {
-        Map<String, Object> errorResponse = new HashMap<>();
+        final Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", "Превышено время ожидания ответа от сервиса");
         errorResponse.put("status", HttpStatus.GATEWAY_TIMEOUT.value());
 
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneralException(Exception ex) {
-        Map<String, Object> errorResponse = new HashMap<>();
+        final Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", ex.getMessage());
         errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
 

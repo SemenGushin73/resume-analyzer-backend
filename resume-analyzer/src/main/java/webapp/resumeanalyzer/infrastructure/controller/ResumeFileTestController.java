@@ -50,8 +50,8 @@ public class ResumeFileTestController {
             throws IOException {
 
         if (file.getContentType().equals("application/pdf") ||
-                file.getContentType()
-                        .equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+            file.getContentType()
+                    .equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
 
             resumeFileService.uploadResumeFile(
                     resumeFileService.createResumeFile(file, ownersName));
@@ -99,8 +99,8 @@ public class ResumeFileTestController {
             return ResponseEntity.badRequest().build();
         } else {
 
-            ResumeFile resumeFile = resumeFileService.getResumeFileById(id);
-            Resource fileResource = new FileSystemResource(resumeFileService.getFile(id));
+            final ResumeFile resumeFile = resumeFileService.getResumeFileById(id);
+            final Resource fileResource = new FileSystemResource(resumeFileService.getFile(id));
 
             return ResponseEntity.ok()
                     .headers(resumeFileService.getHeaders(resumeFile))

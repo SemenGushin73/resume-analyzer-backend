@@ -41,7 +41,9 @@ public class KafkaConsumerService {
         log.info("Получен результат анализа резюме {}", result.getResumeId());
     }
 
-    public ResumeScoreResult getScoreResult(String resumeId) { return scoreResults.get(resumeId); }
+    public ResumeScoreResult getScoreResult(String resumeId) {
+        return scoreResults.get(resumeId);
+    }
 
     public AnalysisResult getResult(String requestId) {
         return results.get(requestId);

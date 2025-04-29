@@ -48,7 +48,7 @@ public class HobbyTestController {
     @ApiResponse(responseCode = "404", description = "Сущность не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<Hobby> getHobby(@PathVariable String id) {
-        Hobby hobby = hobbyService.getHobbyById(id);
+        final Hobby hobby = hobbyService.getHobbyById(id);
         if (hobby == null) {
             return ResponseEntity.notFound().build();
         }
@@ -71,7 +71,7 @@ public class HobbyTestController {
     @ApiResponse(responseCode = "400", description = "Некорректные данные для создания сущности")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Hobby> createHobby(@Valid @RequestBody Hobby hobby) {
-        Hobby savedHobby = hobbyService.createHobby(hobby);
+        final Hobby savedHobby = hobbyService.createHobby(hobby);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedHobby);
     }
 
