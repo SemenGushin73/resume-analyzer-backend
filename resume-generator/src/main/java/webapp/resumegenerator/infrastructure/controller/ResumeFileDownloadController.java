@@ -48,13 +48,13 @@ public class ResumeFileDownloadController {
     public ResponseEntity<Resource> downloadResumePdf(@PathVariable UUID id, @RequestBody TemplateDTO template) {
         ResumeDto resume = resumeService.getResume( id );
         byte[] pdfBytes = pdfService.generateResumePdf( resume, template );
-        return getResponcePdfFile( pdfBytes );
+        return getResponcePdfFile( id, pdfBytes );
     }
 
-    private ResponseEntity<Resource> getResponcePdfFile( byte[] pdfBytes ) {
+    private ResponseEntity<Resource> getResponcePdfFile( UUID id, byte[] pdfBytes ) {
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, 
-                   "attachment; filename=resume.pdf")
+                   "attachment; filename=resume_" + id.toString() + ".pdf")
             .contentType(MediaType.APPLICATION_PDF)
             .contentLength(pdfBytes.length)
             .body(new ByteArrayResource(pdfBytes));
