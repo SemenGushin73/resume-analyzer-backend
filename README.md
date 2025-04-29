@@ -45,10 +45,25 @@ docker compose -f docker-compose.yml up -d
 - [http://localhost:8765/swagger-ui/index.html](http://localhost:8765/analyzer/swagger-ui/index.html)
 
 ### 🔧 Примеры запросов:
+#### 1. Документация Gateway API
 ```http
-POST /api/ai/analyze
-GET /api/ai/status/{id}
+POST /api/analyze
 ```
+Отправляет POST запрос в GatewayController(), в теле запроса
+JSON (DTO AnalysisRequest). Контроллер генерирует requestId,
+вызывает KafkaConsumerService API Gateway и отправляет сообщение 
+в Kafka топик RESUME_ANALYZE_REQUESTS. На этот топик подписан
+слушатель AnalysisRequest(), в сервисе Resume Analyzer. Слушатель 
+отправляет прочитанное сообщение в Kafka топик 
+DEEPSEEK_ANALYSIS_REQUESTS, на который подписан слушатель 
+processRequest() в сервисе Deepseek Service. Он в свою очередь
+вызывает метод analyzeResume(), объявленный в DeepSeekService, который
+делает запрос непосредственно в ИИ модель, для анализа соответствия 
+текста резюме, описанию вакансии. Полученный ответ от ИИ модели,
+отправляется в Kafka топик RESUME_ANALYZE_RESULTS.
+Итоговое сообщение из топика RESUME_ANALYZE_RESULTS, можно вычитать
+консольным Kafka Consumer.
+
 
 ## 🗂️ Структура проекта
 ```

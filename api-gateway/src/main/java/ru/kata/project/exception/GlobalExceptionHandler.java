@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RestClientException.class)
     public ResponseEntity<Map<String, Object>> handleRestClientException(RestClientException ex) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", "Ошибка при вызове REST-клиента");
+        errorResponse.put("message", ex.getMessage());
         errorResponse.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
 
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);

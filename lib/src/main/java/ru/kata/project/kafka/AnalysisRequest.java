@@ -1,5 +1,6 @@
 package ru.kata.project.kafka;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "DTO для передачи данных между API Gateway и Resume-Analyzer")
 public class AnalysisRequest {
+
+    @Schema(description = "Текст резюме",
+            example = "Java developer with Spring experience.")
     private String resumeText;
+
+    @Schema(description = "Описание вакансии",
+            example = "Looking for a backend developer with Java 21, Kafka and PostgreSQL knowledge.")
     private String jobDescription;
 }
