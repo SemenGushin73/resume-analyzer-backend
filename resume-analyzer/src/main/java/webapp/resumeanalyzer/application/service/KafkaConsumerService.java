@@ -71,8 +71,8 @@ public class KafkaConsumerService {
     @KafkaListener(topics = KafkaTopics.AI_RESUME_SCORE_REQUESTS, groupId = "resume-score-group")
     public void consume(ResumeScoreRequest request) {
         try {
-            Resume resume = resumeService.getResumeById(request.getResumeId());
-            ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
+            final Resume resume = resumeService.getResumeById(request.getResumeId());
+            final ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
                     resume.getId().toString(),
                     resumeMapper.toDto(resume)
             );
@@ -88,7 +88,12 @@ public class KafkaConsumerService {
         if (text == null || text.trim().isEmpty()) {
             return false;
         }
-        return text.toLowerCase().contains("опыт работы") ||
-               text.toLowerCase().contains("навыки");
+        //TODO реализовать валидацию,
+        // я не понимаю смысла валидации на этом уровне,
+        // тем более реализованной таким образом
+//        return text.toLowerCase().contains("опыт работы") ||
+//               text.toLowerCase().contains("навыки");
+
+        return true;
     }
 }

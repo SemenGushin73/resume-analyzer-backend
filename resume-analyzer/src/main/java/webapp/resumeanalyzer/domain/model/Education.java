@@ -50,7 +50,7 @@ public class Education {
             return false;
         }
 
-        Education education = (Education) o;
+        final Education education = (Education) o;
         return id.equals(education.id);
     }
 

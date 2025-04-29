@@ -41,7 +41,7 @@ public class SocialLink {
             return false;
         }
 
-        SocialLink that = (SocialLink) o;
+        final SocialLink that = (SocialLink) o;
         return id.equals(that.id);
     }
 

@@ -58,13 +58,13 @@ public class ResumeFile {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ResumeFile that = (ResumeFile) o;
+        final ResumeFile that = (ResumeFile) o;
         return size == that.size && Objects.equals(id, that.id) &&
-                Objects.equals(filename, that.filename) &&
-                Objects.equals(fileType, that.fileType) &&
-                Objects.deepEquals(data, that.data) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(owner, that.owner);
+               Objects.equals(filename, that.filename) &&
+               Objects.equals(fileType, that.fileType) &&
+               Objects.deepEquals(data, that.data) &&
+               Objects.equals(createdAt, that.createdAt) &&
+               Objects.equals(owner, that.owner);
     }
 
     @Override

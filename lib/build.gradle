@@ -1,6 +1,12 @@
 plugins {
     id("java-library")
     id("maven-publish")
+    id 'checkstyle'
+}
+checkstyle {
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    toolVersion = "9.3"
+    ignoreFailures = true
 }
 
 group = "ru.kata.project"
@@ -23,6 +29,9 @@ dependencies {
 
     // Kafka
     implementation("org.springframework.kafka:spring-kafka:3.0.7")
+
+    // SpringDoc OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
     // Jackson (для сериализации DTO)
     api("com.fasterxml.jackson.core:jackson-databind:2.16.1")

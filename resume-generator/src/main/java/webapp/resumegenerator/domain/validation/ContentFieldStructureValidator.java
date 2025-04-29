@@ -17,7 +17,7 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
 
     private static final int MAX_BLOCKS = 50;
     private static final int MAX_DEPTH = 5;
-    private static final String[] FIELDS = new String[] {"name", "layout", "props"};
+    private static final String[] FIELDS = new String[]{"name", "layout", "props"};
     private final ObjectMapper objectMapper;
 
     public ContentFieldStructureValidator() {
@@ -38,8 +38,8 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
         }
 
         try {
-            JsonNode root = objectMapper.readTree(value);
-            JsonNode blocksNode = root.get("blocks");
+            final JsonNode root = objectMapper.readTree(value);
+            final JsonNode blocksNode = root.get("blocks");
 
             if (blocksNode == null || !blocksNode.isArray()) {
                 return false;
@@ -63,8 +63,9 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
 
     /**
      * Метод валидирующий глубину вложения поля blocks
+     *
      * @param blockNode поле для проверки
-     * @param depth текущая глубина вложенности
+     * @param depth     текущая глубина вложенности
      * @return false в случае не соответствия структуры заданным параметрам
      */
     private boolean isInvalidBlock(JsonNode blockNode, int depth) {
@@ -79,7 +80,7 @@ public class ContentFieldStructureValidator implements ConstraintValidator<Valid
             }
         }
 
-        JsonNode childrenNode = blockNode.get("children");
+        final JsonNode childrenNode = blockNode.get("children");
 
         if (childrenNode == null) {
             return false;

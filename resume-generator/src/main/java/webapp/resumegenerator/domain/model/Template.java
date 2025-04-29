@@ -74,18 +74,19 @@ public class Template {
 
     private Department department;
 
-    public Template() {}
+    public Template() {
+    }
 
     /**
      * Конструктор со всеми параметрами класса
      *
-     * @param id Уникальный идентификатор, генерируется при создании нового шаблона.
-     * @param name Название шаблона. Не должно быть пустым.
+     * @param id          Уникальный идентификатор, генерируется при создании нового шаблона.
+     * @param name        Название шаблона. Не должно быть пустым.
      * @param description Описание шаблона.
-     * @param content Контент шаблона.
-     * @param createdAt Дата и время создания шаблона.
-     * @param version Версия шаблона.
-     * @param department Департамент
+     * @param content     Контент шаблона.
+     * @param createdAt   Дата и время создания шаблона.
+     * @param version     Версия шаблона.
+     * @param department  Департамент
      */
     public Template(UUID id, String name, String description, String content, LocalDateTime createdAt, Integer version, Department department) {
         this.id = id;
@@ -100,9 +101,9 @@ public class Template {
     /**
      * Конструктор с параметрами для создания шаблона.
      *
-     * @param name Название шаблона.
+     * @param name        Название шаблона.
      * @param description Описание шаблона.
-     * @param content Контент шаблона.
+     * @param content     Контент шаблона.
      */
     public Template(String name, String description, String content) {
         this.id = UUID.randomUUID();
@@ -121,9 +122,9 @@ public class Template {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Template template = (Template) o;
+        final Template template = (Template) o;
         return Objects.equals(id, template.id) &&
-          Objects.equals(name, template.name);
+               Objects.equals(name, template.name);
     }
 
     @Override

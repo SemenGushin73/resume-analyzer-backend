@@ -43,9 +43,9 @@ public class EducationServiceImpl implements EducationService {
     @Transactional
     @Override
     public Education updateEducation(String id, Education education) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         education.setId(uuid);
-        Optional<Education> existingEducation = educationRepository.findById(uuid);
+        final Optional<Education> existingEducation = educationRepository.findById(uuid);
         if (existingEducation.isEmpty()) {
             throw new IllegalArgumentException("Education with uuid " + uuid + " not found.");
         }
@@ -58,7 +58,7 @@ public class EducationServiceImpl implements EducationService {
     @Transactional
     @Override
     public void deleteEducation(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         educationRepository.deleteById(uuid);
     }
 
@@ -73,7 +73,7 @@ public class EducationServiceImpl implements EducationService {
 
     @Override
     public Education getEducationById(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         return educationRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Education with uuid " + uuid + " not found."));
     }

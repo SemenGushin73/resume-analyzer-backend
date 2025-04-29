@@ -35,7 +35,7 @@ public class CustomTemplateRepositoryImpl implements CustomTemplateRepository {
      */
     @Override
     public List<Template> findByName(String name) {
-        Query query = new Query(Criteria.where("name").regex(name, "i"));
+        final Query query = new Query(Criteria.where("name").regex(name, "i"));
         return mongoTemplate.find(query, Template.class);
     }
 
@@ -48,7 +48,7 @@ public class CustomTemplateRepositoryImpl implements CustomTemplateRepository {
      */
     @Override
     public List<Template> findByDate(LocalDate startDate, LocalDate endDate) {
-        Query query = new Query(Criteria.where("date").gte(startDate).lt(endDate));
+        final Query query = new Query(Criteria.where("date").gte(startDate).lt(endDate));
         return mongoTemplate.find(query, Template.class);
     }
 }

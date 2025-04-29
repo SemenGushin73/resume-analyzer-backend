@@ -34,14 +34,14 @@ public class KafkaConsumerService {
     void listener(String jsonData, @Header(KafkaHeaders.RECEIVED_KEY) String key) {
         log.info("Processing message. Topic: {}, Key: {}, Data: {}", KafkaTopics.RESUME_GENERATION_REQUESTS, key, jsonData);
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            Map<String, String> data = objectMapper.readValue(jsonData, new TypeReference<Map<String, String>>() {
+            final Map<String, String> data = objectMapper.readValue(jsonData, new TypeReference<Map<String, String>>() {
             });
             log.info("Received message. Topic: {}, Key: {}, Data: {}", KafkaTopics.RESUME_GENERATION_REQUESTS, key, data);
 
-            Template template = new Template();
+            final Template template = new Template();
             template.setContent(jsonData);
             template.setDepartment(Department.getDepartment(data.get("department")));
 

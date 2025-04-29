@@ -141,8 +141,12 @@ public class BlockElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BlockElement that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BlockElement that)) {
+            return false;
+        }
         return Objects.equals(getId(), that.getId());
     }
 

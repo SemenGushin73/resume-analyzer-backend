@@ -1,4 +1,5 @@
 package webapp.deepseek.api;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +10,7 @@ import ru.kata.project.exception.ResourceNotFoundException;
 
 /**
  * Контроллер для тестирования обработки глобальных исключений.
- *
+ * <p>
  * Данный контроллер предоставляет эндпоинты, вызывающие различные исключения,
  * чтобы проверить работу GlobalExceptionHandler.
  */

@@ -3,6 +3,12 @@ plugins {
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'maven-publish'
+    id 'checkstyle'
+}
+checkstyle {
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    toolVersion = "9.3"
+    ignoreFailures = true
 }
 
 group = 'ru.kata.project'
@@ -25,9 +31,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.4.0'
-
-    // Swagger/OpenAPI
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
     // Jackson & JSON
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'

@@ -2,6 +2,12 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'checkstyle'
+}
+checkstyle {
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    toolVersion = "9.3"
+    ignoreFailures = true
 }
 
 group = 'ru.kata.project'
@@ -33,9 +39,12 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
+    // SpringDoc OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.6'
+
     // Kafka
-    implementation 'org.apache.kafka:kafka-clients'
-    implementation 'org.springframework.kafka:spring-kafka:3.3.0'
+//    implementation 'org.apache.kafka:kafka-clients'
+    implementation 'org.springframework.kafka:spring-kafka'
 
     // Monitoring and Logging
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
