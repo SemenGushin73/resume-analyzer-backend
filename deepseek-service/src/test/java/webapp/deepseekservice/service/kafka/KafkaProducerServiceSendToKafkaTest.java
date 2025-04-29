@@ -44,7 +44,7 @@ public class KafkaProducerServiceSendToKafkaTest {
         when(kafkaTemplate.send(any(), any(), any()))
                 .thenThrow(new RuntimeException("Kafka error"));
 
-        assertDoesNotThrow(() -> kafkaProducerService.sendToKafka(KEY,DATA));
+        assertDoesNotThrow(() -> kafkaProducerService.sendToKafka(KEY, DATA));
         verify(kafkaTemplate).send(KafkaTopics.DEEPSEEK_GENERATION_RESULT, KEY, DATA);
     }
 }

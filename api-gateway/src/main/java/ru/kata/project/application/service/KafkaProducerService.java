@@ -32,7 +32,7 @@ public class KafkaProducerService {
     }
 
     public void sendScoreRequest(String resumeId) {
-        ResumeScoreRequest request = new ResumeScoreRequest(resumeId);
+        final ResumeScoreRequest request = new ResumeScoreRequest(resumeId);
         kafkaScoreTemplate.send(KafkaTopics.AI_RESUME_SCORE_REQUESTS, request);
         log.info("Отправлен запрос на оценку резюме {}", resumeId);
     }

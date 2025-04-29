@@ -54,7 +54,7 @@ class ResumeBuilderControllerTest {
     @Test
     void shouldBuildResumeAndReturnCreated() throws Exception {
 
-        String resumeRequest = """
+        final String resumeRequest = """
                 { "personal_data" : {
                     "fullName":"Иван Петров",
                     "adress":"Moscow city",
@@ -87,9 +87,9 @@ class ResumeBuilderControllerTest {
                     ]
                 }
                 """;
-        JsonNode inputJson = objectMapper.readTree(resumeRequest);
-        String resumeResponse = "{\"resume\":\"Generated resume\"}";
-        JsonNode responseJson = objectMapper.readTree(resumeResponse);
+        final JsonNode inputJson = objectMapper.readTree(resumeRequest);
+        final String resumeResponse = "{\"resume\":\"Generated resume\"}";
+        final JsonNode responseJson = objectMapper.readTree(resumeResponse);
 
         // Мокаем метод сервиса
         Mockito.when(resumeBuilder.processResume(Mockito.any(JsonNode.class))).thenReturn(responseJson);
@@ -107,7 +107,7 @@ class ResumeBuilderControllerTest {
                  "Так как @Valid + JsonNode = не работает (аннотации валидации не применяются).")
     @Test
     void shouldReturnBadRequestForNotCompleteEmptyResume() throws Exception {
-        String invalidRequest = """
+        final String invalidRequest = """
                 { "personal_data" :
                     { "fullName":"Maxim",
                     "address":"Ivanov city",
@@ -119,9 +119,9 @@ class ResumeBuilderControllerTest {
                     }
                 }
                 """;
-        JsonNode inputJson = objectMapper.readTree(invalidRequest);
-        String resumeResponse = "{\"resume\":\"Generated NotComplete resume\"}";
-        JsonNode responseJson = objectMapper.readTree(resumeResponse);
+        final JsonNode inputJson = objectMapper.readTree(invalidRequest);
+        final String resumeResponse = "{\"resume\":\"Generated NotComplete resume\"}";
+        final JsonNode responseJson = objectMapper.readTree(resumeResponse);
         Mockito.when(resumeBuilder.processResume(Mockito.any(JsonNode.class))).thenReturn(responseJson);
         mockMvc.perform(post("/builder")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +134,7 @@ class ResumeBuilderControllerTest {
     @DisplayName("Проверка реальной валидации пустого резюме. Ожидается статус 400 (BadRequest).")
     @Test
     void shouldReturnBadRequestMissingBody() throws Exception {
-        String invalidRequest = """
+        final String invalidRequest = """
                 {""}
                 """;
         mockMvc.perform(post("/builder")
@@ -149,15 +149,15 @@ class ResumeBuilderControllerTest {
                  "минимальная фикстура DTO ")
     @Test
     void shouldBuildNotCompleteResumeAndReturnCreated() throws Exception {
-        String resumeRequest = """
+        final String resumeRequest = """
                 { "personal_data" :
                     { "fullName":"Иван Петров"
                     }
                 }
                 """;
-        JsonNode inputJson = objectMapper.readTree(resumeRequest);
-        String resumeResponse = "{\"resume\":\"Generated minFixDto resume\"}";
-        JsonNode responseJson = objectMapper.readTree(resumeResponse);
+        final JsonNode inputJson = objectMapper.readTree(resumeRequest);
+        final String resumeResponse = "{\"resume\":\"Generated minFixDto resume\"}";
+        final JsonNode responseJson = objectMapper.readTree(resumeResponse);
 
         // Мокаем метод сервиса
         Mockito.when(resumeBuilder.processResume(Mockito.any(JsonNode.class))).thenReturn(responseJson);

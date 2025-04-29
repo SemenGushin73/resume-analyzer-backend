@@ -43,11 +43,11 @@ public class ResumeGenerationTest {
 
     @Test
     void generateResume_ShouldReturnFormattedResume() {
-        OpenRouterResponse response = TestDataBuilder.createMockResponse("Generated resume");
+        final OpenRouterResponse response = TestDataBuilder.createMockResponse("Generated resume");
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenReturn(response);
 
-        String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
+        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
 
         assertEquals("Generated resume", result);
     }
@@ -57,13 +57,13 @@ public class ResumeGenerationTest {
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenThrow(new RuntimeException("API error"));
 
-        String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
+        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
 
         assertTrue(result.contains("Ошибка генерации: API error"));
     }
 
     private static Stream<Arguments> errorResponses() {
-        OpenRouterResponse responseWithEmptyChoices = new OpenRouterResponse();
+        final OpenRouterResponse responseWithEmptyChoices = new OpenRouterResponse();
         responseWithEmptyChoices.setChoices(List.of());
 
         return Stream.of(
@@ -79,7 +79,7 @@ public class ResumeGenerationTest {
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenReturn(response);
 
-        String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
+        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
 
         assertEquals("Не удалось сгенерировать резюме.", result);
     }

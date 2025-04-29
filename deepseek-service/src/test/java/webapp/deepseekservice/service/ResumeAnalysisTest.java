@@ -43,11 +43,11 @@ public class ResumeAnalysisTest {
 
     @Test
     void analyzeResume_ShouldReturnSuccessResult() {
-        OpenRouterResponse response = TestDataBuilder.createMockResponse("AI result");
+        final OpenRouterResponse response = TestDataBuilder.createMockResponse("AI result");
         when(apiClient.generateCompletion(any(), any(), any())).
                 thenReturn(response);
 
-        String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
+        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
 
         assertEquals("AI result", result);
     }
@@ -57,13 +57,13 @@ public class ResumeAnalysisTest {
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenThrow(new RuntimeException("API error"));
 
-        String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
+        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
 
         assertTrue(result.contains("Ошибка анализа: API error"));
     }
 
     private static Stream<Arguments> errorResponses() {
-        OpenRouterResponse responseWithEmptyChoices = new OpenRouterResponse();
+        final OpenRouterResponse responseWithEmptyChoices = new OpenRouterResponse();
         responseWithEmptyChoices.setChoices(List.of());
 
         return Stream.of(
@@ -79,7 +79,7 @@ public class ResumeAnalysisTest {
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenReturn(response);
 
-        String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
+        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
 
         assertEquals("Не удалось проанализировать резюме.", result);
     }

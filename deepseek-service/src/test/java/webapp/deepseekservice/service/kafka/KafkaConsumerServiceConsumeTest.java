@@ -60,7 +60,7 @@ public class KafkaConsumerServiceConsumeTest {
 
     @BeforeEach
     void setUp() throws JsonProcessingException {
-        ResumeDto resume = TestDataBuilder.createSampleResume();
+        final ResumeDto resume = TestDataBuilder.createSampleResume();
         request = new ResumeScoreAnalysisRequest(RESUME_ID, resume);
         mockResult = new ResumeScoreResult(UUID.randomUUID().toString(), 90,
                 List.of("Хорошее резюме"));
@@ -75,10 +75,10 @@ public class KafkaConsumerServiceConsumeTest {
     void consume_ShouldSetResumeId_WhenProcessingSuccess() {
         kafkaConsumerService.consume(request);
 
-        ArgumentCaptor<ResumeScoreResult> captor = ArgumentCaptor.forClass(ResumeScoreResult.class);
+        final ArgumentCaptor<ResumeScoreResult> captor = ArgumentCaptor.forClass(ResumeScoreResult.class);
         verify(kafkaScoreTemplate).send(any(), captor.capture());
 
-        ResumeScoreResult sentResult = captor.getValue();
+        final ResumeScoreResult sentResult = captor.getValue();
 
         assertAll(
                 () -> assertEquals(RESUME_ID, sentResult.getResumeId()),
@@ -110,8 +110,8 @@ public class KafkaConsumerServiceConsumeTest {
 
     @Test
     void consume_ShouldHandleEmptyResume_WhenAnalysisFails() throws JsonProcessingException {
-        ResumeDto emptyResumeDto = new ResumeDto();
-        ResumeScoreAnalysisRequest emptyRequest = new ResumeScoreAnalysisRequest(RESUME_ID, emptyResumeDto);
+        final ResumeDto emptyResumeDto = new ResumeDto();
+        final ResumeScoreAnalysisRequest emptyRequest = new ResumeScoreAnalysisRequest(RESUME_ID, emptyResumeDto);
         when(deepSeekService.analyzeResumeScore(any()))
                 .thenThrow(new RuntimeException("Ошибка: AI не смог обработать запрос."));
 

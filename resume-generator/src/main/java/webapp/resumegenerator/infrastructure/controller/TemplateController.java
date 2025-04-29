@@ -47,15 +47,14 @@ public class TemplateController {
      * Получение списка шаблонов с поддержкой пагинации.
      *
      * @param page Номер страницы.
-     *
      * @param size Количество элементов на странице.
      * @return {@link ResponseEntity} с HTTP статусом 200 (OK) и страницей шаблонов.
      */
     @GetMapping
     public Page<Template> getTemplates(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        final Pageable pageable = PageRequest.of(page, size);
         return templateService.getAllTemplates(pageable);
     }
 
@@ -67,7 +66,7 @@ public class TemplateController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Template> getTemplateById(@PathVariable String id) {
-        Template template = templateService.getTemplateById(id);
+        final Template template = templateService.getTemplateById(id);
         if (template == null) {
             return ResponseEntity.notFound().build();
         }
@@ -82,7 +81,7 @@ public class TemplateController {
      */
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Template> createTemplate(@Valid @RequestBody Template template) {
-        Template savedTemplate = templateService.createTemplate(template);
+        final Template savedTemplate = templateService.createTemplate(template);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTemplate);
     }
 
@@ -101,8 +100,7 @@ public class TemplateController {
     /**
      * Обновляет существующий шаблон.
      *
-     * @param id Уникальный идентификатор, обновленного шаблона.
-     *
+     * @param id       Уникальный идентификатор, обновленного шаблона.
      * @param template Обновленный шаблон.
      * @return Обновленный шаблон.
      */
@@ -121,15 +119,14 @@ public class TemplateController {
      * Извлекает шаблоны, за указанный период.
      *
      * @param startDate Начальная дата диапазона.
-     *
-     * @param endDate Конечная дата диапазона.
+     * @param endDate   Конечная дата диапазона.
      * @return Список шаблонов за указанный период.
      */
     @GetMapping("/data")
     public List<Template> getTemplateData(@RequestParam String startDate,
-                                        @RequestParam String endDate) {
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
+                                          @RequestParam String endDate) {
+        final LocalDate start = LocalDate.parse(startDate);
+        final LocalDate end = LocalDate.parse(endDate);
         return templateService.getTemplatesByDateRange(start, end);
     }
 
@@ -141,7 +138,7 @@ public class TemplateController {
      */
     @GetMapping("/exists")
     public ResponseEntity<Boolean> existsTemplateName(@RequestParam String name) {
-        boolean exists = templateService.isTemplateNameExist(name);
+        final boolean exists = templateService.isTemplateNameExist(name);
         return ResponseEntity.ok(exists);
     }
 
@@ -153,11 +150,11 @@ public class TemplateController {
      */
     @PostMapping("/{id}/version")
     public ResponseEntity<Template> createNewTemplateVersion(@PathVariable String id) {
-        Template template = templateService.getTemplateById(id);
+        final Template template = templateService.getTemplateById(id);
         if (template == null) {
             return ResponseEntity.notFound().build();
         }
-        Template newTemplate = templateService.createNewTemplateVersion(template);
+        final Template newTemplate = templateService.createNewTemplateVersion(template);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTemplate);
     }
 
@@ -169,11 +166,11 @@ public class TemplateController {
      */
     @GetMapping("/{id}/versions")
     public ResponseEntity<List<Template>> getTemplateVersions(@PathVariable String id) {
-        Template template = templateService.getTemplateById(id);
+        final Template template = templateService.getTemplateById(id);
         if (template == null) {
             return ResponseEntity.notFound().build();
         }
-        List<Template> listTemplate = templateService.findAllTemplateVersionsByName(template.getName());
+        final List<Template> listTemplate = templateService.findAllTemplateVersionsByName(template.getName());
         return ResponseEntity.ok(listTemplate);
     }
 

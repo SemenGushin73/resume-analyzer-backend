@@ -3,11 +3,11 @@
     </appender>
 
     <root level="info">
-        <appender-ref ref="MEMORY" />
+        <appender-ref ref="MEMORY"/>
     </root>
 
     <logger name="deepseek-service/src/main/java/webapp/deepseek/application/service/KafkaConsumerService.java"
             level="info" additivity="false">
-        <appender-ref ref="MEMORY" />
+        <appender-ref ref="MEMORY"/>
     </logger>
 </configuration>

@@ -22,7 +22,7 @@ public class PromptGenerationTest {
 
     @Test
     void createPrompt_ShouldIncludeResumeAndJobDescription() {
-        String prompt = ReflectionTestUtils.invokeMethod(service, "createPrompt", RESUME_TEXT, JOB_DESCRIPTION);
+        final String prompt = ReflectionTestUtils.invokeMethod(service, "createPrompt", RESUME_TEXT, JOB_DESCRIPTION);
 
         assertThat(prompt)
                 .startsWith("Вы полезный помощник")
@@ -32,7 +32,7 @@ public class PromptGenerationTest {
 
     @Test
     void createPromptForGeneration_ShouldIncludeTemplateAndDepartment() {
-        String prompt = ReflectionTestUtils.invokeMethod(service, "createPromptForGeneration", TEMPLATE, DEPT_DESC);
+        final String prompt = ReflectionTestUtils.invokeMethod(service, "createPromptForGeneration", TEMPLATE, DEPT_DESC);
 
         assertThat(prompt)
                 .startsWith("Напиши профессиональное")
@@ -42,7 +42,7 @@ public class PromptGenerationTest {
 
     @Test
     void createPromptForScoring_ShouldIncludeResumeScore() {
-        String prompt = ReflectionTestUtils.invokeMethod(service, "createPromptForScoring", RESUME_TEXT);
+        final String prompt = ReflectionTestUtils.invokeMethod(service, "createPromptForScoring", RESUME_TEXT);
 
         assertThat(prompt)
                 .startsWith("Руководствуясь параметрами ниже оцени резюме")

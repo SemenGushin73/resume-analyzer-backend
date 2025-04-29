@@ -40,9 +40,9 @@ public class HobbyServiceImpl implements HobbyService {
     @Transactional
     @Override
     public Hobby updateHobby(String id, Hobby hobby) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         hobby.setId(uuid);
-        Optional<Hobby> existingHobby = hobbyRepository.findById(uuid);
+        final Optional<Hobby> existingHobby = hobbyRepository.findById(uuid);
         if (existingHobby.isEmpty()) {
             throw new IllegalArgumentException("Hobby with uuid " + uuid + " not found.");
         }
@@ -52,7 +52,7 @@ public class HobbyServiceImpl implements HobbyService {
     @Transactional
     @Override
     public void deleteHobby(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         hobbyRepository.deleteById(uuid);
     }
 
@@ -67,7 +67,7 @@ public class HobbyServiceImpl implements HobbyService {
 
     @Override
     public Hobby getHobbyById(String id) {
-        UUID uuid = generateUuid(id);
+        final UUID uuid = generateUuid(id);
         return hobbyRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Hobby with uuid " + uuid + " not found."));
     }

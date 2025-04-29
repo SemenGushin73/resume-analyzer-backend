@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * Глобальный обработчик исключений для всех контроллеров в приложении.
- *
+ * <p>
  * Этот класс перехватывает различные исключения, возникающие в процессе работы приложения,
  * и возвращает соответствующие HTTP-ответы с описанием ошибки и кодом статуса.
  */
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        Map<String, Object> body = new HashMap<>();
+        final Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("status", HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<Object> handleInvalidRequestException(InvalidRequestException ex) {
-        Map<String, Object> body = new HashMap<>();
+        final Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("status", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(KafkaProcessingException.class)
     public ResponseEntity<Object> handleKafkaProcessingException(KafkaProcessingException ex) {
-        Map<String, Object> body = new HashMap<>();
+        final Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ExternalServiceException.class)
     public ResponseEntity<Object> handleExternalServiceException(ExternalServiceException ex) {
-        Map<String, Object> body = new HashMap<>();
+        final Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGlobalException(Exception ex) {
-        Map<String, Object> body = new HashMap<>();
+        final Map<String, Object> body = new HashMap<>();
         body.put("message", "Internal Server Error");
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);

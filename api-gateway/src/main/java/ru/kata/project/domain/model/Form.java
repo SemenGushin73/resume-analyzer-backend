@@ -2,6 +2,7 @@ package ru.kata.project.domain.model;
 
 import java.util.Objects;
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,15 +34,14 @@ public class Form {
     @Override
     public String toString() {
         return "Form{" +
-                "personalData='" + personalData + '\'' +
-                ", educations='" + educations + '\'' +
-                ", experiences='" + experiences + '\'' +
-                ", socialLinks='" + socialLinks + '\'' +
-                ", hobbies='" + hobbies + '\'' +
-                ", department=" + department +
-                '}';
+               "personalData='" + personalData + '\'' +
+               ", educations='" + educations + '\'' +
+               ", experiences='" + experiences + '\'' +
+               ", socialLinks='" + socialLinks + '\'' +
+               ", hobbies='" + hobbies + '\'' +
+               ", department=" + department +
+               '}';
     }
-
 
 
     @Override
@@ -52,12 +52,12 @@ public class Form {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Form form = (Form) o;
+        final Form form = (Form) o;
         return Objects.equals(personalData, form.personalData) &&
-                Objects.equals(educations, form.educations) &&
-                Objects.equals(experiences, form.experiences) &&
-                Objects.equals(socialLinks, form.socialLinks) &&
-                Objects.equals(hobbies, form.hobbies) && department == form.department;
+               Objects.equals(educations, form.educations) &&
+               Objects.equals(experiences, form.experiences) &&
+               Objects.equals(socialLinks, form.socialLinks) &&
+               Objects.equals(hobbies, form.hobbies) && department == form.department;
     }
 
     @Override

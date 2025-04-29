@@ -50,7 +50,7 @@ public class Experience {
             return false;
         }
 
-        Experience experience = (Experience) o;
+        final Experience experience = (Experience) o;
         return id.equals(experience.id);
     }
 

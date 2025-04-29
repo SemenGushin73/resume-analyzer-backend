@@ -21,7 +21,7 @@ import ru.kata.project.resumeDto.TemplateDTO;
 public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     public <T> Mono<List<T>> makeRequest(String uri, Class<T> elementClass) {
-        WebClient webClient = WebClient.create();
+        final WebClient webClient = WebClient.create();
 
         return webClient.get()
                 .uri(uri)
@@ -32,14 +32,14 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     public Mono<List<ResumeWithTemplate>> getListOfResumeWithTemplates(Department department) {
 
-        Mono<List<TemplateDTO>> templates = makeRequest("http://localhost:8765/generator/templates/all?department=" + department, TemplateDTO.class);
-        Mono<List<ResumeDto>> resumes = makeRequest("http://localhost:8765/analyzer/resumes/all?department=" + department, ResumeDto.class);
+        final Mono<List<TemplateDTO>> templates = makeRequest("http://localhost:8765/generator/templates/all?department=" + department, TemplateDTO.class);
+        final Mono<List<ResumeDto>> resumes = makeRequest("http://localhost:8765/analyzer/resumes/all?department=" + department, ResumeDto.class);
 
         return Mono.zip(resumes, templates)
                 .map(tuple -> {
-                    List<ResumeWithTemplate> result = new ArrayList<>();
+                    final List<ResumeWithTemplate> result = new ArrayList<>();
                     for (ResumeDto resume : tuple.getT1()) {
-                        ResumeWithTemplate resumeWithTemplate = new ResumeWithTemplate(resume);
+                        final ResumeWithTemplate resumeWithTemplate = new ResumeWithTemplate(resume);
                         for (TemplateDTO template : tuple.getT2()) {
                             resumeWithTemplate.addTemplate(template);
                         }
@@ -57,13 +57,13 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
      */
     @Override
     public ResponseEntity<JsonNode> createResume(JsonNode resumeJson) {
-        WebClient webClient = WebClient.builder()
+        final WebClient webClient = WebClient.builder()
                 .baseUrl("http://localhost:8080")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
 
         // Отправляем запрос на resume-analyzer
-        ResponseEntity<JsonNode> buildResume = webClient.post()
+        final ResponseEntity<JsonNode> buildResume = webClient.post()
                 .uri("/resumes")
                 .bodyValue(resumeJson)
                 .retrieve()
@@ -72,16 +72,16 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
         if (buildResume.getStatusCode().is2xxSuccessful()) {
             // Получаем тело ответа
-            JsonNode responseJson = buildResume.getBody();
+            final JsonNode responseJson = buildResume.getBody();
 
             // WebClient для resume-builder
-            WebClient secondWebClient = WebClient.builder()
+            final WebClient secondWebClient = WebClient.builder()
                     .baseUrl("http://localhost:8082")
                     .defaultHeader("Content-Type", "application/json")
                     .build();
 
             // Отправляем полученный JSON на resume-builder для обработки
-            ResponseEntity<JsonNode> secondResponse = secondWebClient.post()
+            final ResponseEntity<JsonNode> secondResponse = secondWebClient.post()
                     .uri("/builder") // Укажите путь на втором микросервисе
                     .bodyValue(responseJson)
                     .retrieve()
