@@ -24,8 +24,6 @@ public class HTMLResumeGenerator {
         String htmlTemplate = templateToHtmlConvertor.convert( template );
         Context context = new Context();
         context.setVariable("resume", resume);
-        System.out.println( htmlTemplate );
-        System.out.println( templateEngine.process(htmlTemplate, context) );
         return templateEngine.process(htmlTemplate, context);
     }
 }
