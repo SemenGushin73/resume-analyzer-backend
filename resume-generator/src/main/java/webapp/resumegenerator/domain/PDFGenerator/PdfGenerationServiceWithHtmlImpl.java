@@ -34,7 +34,7 @@ public class PdfGenerationServiceWithHtmlImpl extends PdfGenerationService{
         return pdfBytes;
     }
 
-    private byte[] createPdfFilebyHtml( String filledHtml ) throws DocumentException, IOException {
+    public byte[] createPdfFilebyHtml( String filledHtml ) throws DocumentException, IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ITextRenderer renderer = new ITextRenderer();
 
