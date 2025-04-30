@@ -21,20 +21,20 @@ import webapp.resumegenerator.exception.PdfGenerationException;
 public class ResumeService {
 
     private RestTemplate restTemplate;
-    private String urlResumeAnalyzer = "http://resume-analyzer:8083/resumes/";
+    private String URL_RESUME_ANALYZER = "http://resume-analyzer:8083/resumes/";
 
     @Autowired
     public ResumeService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public ResumeDto getResume( UUID id ) {
-        String url = urlResumeAnalyzer + id;
+    public ResumeDto getResume(UUID id) {
+        String url = URL_RESUME_ANALYZER + id;
         ResponseEntity<ResumeDto> response = restTemplate.getForEntity(url, ResumeDto.class);
         if (response.getStatusCode() != HttpStatus.OK) {
-            log.error("Resume not found", id);
+            log.error("Resume not found, id: {}", id);
             throw new PdfGenerationException("Resume not found");
         }
         return response.getBody();
-    };
+    }
 }

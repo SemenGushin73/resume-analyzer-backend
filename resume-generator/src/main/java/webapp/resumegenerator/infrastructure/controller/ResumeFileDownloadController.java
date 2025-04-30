@@ -9,13 +9,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.kata.project.resumeDto.ResumeDto;
 import ru.kata.project.resumeDto.TemplateDTO;
 import webapp.resumegenerator.domain.service.PdfGenerationService;
@@ -26,6 +26,7 @@ import webapp.resumegenerator.domain.service.ResumeService;
  */
 @RestController
 @RequestMapping("/resumes")
+@Tag(name = "Resume Download", description = "API для генерации и скачивания резюме в PDF формате")
 public class ResumeFileDownloadController {
 
     private final PdfGenerationService pdfService;
@@ -46,12 +47,12 @@ public class ResumeFileDownloadController {
      */
     @PostMapping("/{id}/download")
     public ResponseEntity<Resource> downloadResumePdf(@PathVariable UUID id, @RequestBody TemplateDTO template) {
-        ResumeDto resume = resumeService.getResume( id );
-        byte[] pdfBytes = pdfService.generateResumePdf( resume, template );
-        return getResponcePdfFile( id, pdfBytes );
+        ResumeDto resume = resumeService.getResume(id);
+        byte[] pdfBytes = pdfService.generateResumePdf(resume, template);
+        return getResponsePdfFile(id, pdfBytes);
     }
 
-    private ResponseEntity<Resource> getResponcePdfFile( UUID id, byte[] pdfBytes ) {
+    private ResponseEntity<Resource> getResponsePdfFile(UUID id, byte[] pdfBytes) {
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, 
                    "attachment; filename=resume_" + id.toString() + ".pdf")

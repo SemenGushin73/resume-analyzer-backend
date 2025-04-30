@@ -10,7 +10,6 @@ import webapp.resumegenerator.exception.PdfGenerationException;
  * абстрактный сервис по генерации PDF файлов резюме
  * 
 */
-
 @Service
 @Slf4j
 public abstract class PdfGenerationService {

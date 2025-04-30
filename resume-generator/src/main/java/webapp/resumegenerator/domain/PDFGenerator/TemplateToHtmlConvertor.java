@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.kata.project.resumeDto.TemplateDTO;
 
 /*
- * 
- * конвертер контекста template в html
+ * конвертер template в html
  * TODO: дописать метод
 */
 @Component
