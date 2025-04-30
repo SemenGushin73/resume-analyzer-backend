@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.kata.project.resumeDto.ResumeDto;
 import ru.kata.project.resumeDto.TemplateDTO;
@@ -46,7 +52,40 @@ public class ResumeFileDownloadController {
      * @return resume.pdf
      */
     @PostMapping("/{id}/download")
-    public ResponseEntity<Resource> downloadResumePdf(@PathVariable UUID id, @RequestBody TemplateDTO template) {
+    @Operation(
+        summary = "Скачать резюме в PDF",
+        description = "Генерирует и возвращает резюме в формате PDF на основе указанного шаблона"
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "PDF файл резюме",
+            content = @Content(mediaType = "application/pdf",
+                              schema = @Schema(type = "string", format = "binary"))
+        ),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Резюме не найдено"
+            ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Неверный запрос"
+        )
+    })
+    public ResponseEntity<Resource> downloadResumePdf(
+        @Parameter(
+            description = "UUID резюме",
+            required = true,
+            example = "123e4567-e89b-12d3-a456-426614174000"
+        )
+        @PathVariable UUID id,
+        
+        @Parameter(
+            description = "Шаблон для генерации PDF",
+            required = true,
+            content = @Content(schema = @Schema(implementation = TemplateDTO.class))
+        )
+        @RequestBody TemplateDTO template) {
         ResumeDto resume = resumeService.getResume(id);
         byte[] pdfBytes = pdfService.generateResumePdf(resume, template);
         return getResponsePdfFile(id, pdfBytes);
