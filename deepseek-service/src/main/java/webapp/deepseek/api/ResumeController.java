@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import webapp.deepseek.aiStuff.ValidResumeChecker;
-import webapp.deepseek.domain.service.AIService;
+import webapp.deepseek.application.service.AIService;
+import webapp.deepseek.utils.ai.ValidResumeChecker;
 
 @RestController
 @RequestMapping("/api/resume")

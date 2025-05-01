@@ -4,9 +4,8 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import webapp.deepseek.aiStuff.AIMessageSender;
-import webapp.deepseek.aiStuff.PromptGenerator;
-import webapp.deepseek.domain.service.AIService;
+import webapp.deepseek.utils.ai.AIMessageSender;
+import webapp.deepseek.utils.ai.PromptGenerator;
 
 @Service
 public class AIServiceImpl implements AIService {

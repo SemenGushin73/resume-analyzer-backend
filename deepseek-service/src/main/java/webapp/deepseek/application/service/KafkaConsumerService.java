@@ -8,7 +8,6 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import ru.kata.project.kafka.*;
 import ru.kata.project.kafka.config.KafkaTopics;
-import webapp.deepseek.domain.service.AIService;
 
 @Service
 @Slf4j

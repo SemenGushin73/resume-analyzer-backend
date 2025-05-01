@@ -1,4 +1,4 @@
-package webapp.deepseek.aiStuff;
+package webapp.deepseek.utils.ai;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;

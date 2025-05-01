@@ -12,8 +12,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.AnalysisResult;
 import ru.kata.project.kafka.config.KafkaTopics;
+import webapp.deepseek.application.service.AIService;
 import webapp.deepseek.application.service.KafkaConsumerService;
-import webapp.deepseek.domain.service.AIService;
 
 import java.util.stream.Stream;
 

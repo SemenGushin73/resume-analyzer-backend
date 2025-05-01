@@ -14,8 +14,8 @@ import ru.kata.project.kafka.ResumeScoreAnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 import ru.kata.project.resumeDto.ResumeDto;
+import webapp.deepseek.application.service.AIService;
 import webapp.deepseek.application.service.KafkaConsumerService;
-import webapp.deepseek.domain.service.AIService;
 import webapp.deepseek.utils.TestDataBuilder;
 
 import java.util.List;

@@ -8,8 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import webapp.deepseek.aiStuff.ValidResumeChecker;
-import webapp.deepseek.domain.service.AIService;
+import webapp.deepseek.utils.ai.ValidResumeChecker;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
