@@ -1,4 +1,4 @@
-package webapp.deepseekservice.service;
+package webapp.deepseek.application.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,10 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import webapp.deepseek.application.service.DeepSeekServiceImpl;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
-import webapp.deepseekservice.utils.TestDataBuilder;
+import webapp.deepseek.utils.TestDataBuilder;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ResumeGenerationTest {
+public class ResumeAnalysisTest {
 
     @Mock
     OpenRouterApiClient apiClient;
@@ -32,8 +31,8 @@ public class ResumeGenerationTest {
     @InjectMocks
     DeepSeekServiceImpl service;
 
-    private static final String TEMPLATE = "Test template";
-    private static final String DEPARTMENT_DESCRIPTION = "Test departmentDescription";
+    private static final String RESUME_TEXT = "Test resume";
+    private static final String JOB_DESC = "Test job";
 
     @BeforeEach
     void setUp() {
@@ -42,24 +41,24 @@ public class ResumeGenerationTest {
     }
 
     @Test
-    void generateResume_ShouldReturnFormattedResume() {
-        final OpenRouterResponse response = TestDataBuilder.createMockResponse("Generated resume");
-        when(apiClient.generateCompletion(any(), any(), any()))
-                .thenReturn(response);
+    void analyzeResume_ShouldReturnSuccessResult() {
+        final OpenRouterResponse response = TestDataBuilder.createMockResponse("AI result");
+        when(apiClient.generateCompletion(any(), any(), any())).
+                thenReturn(response);
 
-        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
+        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
 
-        assertEquals("Generated resume", result);
+        assertEquals("AI result", result);
     }
 
     @Test
-    void generateResume_ShouldHandleApiErrors() {
+    void analyzeResume_ShouldHandleApiErrors() {
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenThrow(new RuntimeException("API error"));
 
-        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
+        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
 
-        assertTrue(result.contains("Ошибка генерации: API error"));
+        assertTrue(result.contains("Ошибка анализа: API error"));
     }
 
     private static Stream<Arguments> errorResponses() {
@@ -75,12 +74,12 @@ public class ResumeGenerationTest {
 
     @ParameterizedTest
     @MethodSource("errorResponses")
-    void generateResume_ShouldHandleInvalidResponses(OpenRouterResponse response) {
+    void analyzeResume_ShouldReturnErrorMessage_WhenInvalidResponse(OpenRouterResponse response) {
         when(apiClient.generateCompletion(any(), any(), any()))
                 .thenReturn(response);
 
-        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
+        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
 
-        assertEquals("Не удалось сгенерировать резюме.", result);
+        assertEquals("Не удалось проанализировать резюме.", result);
     }
 }

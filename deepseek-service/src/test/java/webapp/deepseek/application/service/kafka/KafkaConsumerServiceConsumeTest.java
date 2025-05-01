@@ -1,4 +1,4 @@
-package webapp.deepseekservice.service.kafka;
+package webapp.deepseek.application.service.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +16,7 @@ import ru.kata.project.kafka.config.KafkaTopics;
 import ru.kata.project.resumeDto.ResumeDto;
 import webapp.deepseek.application.service.DeepSeekServiceImpl;
 import webapp.deepseek.application.service.KafkaConsumerService;
-import webapp.deepseekservice.utils.TestDataBuilder;
+import webapp.deepseek.utils.TestDataBuilder;
 
 import java.util.List;
 import java.util.UUID;
