@@ -1,8 +1,10 @@
 // package infrastructure.controller;
 
 // import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
 // import org.mockito.InjectMocks;
 // import org.mockito.Mock;
+// import org.mockito.junit.jupiter.MockitoExtension;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 // import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +19,7 @@
 // import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 // import ru.kata.project.resumeDto.ResumeDto;
 // import ru.kata.project.resumeDto.TemplateDTO;
+// import webapp.resumegenerator.ResumeGeneratorApplication;
 // import webapp.resumegenerator.domain.service.PdfGenerationService;
 // import webapp.resumegenerator.domain.service.ResumeService;
 // import webapp.resumegenerator.infrastructure.controller.ResumeFileDownloadController;
@@ -27,8 +30,13 @@
 // import static org.mockito.Mockito.when;
 // import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/*
+ * 
+ * TODO: расскоментить и дописать тест
+ * 
+*/
 // @WebMvcTest(controllers = ResumeFileDownloadController.class)
-// @ContextConfiguration(classes = {ResumeFileDownloadController.class})
+// @ContextConfiguration(classes = ResumeGeneratorApplication.class)
 // class ResumeFileDownloadControllerTest {
 
 //     @Autowired
@@ -63,18 +71,5 @@
 //                     "attachment; filename=resume_" + resumeId + ".pdf"))
 //                 .andExpect(content().contentType(MediaType.APPLICATION_PDF))
 //                 .andExpect(content().bytes(pdfBytes));
-//     }
-
-//     @Test
-//     void downloadResumePdf_ShouldReturn404WhenResumeNotFound() throws Exception {
-//         // Arrange
-//         UUID resumeId = UUID.randomUUID();
-//         when(resumeService.getResume(resumeId)).thenThrow(new RuntimeException("Resume not found"));
-
-//         // Act & Assert
-//         mockMvc.perform(MockMvcRequestBuilders.post("/resumes/{id}/download", resumeId)
-//                 .contentType(MediaType.APPLICATION_JSON)
-//                 .content("{\"templateName\":\"default\"}"))
-//                 .andExpect(status().isNotFound());
 //     }
 // }
