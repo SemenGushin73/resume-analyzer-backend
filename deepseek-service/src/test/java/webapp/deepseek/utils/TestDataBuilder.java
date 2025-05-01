@@ -1,4 +1,4 @@
-package webapp.deepseekservice.utils;
+package webapp.deepseek.utils;
 
 import ru.kata.project.resumeDto.EducationDto;
 import ru.kata.project.resumeDto.ExperienceDto;
