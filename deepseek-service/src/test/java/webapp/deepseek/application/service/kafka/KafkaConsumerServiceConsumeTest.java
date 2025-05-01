@@ -15,7 +15,7 @@ import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 import ru.kata.project.resumeDto.ResumeDto;
 import webapp.deepseek.application.service.KafkaConsumerService;
-import webapp.deepseek.domain.service.DeepSeekService;
+import webapp.deepseek.domain.service.AIService;
 import webapp.deepseek.utils.TestDataBuilder;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class KafkaConsumerServiceConsumeTest {
     private KafkaTemplate<String, ResumeScoreResult> kafkaScoreTemplate;
 
     @Mock
-    private DeepSeekService deepSeekService;
+    private AIService aiService;
 
     @Mock
     private ObjectMapper mapper;
@@ -65,7 +65,7 @@ public class KafkaConsumerServiceConsumeTest {
         mockResult = new ResumeScoreResult(UUID.randomUUID().toString(), 90,
                 List.of("Хорошее резюме"));
 
-        lenient().when(deepSeekService.analyzeResumeScore(any()))
+        lenient().when(aiService.analyzeResumeScore(any()))
                 .thenReturn(DEEPSEEK_RESPONSE_JSON);
         lenient().when(mapper.readValue(anyString(), eq(ResumeScoreResult.class)))
                 .thenReturn(mockResult);
@@ -91,7 +91,7 @@ public class KafkaConsumerServiceConsumeTest {
     void consume_ShouldSendScoreResult_WhenValidRequest() throws JsonProcessingException {
         kafkaConsumerService.consume(request);
 
-        verify(deepSeekService).analyzeResumeScore(request.getResume().toString());
+        verify(aiService).analyzeResumeScore(request.getResume().toString());
         verify(mapper).readValue(anyString(), eq(ResumeScoreResult.class));
         verify(kafkaScoreTemplate).send(eq(KafkaTopics.AI_RESUME_SCORE_RESULTS),
                 any(ResumeScoreResult.class));
@@ -112,7 +112,7 @@ public class KafkaConsumerServiceConsumeTest {
     void consume_ShouldHandleEmptyResume_WhenAnalysisFails() throws JsonProcessingException {
         final ResumeDto emptyResumeDto = new ResumeDto();
         final ResumeScoreAnalysisRequest emptyRequest = new ResumeScoreAnalysisRequest(RESUME_ID, emptyResumeDto);
-        when(deepSeekService.analyzeResumeScore(any()))
+        when(aiService.analyzeResumeScore(any()))
                 .thenThrow(new RuntimeException("Ошибка: AI не смог обработать запрос."));
 
         kafkaConsumerService.consume(emptyRequest);
@@ -124,7 +124,7 @@ public class KafkaConsumerServiceConsumeTest {
     @Test
     void consume_ShouldHandleNullRequest() {
         kafkaConsumerService.consume(null);
-        verifyNoInteractions(deepSeekService, mapper, kafkaScoreTemplate);
+        verifyNoInteractions(aiService, mapper, kafkaScoreTemplate);
     }
 
     @Test

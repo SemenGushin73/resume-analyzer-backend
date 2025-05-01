@@ -13,7 +13,7 @@ import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.AnalysisResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 import webapp.deepseek.application.service.KafkaConsumerService;
-import webapp.deepseek.domain.service.DeepSeekService;
+import webapp.deepseek.domain.service.AIService;
 
 import java.util.stream.Stream;
 
@@ -31,7 +31,7 @@ public class KafkaConsumerServiceProcessRequestTest {
     private KafkaTemplate<String, AnalysisResult> kafkaTemplate;
 
     @Mock
-    private DeepSeekService deepSeekService;
+    private AIService aiService;
 
     @InjectMocks
     private KafkaConsumerService kafkaConsumerService;
@@ -41,19 +41,19 @@ public class KafkaConsumerServiceProcessRequestTest {
 
     @Test
     void processRequest_ShouldCorrectlyParseAndProcessValidRequest() {
-        when(deepSeekService.analyzeResume(validRequest.getResumeText(), validRequest.getJobDescription()))
+        when(aiService.analyzeResume(validRequest.getResumeText(), validRequest.getJobDescription()))
                 .thenReturn("OK");
 
         kafkaConsumerService.processRequest(REQUEST_ID, validRequest);
 
-        verify(deepSeekService).analyzeResume("testResume", "testJobDesc");
+        verify(aiService).analyzeResume("testResume", "testJobDesc");
         verify(kafkaTemplate).send(eq(KafkaTopics.RESUME_ANALYZE_RESULTS), eq("123"),
                 eq(new AnalysisResult("123", "OK")));
     }
 
     @Test
     void processRequest_ShouldHandleDeepSeekErrors_Gracefully() {
-        when(deepSeekService.analyzeResume(any(), any()))
+        when(aiService.analyzeResume(any(), any()))
                 .thenThrow(new RuntimeException("API error"));
 
         kafkaConsumerService.processRequest(REQUEST_ID, validRequest);
@@ -64,7 +64,7 @@ public class KafkaConsumerServiceProcessRequestTest {
     @ParameterizedTest
     @MethodSource("provideInvalidRequests")
     void processRequest_ShouldRejectInvalidRequests(AnalysisRequest invalidRequest) {
-        when(deepSeekService.analyzeResume(any(), any()))
+        when(aiService.analyzeResume(any(), any()))
                 .thenThrow(new RuntimeException("AnalysisRequest is null"));
 
         kafkaConsumerService.processRequest(REQUEST_ID, invalidRequest);
@@ -83,7 +83,7 @@ public class KafkaConsumerServiceProcessRequestTest {
 
     @Test
     void processRequest_ShouldHandleKafkaSendExceptionGracefully() {
-        when(deepSeekService.analyzeResume(any(), any()))
+        when(aiService.analyzeResume(any(), any()))
                 .thenReturn("OK");
         when(kafkaTemplate.send(any(), any(), any()))
                 .thenThrow(new RuntimeException("Kafka send failed"));
