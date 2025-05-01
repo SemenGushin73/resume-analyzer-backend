@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import webapp.deepseek.domain.service.DeepSeekService;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ValidationResumeOrJobDescTest {
 
     @InjectMocks
-    private DeepSeekServiceImpl service;
+    private DeepSeekService service;
 
     @ParameterizedTest
     @ValueSource(strings = {

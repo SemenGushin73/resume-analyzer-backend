@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import webapp.deepseek.domain.service.DeepSeekService;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
 import webapp.deepseek.utils.TestDataBuilder;
@@ -29,7 +31,7 @@ public class ResumeGenerationTest {
     OpenRouterApiClient apiClient;
 
     @InjectMocks
-    DeepSeekServiceImpl service;
+    DeepSeekService service;
 
     private static final String TEMPLATE = "Test template";
     private static final String DEPARTMENT_DESCRIPTION = "Test departmentDescription";

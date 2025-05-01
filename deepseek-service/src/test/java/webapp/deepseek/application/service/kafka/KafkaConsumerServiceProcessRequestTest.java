@@ -12,8 +12,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.AnalysisResult;
 import ru.kata.project.kafka.config.KafkaTopics;
-import webapp.deepseek.application.service.DeepSeekServiceImpl;
 import webapp.deepseek.application.service.KafkaConsumerService;
+import webapp.deepseek.domain.service.DeepSeekService;
 
 import java.util.stream.Stream;
 
@@ -31,7 +31,7 @@ public class KafkaConsumerServiceProcessRequestTest {
     private KafkaTemplate<String, AnalysisResult> kafkaTemplate;
 
     @Mock
-    private DeepSeekServiceImpl deepSeekService;
+    private DeepSeekService deepSeekService;
 
     @InjectMocks
     private KafkaConsumerService kafkaConsumerService;
