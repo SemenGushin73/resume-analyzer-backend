@@ -4,19 +4,26 @@ import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import webapp.deepseek.domain.service.DeepSeekService;
+
+import webapp.deepseek.aiStuff.ValidResumeChecker;
+import webapp.deepseek.domain.service.AIService;
 
 @RestController
 @RequestMapping("/api/resume")
 @Tag(name = "Resume Analysis", description = "API для анализа и оценки резюме")
 public class ResumeController {
 
-    private final DeepSeekService deepSeekService;
+    private final AIService aiService;
+    private final ValidResumeChecker validResumeChecker;
 
-    public ResumeController(DeepSeekService deepSeekService) {
-        this.deepSeekService = deepSeekService;
+    @Autowired
+    public ResumeController(AIService aiService, ValidResumeChecker validResumeChecker) {
+        this.aiService = aiService;
+        this.validResumeChecker = validResumeChecker;
     }
 
     @PostMapping("/analyze")
@@ -30,13 +37,12 @@ public class ResumeController {
             @RequestParam("resumeText") String resumeText,
             @RequestParam("jobDescription") String jobDescription) {
 
-        if (!deepSeekService.isValidResumeOrJobDescription(resumeText) ||
-            !deepSeekService.isValidResumeOrJobDescription(jobDescription)) {
+        if ( !validResumeChecker.isValidResumeAndJobDescribtion( resumeText, jobDescription )) {
             return ResponseEntity.badRequest().body("Некорректный текст резюме или описания вакансии.");
         }
 
         try {
-            return ResponseEntity.ok(deepSeekService.analyzeResume(resumeText, jobDescription));
+            return ResponseEntity.ok(aiService.analyzeResume(resumeText, jobDescription));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ошибка обработки: " + e.getMessage());

@@ -1,6 +1,16 @@
 package webapp.deepseek.aiStuff;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ValidResumeChecker {
+
+    public boolean isValidResumeAndJobDescribtion(String resumeText, String jobDescription) {
+        boolean isValidResume = isValidResumeOrJobDescription(resumeText);
+        boolean isValidJobDescription = isValidResumeOrJobDescription(jobDescription);
+        return isValidResume && isValidJobDescription;
+    }
+
     public boolean isValidResumeOrJobDescription(String text) {
         if (text == null || text.trim().isEmpty()) {
             return false;

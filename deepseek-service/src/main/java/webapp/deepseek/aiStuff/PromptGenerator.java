@@ -1,8 +1,11 @@
 package webapp.deepseek.aiStuff;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PromptGenerator {
 
-    
+
     public String createPrompt(String resumeText, String jobDescription) {
         return "Вы полезный помощник, который анализирует резюме на предмет соответствия должности. " +
                "Учитывая следующее резюме и описание должности, дайте оценку (0-100) " +
