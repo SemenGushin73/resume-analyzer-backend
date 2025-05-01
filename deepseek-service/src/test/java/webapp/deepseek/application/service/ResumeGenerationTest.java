@@ -9,52 +9,50 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
-import webapp.deepseek.infrastructure.client.OpenRouterResponse;
+import webapp.deepseek.utils.ai.AIMessageSender;
+import webapp.deepseek.utils.ai.PromptGenerator;
 import webapp.deepseek.utils.TestDataBuilder;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ResumeGenerationTest {
 
     @Mock
-    OpenRouterApiClient apiClient;
+    private AIMessageSender aiMessageSender;
+
+    @Mock
+    private PromptGenerator promptGenerator;
 
     @InjectMocks
-    AIService service;
+    private AIServiceImpl service;
 
     private static final String TEMPLATE = "Test template";
     private static final String DEPARTMENT_DESCRIPTION = "Test departmentDescription";
 
-    @BeforeEach
-    void setUp() {
-        ReflectionTestUtils.setField(service, "apiKey", "test_key");
-        ReflectionTestUtils.setField(service, "aiModel", "test_model");
-    }
-
     @Test
     void generateResume_ShouldReturnFormattedResume() {
-        final OpenRouterResponse response = TestDataBuilder.createMockResponse("Generated resume");
-        when(apiClient.generateCompletion(any(), any(), any()))
-                .thenReturn(response);
+        final String expectedResponse = "Generated resume";
+        when(promptGenerator.createPromptForGeneration(anyString(), anyString()))
+                .thenReturn("Generated prompt");
+        when(aiMessageSender.send(anyString()))
+                .thenReturn(expectedResponse);
 
         final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
 
-        assertEquals("Generated resume", result);
+        assertEquals(expectedResponse, result);
     }
 
     @Test
     void generateResume_ShouldHandleApiErrors() {
-        when(apiClient.generateCompletion(any(), any(), any()))
+        when(promptGenerator.createPromptForGeneration(anyString(), anyString()))
+                .thenReturn("Generated prompt");
+        when(aiMessageSender.send(anyString()))
                 .thenThrow(new RuntimeException("API error"));
 
         final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
@@ -63,21 +61,20 @@ public class ResumeGenerationTest {
     }
 
     private static Stream<Arguments> errorResponses() {
-        final OpenRouterResponse responseWithEmptyChoices = new OpenRouterResponse();
-        responseWithEmptyChoices.setChoices(List.of());
-
         return Stream.of(
-                Arguments.of((Object) null),
-                Arguments.of(new OpenRouterResponse()),
-                Arguments.of(responseWithEmptyChoices)
+                Arguments.of((String) null),
+                Arguments.of(""),
+                Arguments.of("   ")
         );
     }
 
     @ParameterizedTest
     @MethodSource("errorResponses")
-    void generateResume_ShouldHandleInvalidResponses(OpenRouterResponse response) {
-        when(apiClient.generateCompletion(any(), any(), any()))
-                .thenReturn(response);
+    void generateResume_ShouldHandleInvalidResponses(String invalidResponse) {
+        when(promptGenerator.createPromptForGeneration(anyString(), anyString()))
+                .thenReturn("Generated prompt");
+        when(aiMessageSender.send(anyString()))
+                .thenReturn(invalidResponse);
 
         final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
 

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 public class ValidResumeChecker {
 
     public boolean isValidResumeAndJobDescribtion(String resumeText, String jobDescription) {
-        boolean isValidResume = isValidResumeOrJobDescription(resumeText);
-        boolean isValidJobDescription = isValidResumeOrJobDescription(jobDescription);
+        final boolean isValidResume = isValidResumeOrJobDescription(resumeText);
+        final boolean isValidJobDescription = isValidResumeOrJobDescription(jobDescription);
         return isValidResume && isValidJobDescription;
     }
 
