@@ -31,13 +31,14 @@ dependencyManagement {
 }
 
 dependencies {
-    // Spring Boot
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	// Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka:3.3.2'
@@ -56,11 +57,15 @@ dependencies {
     implementation 'org.hibernate.orm:hibernate-core:6.6.3.Final'
     implementation 'org.postgresql:postgresql:42.7.4'
 
-    // MongoDB testing
-    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
-    implementation('com.sourcemuse.gradle.plugin:gradle-mongo-plugin:2.0.0') {
-        exclude group: 'org.mongodb', module: 'mongo-java-driver'
-    }
+	//
+	
+	implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.22")
+
+	// MongoDB testing
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
+	implementation('com.sourcemuse.gradle.plugin:gradle-mongo-plugin:2.0.0') {
+		exclude group: 'org.mongodb', module: 'mongo-java-driver'
+	}
 
     // Logging
     implementation 'net.logstash.logback:logstash-logback-encoder:8.0'

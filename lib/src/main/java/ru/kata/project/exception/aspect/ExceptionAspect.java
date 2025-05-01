@@ -20,10 +20,9 @@ public class ExceptionAspect {
     ) throws Throwable {
         try {
             return joinPoint.proceed();
+        } catch ( ResourceNotFoundException ex) {
+            throw new ResourceNotFoundException(throwsResourceNotFoundException.message());
         } catch (Throwable ex) {
-            if (ex instanceof ResourceNotFoundException) {
-                throw new ResourceNotFoundException(throwsResourceNotFoundException.message());
-            }
             throw ex;
         }
     }
@@ -34,10 +33,9 @@ public class ExceptionAspect {
     ) throws Throwable {
         try {
             return joinPoint.proceed();
+        } catch (KafkaProcessingException ex) {
+            throw new KafkaProcessingException(throwsKafkaProcessingException.message()); 
         } catch (Throwable ex) {
-            if (ex instanceof KafkaProcessingException) {
-                throw new KafkaProcessingException(throwsKafkaProcessingException.message());
-            }
             throw ex;
         }
     }
@@ -48,10 +46,9 @@ public class ExceptionAspect {
     ) throws Throwable {
         try {
             return joinPoint.proceed();
+        } catch (InvalidRequestException ex) {
+            throw new InvalidRequestException(throwsInvalidRequestException.message());
         } catch (Throwable ex) {
-            if (ex instanceof InvalidRequestException) {
-                throw new InvalidRequestException(throwsInvalidRequestException.message());
-            }
             throw ex;
         }
     }
@@ -62,10 +59,9 @@ public class ExceptionAspect {
     ) throws Throwable {
         try {
             return joinPoint.proceed();
+        } catch (ExternalServiceException ex) {
+            throw new ExternalServiceException(throwsExternalServiceException.message());
         } catch (Throwable ex) {
-            if (ex instanceof ExternalServiceException) {
-                throw new ExternalServiceException(throwsExternalServiceException.message());
-            }
             throw ex;
         }
     }
@@ -75,10 +71,9 @@ public class ExceptionAspect {
                                           ThrowsAIProcessingException throwsAIProcessingException) throws Throwable {
         try {
             return joinPoint.proceed();
+        } catch (AIProcessingException ex) {
+            throw new AIProcessingException(throwsAIProcessingException.message(), ex.getCause());
         } catch (Throwable ex) {
-            if (ex instanceof AIProcessingException) {
-                throw new AIProcessingException(throwsAIProcessingException.message(), ex.getCause());
-            }
             throw ex;
         }
     }

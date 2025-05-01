@@ -8,6 +8,7 @@ import webapp.resumegenerator.domain.service.ResumeBuilder;
  * Сервис для построения резюме.
  * Этот класс получает JSON-данные резюме, выполняет обработку (например, добавляет недостающие поля)
  * и возвращает итоговое сгенерированное резюме.
+ * TODO: доработать метод processResume 
  */
 @Service
 public class ResumeBuilderServiceImpl implements ResumeBuilder {
