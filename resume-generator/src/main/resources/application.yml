@@ -2,7 +2,12 @@ spring:
   application:
     name: resume-generator
   config:
-    import: "configserver:http://config-server:8888"
+    import: "optional:configserver:http://config-server:8888"
+---
+spring:
+  config:
+    activate:
+      on-profile: "!test"
   cloud:
     config:
       fail-fast: true
