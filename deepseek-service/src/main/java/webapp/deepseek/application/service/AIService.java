@@ -1,4 +1,4 @@
-package webapp.deepseek.domain.service;
+package webapp.deepseek.application.service;
 
 public interface AIService {
     String analyzeResume(String resumeText, String jobDescription);
