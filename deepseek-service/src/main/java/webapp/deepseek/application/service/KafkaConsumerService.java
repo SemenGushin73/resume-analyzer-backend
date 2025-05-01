@@ -8,22 +8,22 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import ru.kata.project.kafka.*;
 import ru.kata.project.kafka.config.KafkaTopics;
-import webapp.deepseek.domain.service.DeepSeekService;
+import webapp.deepseek.domain.service.AIService;
 
 @Service
 @Slf4j
 public class KafkaConsumerService {
 
-    private final DeepSeekService deepSeekService;
+    private final AIService aiService;
     private final KafkaTemplate<String, AnalysisResult> kafkaTemplate;
     private final KafkaTemplate<String, ResumeScoreResult> kafkaScoreTemplate;
     private final ObjectMapper mapper;
 
-    public KafkaConsumerService(DeepSeekService deepSeekService,
+    public KafkaConsumerService(AIService aiService,
                                 KafkaTemplate<String, AnalysisResult> kafkaTemplate,
                                 KafkaTemplate<String, ResumeScoreResult> kafkaScoreTemplate,
                                 ObjectMapper mapper) {
-        this.deepSeekService = deepSeekService;
+        this.aiService = aiService;
         this.kafkaTemplate = kafkaTemplate;
         this.kafkaScoreTemplate = kafkaScoreTemplate;
         this.mapper = mapper;
@@ -33,7 +33,7 @@ public class KafkaConsumerService {
     public void processRequest(@Header("kafka_receivedMessageKey") String requestId, AnalysisRequest request) {
         log.info("Получено сообщение: requestId={}, данные={}", requestId, request);
         try {
-            final String result = deepSeekService.analyzeResume(request.getResumeText(), request.getJobDescription());
+            final String result = aiService.analyzeResume(request.getResumeText(), request.getJobDescription());
             kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, new AnalysisResult(requestId, result));
             log.info("Результат анализа отправлен: requestId={}, результат={}", requestId, result);
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class KafkaConsumerService {
     @KafkaListener(topics = KafkaTopics.DEEPSEEK_RESUME_SCORE_REQUESTS, groupId = "deepseek-analysis-group")
     public void consume(ResumeScoreAnalysisRequest request) {
         try {
-            final String analysis = deepSeekService.analyzeResumeScore(request.getResume().toString());
+            final String analysis = aiService.analyzeResumeScore(request.getResume().toString());
             final ResumeScoreResult result = mapper.readValue(analysis, ResumeScoreResult.class);
             result.setResumeId(request.getResumeId());
             kafkaScoreTemplate.send(KafkaTopics.AI_RESUME_SCORE_RESULTS, result);

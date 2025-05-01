@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import webapp.deepseek.domain.service.DeepSeekService;
+import webapp.deepseek.domain.service.AIService;
 import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
 import webapp.deepseek.infrastructure.client.OpenRouterResponse;
 import webapp.deepseek.utils.TestDataBuilder;
@@ -31,7 +31,7 @@ public class ResumeAnalysisTest {
     OpenRouterApiClient apiClient;
 
     @InjectMocks
-    DeepSeekService service;
+    AIService service;
 
     private static final String RESUME_TEXT = "Test resume";
     private static final String JOB_DESC = "Test job";

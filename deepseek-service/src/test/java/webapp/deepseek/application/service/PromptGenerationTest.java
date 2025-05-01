@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import webapp.deepseek.domain.service.DeepSeekService;
+import webapp.deepseek.domain.service.AIService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PromptGenerationTest {
 
     @InjectMocks
-    DeepSeekService service;
+    AIService service;
 
     private static final String RESUME_TEXT = "Test resume";
     private static final String JOB_DESCRIPTION = "Test job";
