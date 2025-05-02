@@ -14,7 +14,7 @@ import ru.kata.project.kafka.ResumeScoreAnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 import ru.kata.project.resumeDto.ResumeDto;
-import webapp.deepseek.application.service.AIService;
+import webapp.deepseek.application.service.AIServiceImpl;
 import webapp.deepseek.application.service.KafkaConsumerService;
 import webapp.deepseek.utils.TestDataBuilder;
 
@@ -40,7 +40,7 @@ public class KafkaConsumerServiceConsumeTest {
     private KafkaTemplate<String, ResumeScoreResult> kafkaScoreTemplate;
 
     @Mock
-    private AIService aiService;
+    private AIServiceImpl aiService;
 
     @Mock
     private ObjectMapper mapper;

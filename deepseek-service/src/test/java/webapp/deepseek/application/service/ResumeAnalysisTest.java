@@ -14,6 +14,7 @@ import webapp.deepseek.utils.ai.PromptGenerator;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -53,9 +54,9 @@ public class ResumeAnalysisTest {
         when(aiMessageSender.send(anyString()))
                 .thenThrow(new RuntimeException("API error"));
 
-        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
-
-        assertTrue(result.contains("Ошибка анализа: API error"));
+        final Exception exception = assertThrows(RuntimeException.class, 
+            () -> service.analyzeResume(RESUME_TEXT, JOB_DESC));
+        assertEquals("Ошибка: AI не смог обработать запрос.", exception.getMessage());
     }
 
     private static Stream<Arguments> errorResponses() {
@@ -74,8 +75,8 @@ public class ResumeAnalysisTest {
         when(aiMessageSender.send(anyString()))
                 .thenReturn(invalidResponse);
 
-        final String result = service.analyzeResume(RESUME_TEXT, JOB_DESC);
-
-        assertEquals("Не удалось проанализировать резюме.", result);
+        final Exception exception = assertThrows(RuntimeException.class,
+            () -> service.analyzeResume(RESUME_TEXT, JOB_DESC));
+        assertEquals("Ошибка: AI не смог обработать запрос.", exception.getMessage());
     }
 }

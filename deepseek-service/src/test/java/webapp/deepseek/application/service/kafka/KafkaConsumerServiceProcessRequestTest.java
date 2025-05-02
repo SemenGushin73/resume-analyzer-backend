@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.AnalysisResult;
 import ru.kata.project.kafka.config.KafkaTopics;
-import webapp.deepseek.application.service.AIService;
+import webapp.deepseek.application.service.AIServiceImpl;
 import webapp.deepseek.application.service.KafkaConsumerService;
 
 import java.util.stream.Stream;
@@ -31,7 +31,7 @@ public class KafkaConsumerServiceProcessRequestTest {
     private KafkaTemplate<String, AnalysisResult> kafkaTemplate;
 
     @Mock
-    private AIService aiService;
+    private AIServiceImpl aiService;
 
     @InjectMocks
     private KafkaConsumerService kafkaConsumerService;

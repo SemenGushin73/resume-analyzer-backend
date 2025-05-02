@@ -16,6 +16,7 @@ import webapp.deepseek.utils.TestDataBuilder;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -55,9 +56,9 @@ public class ResumeGenerationTest {
         when(aiMessageSender.send(anyString()))
                 .thenThrow(new RuntimeException("API error"));
 
-        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
-
-        assertTrue(result.contains("Ошибка генерации: API error"));
+        final Exception exception = assertThrows(RuntimeException.class, 
+            () -> service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION));
+        assertEquals("Ошибка: AI не смог обработать запрос.", exception.getMessage());
     }
 
     private static Stream<Arguments> errorResponses() {
@@ -76,8 +77,8 @@ public class ResumeGenerationTest {
         when(aiMessageSender.send(anyString()))
                 .thenReturn(invalidResponse);
 
-        final String result = service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION);
-
-        assertEquals("Не удалось сгенерировать резюме.", result);
+        final Exception exception = assertThrows(RuntimeException.class,
+            () -> service.generateResume(TEMPLATE, DEPARTMENT_DESCRIPTION));
+        assertEquals("Ошибка: AI не смог обработать запрос.", exception.getMessage());
     }
 }

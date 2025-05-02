@@ -4,15 +4,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import webapp.deepseek.utils.ai.PromptGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
+@EmbeddedKafka
 public class PromptGenerationTest {
 
-    @InjectMocks
-    AIService service;
+    @Autowired
+    PromptGenerator promptGenerator;
 
     private static final String RESUME_TEXT = "Test resume";
     private static final String JOB_DESCRIPTION = "Test job";
@@ -21,7 +29,7 @@ public class PromptGenerationTest {
 
     @Test
     void createPrompt_ShouldIncludeResumeAndJobDescription() {
-        final String prompt = ReflectionTestUtils.invokeMethod(service, "createPrompt", RESUME_TEXT, JOB_DESCRIPTION);
+        final String prompt = promptGenerator.createPrompt(RESUME_TEXT, JOB_DESCRIPTION);
 
         assertThat(prompt)
                 .startsWith("Вы полезный помощник")
@@ -31,7 +39,7 @@ public class PromptGenerationTest {
 
     @Test
     void createPromptForGeneration_ShouldIncludeTemplateAndDepartment() {
-        final String prompt = ReflectionTestUtils.invokeMethod(service, "createPromptForGeneration", TEMPLATE, DEPT_DESC);
+        final String prompt = promptGenerator.createPromptForGeneration(TEMPLATE, DEPT_DESC);
 
         assertThat(prompt)
                 .startsWith("Напиши профессиональное")
@@ -41,7 +49,7 @@ public class PromptGenerationTest {
 
     @Test
     void createPromptForScoring_ShouldIncludeResumeScore() {
-        final String prompt = ReflectionTestUtils.invokeMethod(service, "createPromptForScoring", RESUME_TEXT);
+        final String prompt = promptGenerator.createPromptForScoring(RESUME_TEXT);
 
         assertThat(prompt)
                 .startsWith("Руководствуясь параметрами ниже оцени резюме")
