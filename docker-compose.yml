@@ -166,7 +166,6 @@ services:
       - otel-collector
       - resume-analyzer
       - resume-generator
-      - deepseek-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
       OTEL_SERVICE_NAME: "api-gateway"

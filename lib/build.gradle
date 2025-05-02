@@ -1,6 +1,8 @@
 plugins {
     id("java-library")
     id("maven-publish")
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.springframework.boot' version '3.4.0'
     id 'checkstyle'
 }
 checkstyle {
@@ -14,22 +16,13 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 repositories {
     mavenCentral()
-}
-
-ext {
-    set('springAiVersion', "1.0.0-M8")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
-    }
+    maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
@@ -38,10 +31,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop:3.2.4")
 
     // Spring Ai
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.0-M8'
 
     // Kafka
     implementation("org.springframework.kafka:spring-kafka:3.0.7")
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // SpringDoc OpenAPI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
