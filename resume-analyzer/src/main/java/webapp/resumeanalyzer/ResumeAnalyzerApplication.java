@@ -6,7 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+    "webapp.resumeanalyzer",
+    "ru.kata.project"
+})
 @EnableJpaRepositories
 @OpenAPIDefinition(info =
 @Info(title = "Resume Analyzer", version = "1.0.0", description = "Documentation Resume Analyzer API v1.0.0")
