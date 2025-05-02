@@ -8,8 +8,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import webapp.deepseek.utils.ai.AIMessageSender;
-import webapp.deepseek.utils.ai.PromptGenerator;
+
+import ru.kata.project.service.AIService;
+import ru.kata.project.utils.ai.AIMessageSender;
+import ru.kata.project.utils.ai.PromptGenerator;
 
 import java.util.stream.Stream;
 
@@ -29,7 +31,7 @@ public class ResumeAnalysisTest {
     private PromptGenerator promptGenerator;
 
     @InjectMocks
-    private AIServiceImpl service;
+    private AIService service;
 
     private static final String RESUME_TEXT = "Test resume";
     private static final String JOB_DESC = "Test job";
