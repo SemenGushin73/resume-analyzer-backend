@@ -53,6 +53,8 @@ dependencies {
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Logging
     implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
