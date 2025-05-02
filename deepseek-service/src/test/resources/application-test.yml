@@ -18,11 +18,18 @@ spring:
         spring.json.value.default.type: ru.kata.project.kafka.AnalysisRequest
         spring.json.trusted.packages: ru.kata.project.kafka
   ai:
+    openrouter:
+      chat:
+        options:
+          models:
+            - deepseek/deepseek-chat
+
     openai:
-      base-url: https://openrouter.ai/api/v1
+      base_url: https://openrouter.ai/api
       api-key: ${OPENROUTER_API_KEY}
-      model: deepseek-chat
-      temperature: 0.7
+      chat:
+        options:
+          model: deepseek/deepseek-chat
 
 server:
   port: 0
