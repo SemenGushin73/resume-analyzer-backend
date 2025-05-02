@@ -153,42 +153,6 @@ services:
       OTEL_BSP_SCHEDULE_DELAY: 5000
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
 
-
-  deepseek-service:
-    image: deepseek-service
-    container_name: deepseek-service
-    build:
-      context: .
-      dockerfile: deepseek-service/Dockerfile
-    ports:
-      - "9090:9090"
-    depends_on:
-      - config-server
-      - otel-collector
-      - kafka
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      OTEL_SERVICE_NAME: "deepseek-service"
-      OTEL_TRACES_EXPORTER: "otlp"
-      OTEL_METRICS_EXPORTER: "otlp"
-      OTEL_LOGS_EXPORTER: "otlp"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
-      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
-      OTEL_PROPAGATORS: "tracecontext,baggage,b3"
-      OTEL_RESOURCE_ATTRIBUTES: "service.version=1.0,deployment.environment=production"
-      OTEL_INSTRUMENTATION_KAFKA_ENABLED: "true"
-      OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED: "true"
-      OTEL_INSTRUMENTATION_LOGBACK_ENABLED: "true"
-      OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED: "true"
-      OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
-      OTEL_JAVAAGENT_DEBUG: "false"
-      OTEL_LOG_LEVEL: "info"
-      OTEL_METRIC_EXPORT_INTERVAL: 60000
-      OTEL_BSP_SCHEDULE_DELAY: 5000
-      OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
-
-      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9092
-
   api-gateway:
     image: api-gateway
     container_name: api-gateway

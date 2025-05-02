@@ -22,10 +22,23 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    set('springAiVersion', "1.0.0-M8")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
 dependencies {
     // Spring Core
     implementation("org.springframework:spring-context:6.1.6")
     implementation("org.springframework.boot:spring-boot-starter-aop:3.2.4")
+
+    // Spring Ai
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
 
     // Kafka
     implementation("org.springframework.kafka:spring-kafka:3.0.7")

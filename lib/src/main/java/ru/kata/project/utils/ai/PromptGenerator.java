@@ -1,4 +1,4 @@
-package webapp.deepseek.utils.ai;
+package ru.kata.project.utils.ai;
 
 import org.springframework.stereotype.Component;
 

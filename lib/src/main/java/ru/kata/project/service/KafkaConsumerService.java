@@ -1,4 +1,4 @@
-package webapp.deepseek.application.service;
+package ru.kata.project.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

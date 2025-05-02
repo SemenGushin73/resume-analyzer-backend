@@ -1,39 +1,35 @@
-package webapp.deepseek.application.service;
+package ru.kata.project.service;
 
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import webapp.deepseek.utils.ai.AIMessageSender;
-import webapp.deepseek.utils.ai.PromptGenerator;
+import ru.kata.project.utils.ai.AIMessageSender;
+import ru.kata.project.utils.ai.PromptGenerator;
 
 @Service
-public class AIServiceImpl implements AIService {
+public class AIService {
 
     private final AIMessageSender aiMessageSender;
     private final PromptGenerator promtptGenerator;
 
     @Autowired
-    public AIServiceImpl(AIMessageSender aiMessageSender, PromptGenerator promtptGenerator) {
+    public AIService(AIMessageSender aiMessageSender, PromptGenerator promtptGenerator) {
         this.aiMessageSender = aiMessageSender;
         this.promtptGenerator = promtptGenerator;
     }
     
-    @Override
     public String analyzeResume(String resumeText, String jobDescription) {
         final String prompt = promtptGenerator.createPrompt(resumeText, jobDescription);
         final String response = sendPromptAndGetResponse( prompt );
         return response;
     }
 
-    @Override
     public String analyzeResumeScore(String resumeText) {
         final String prompt = promtptGenerator.createPromptForScoring(resumeText);
         final String response = sendPromptAndGetResponse( prompt );
         return response;
     }
 
-    @Override
     public String generateResume(String template, String departmentDescription) {
         final String prompt = promtptGenerator.createPromptForGeneration(template, departmentDescription);
         final String response = sendPromptAndGetResponse( prompt );
