@@ -22,16 +22,12 @@ java {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
     // Spring Core
     implementation("org.springframework:spring-context:6.1.6")
     implementation("org.springframework.boot:spring-boot-starter-aop:3.2.4")
-
-    // Spring Ai
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.0-M8'
 
     // Kafka
     implementation("org.springframework.kafka:spring-kafka:3.0.7")

@@ -10,10 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ru.kata.project.service.AIService;
-import ru.kata.project.utils.ai.AIMessageSender;
-import ru.kata.project.utils.ai.PromptGenerator;
 import webapp.deepseek.utils.TestDataBuilder;
+import webapp.resumeanalyzer.application.service.AIService;
+import webapp.resumeanalyzer.application.utils.ai.AIMessageSender;
+import webapp.resumeanalyzer.application.utils.ai.PromptGenerator;
 
 import java.util.stream.Stream;
 

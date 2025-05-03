@@ -10,7 +10,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ru.kata.project.utils.ai.PromptGenerator;
+import webapp.resumeanalyzer.application.utils.ai.PromptGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

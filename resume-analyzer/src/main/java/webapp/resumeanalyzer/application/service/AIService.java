@@ -1,10 +1,10 @@
-package ru.kata.project.service;
+package webapp.resumeanalyzer.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.kata.project.utils.ai.AIMessageSender;
-import ru.kata.project.utils.ai.PromptGenerator;
+import webapp.resumeanalyzer.application.utils.ai.AIMessageSender;
+import webapp.resumeanalyzer.application.utils.ai.PromptGenerator;
 
 @Service
 public class AIService {

@@ -16,9 +16,8 @@ import ru.kata.project.kafka.ResumeScoreAnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
-import ru.kata.project.service.AIService;
-import ru.kata.project.utils.ai.ValidResumeChecker;
 import webapp.resumeanalyzer.application.mapper.ResumeMapper;
+import webapp.resumeanalyzer.application.utils.ai.ValidResumeChecker;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 

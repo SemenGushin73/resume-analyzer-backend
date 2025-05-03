@@ -1,4 +1,4 @@
-package ru.kata.project.utils.ai;
+package webapp.resumeanalyzer.application.utils.ai;
 
 import org.springframework.stereotype.Component;
 
