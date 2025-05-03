@@ -23,7 +23,7 @@ AI-интеграцию (DeepSeek), API Gateway и мониторинг инфр
 - `resume-analyzer` — анализ резюме, сохранение и Kafka-интеграция
 - `resume-generator` — генерация текста по шаблонам и через AI
 - `api-gateway` — маршрутизация, OpenAPI Proxy, CircuitBreaker
-- `lib` — общий модуль с DTO, исключениями, утилитами и межмодульными сервисами
+- `lib` — общий модуль с DTO, исключениями и утилитами
 - `bitbucket-config-server` — централизованная конфигурация микросервисов для удобства поддержки и масштабирования
 
 ## 🚀 Запуск проекта
@@ -81,7 +81,7 @@ resume-analyzer-backend/
 ├── bitbucket-config-server/    # Централизованная конфигурация микросервисов Spring Cloud Config
 ├── resume-analyzer/            # Анализ резюме (PostgreSQL)
 ├── resume-generator/           # Генератор резюме (MongoDB)
-├── lib/                        # Общие DTO, утилиты, исключения и межмодульныe сервисы
+├── lib/                        # Общие DTO, утилиты, исключения
 ├── docker-compose.yml          # Полный стек инфраструктуры
 └── utils/                      # Настройки Prometheus, Loki, Grafana, otel-Collector
 ```
