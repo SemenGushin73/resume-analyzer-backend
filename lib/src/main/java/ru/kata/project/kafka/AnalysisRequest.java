@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "DTO для передачи данных между API Gateway и Resume-Analyzer")
 public class AnalysisRequest {
 
+    @Schema(description = "Id резюме")
+    private String requestId;
+
     @Schema(description = "Текст резюме",
             example = "Java developer with Spring experience.")
     private String resumeText;

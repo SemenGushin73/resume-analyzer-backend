@@ -2,15 +2,17 @@ package ru.kata.project.webSocket.webSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
 import ru.kata.project.webSocket.component.WebSocketSessionRegistry;
-
+@Component
 public class NotificationWebSocketHandler implements WebSocketHandler {
     private final WebSocketSessionRegistry sessionRegistry;
-
+@Autowired
     public NotificationWebSocketHandler(WebSocketSessionRegistry sessionRegistry) {
         this.sessionRegistry = sessionRegistry;
     }
