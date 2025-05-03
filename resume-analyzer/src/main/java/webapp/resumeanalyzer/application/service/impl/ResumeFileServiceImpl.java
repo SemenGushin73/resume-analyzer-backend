@@ -1,4 +1,4 @@
-package webapp.resumeanalyzer.application.service;
+package webapp.resumeanalyzer.application.service.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
