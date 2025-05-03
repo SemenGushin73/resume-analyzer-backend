@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
+import ru.kata.project.resumeDto.ResumeDto;
 
 
 /**
@@ -14,6 +15,6 @@ public interface ApiGatewayService {
 
     <T> Mono<List<T>> makeRequest(String uri, Class<T> elementClass);
 
-    ResponseEntity<JsonNode> createResume(JsonNode resumeJson);
+    Mono<ResponseEntity<JsonNode>> createResume(ResumeDto resumeDto);
 }
 

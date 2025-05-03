@@ -19,6 +19,7 @@ import ru.kata.project.domain.service.ApiGatewayService;
 import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
+import ru.kata.project.resumeDto.ResumeDto;
 
 import java.util.UUID;
 
@@ -126,12 +127,18 @@ public class GatewayController {
      * Добавляет маршрут для создания нового резюме.
      * Этот метод будет обрабатывать POST-запросы для создания резюме.
      *
-     * @param resumeJson Данные для создания резюме, включая личные данные кандидата, образование и опыт.
-     * @return ResponseEntity с результатом обработки запроса.
+     * @param resumeDto Данные для создания резюме, включая личные данные кандидата, образование и опыт.
+     * @return Mono<ResponseEntity> с результатом обработки запроса.
      */
     @PostMapping("/resume/create")
-    public ResponseEntity<JsonNode> createResume(@RequestBody JsonNode resumeJson) {
-        return apiGatewayService.createResume(resumeJson);
+    @Operation(summary = "Отправка JSON данных для создания резюме")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Успешная отправка"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+    })
+    public Mono<ResponseEntity<JsonNode>> createResume(@RequestBody ResumeDto resumeDto) {
+        return apiGatewayService.createResume(resumeDto);
     }
 
     /**
