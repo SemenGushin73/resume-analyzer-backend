@@ -4,8 +4,6 @@ services:
   grafana:
     image: grafana/grafana:11.0.0
     container_name: grafana
-    labels:
-      logging_jobname: "grafana"
     ports:
       - "3000:3000"
     volumes:
@@ -20,8 +18,6 @@ services:
   loki:
     image: grafana/loki:3.0.0
     container_name: loki
-    labels:
-      logging_jobname: "loki"
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/loki.yaml
@@ -31,8 +27,8 @@ services:
   promtail:
     image: grafana/promtail:3.0.0
     container_name: promtail
-    labels:
-      logging_jobname: "promtail"
+    ports:
+      - "9080:9080"
     volumes:
       - ./config/promtail/promtail.yaml:/etc/promtail/docker-config.yaml
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -44,8 +40,10 @@ services:
   postgres:
     image: postgres:15
     container_name: postgres
-    labels:
-      logging_jobname: "postgres"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     environment:
       POSTGRES_DB: test_db
       POSTGRES_USER: root
@@ -58,8 +56,10 @@ services:
   mongodb:
     image: mongo:6
     container_name: mongodb
-    labels:
-      logging_jobname: "mongodb"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "27017:27017"
     mem_limit: 512m
@@ -69,8 +69,10 @@ services:
     image: redis:7.4.2
     container_name: redis-container
     restart: always
-    labels:
-      logging_jobname: "redis"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning --requirepass root
@@ -79,8 +81,11 @@ services:
 
   zookeeper:
     image: bitnami/zookeeper:latest
-    labels:
-      logging_jobname: "zookeeper"
+    container_name: zookeeper
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "21810:2181"
     environment:
@@ -90,8 +95,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:latest
-    labels:
-      logging_jobname: "kafka"
+    container_name: kafka
     ports:
       - "29092:29092"
       - "9092:9092"
@@ -120,11 +124,14 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.92.0
+    container_name: otel-collector
     command: [ "--config=/etc/otel-config.yaml" ]
     volumes:
       - ./utils/otel-config.yml:/etc/otel-config.yaml
-    labels:
-      logging_jobname: "otel-collector"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "4317:4317"
       - "4318:4318"
@@ -137,8 +144,11 @@ services:
 
   jaeger:
     image: jaegertracing/all-in-one:1.53
-    labels:
-      logging_jobname: "jaeger"
+    container_name: jaeger
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "16686:16686"
       - "14250:14250"
@@ -148,13 +158,15 @@ services:
   resume-analyzer:
     image: resume-analyzer
     container_name: resume-analyzer
-    labels:
-      logging_jobname: "resume-analyzer"
     build:
       context: .
       dockerfile: resume-analyzer/Dockerfile
     ports:
       - "8083:8083"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     depends_on:
       - config-server
       - otel-collector
@@ -185,8 +197,10 @@ services:
   resume-generator:
     image: resume-generator
     container_name: resume-generator
-    labels:
-      logging_jobname: "resume-generator"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     build:
       context: .
       dockerfile: resume-generator/Dockerfile
@@ -221,8 +235,10 @@ services:
   deepseek-service:
     image: deepseek-service
     container_name: deepseek-service
-    labels:
-      logging_jobname: "deepseek-service"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     build:
       context: .
       dockerfile: deepseek-service/Dockerfile
@@ -258,8 +274,10 @@ services:
   api-gateway:
     image: api-gateway
     container_name: api-gateway
-    labels:
-      logging_jobname: "api-gateway"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
@@ -295,8 +313,10 @@ services:
   config-server:
     image: config-server
     container_name: config-server
-    labels:
-      logging_jobname: "config-server"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     build:
       context: ./bitbucket-config-server
       dockerfile: Dockerfile
