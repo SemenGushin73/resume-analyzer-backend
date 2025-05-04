@@ -1,4 +1,4 @@
-package webapp.deepseekservice.service.kafka;
+package webapp.deepseek.application.service.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

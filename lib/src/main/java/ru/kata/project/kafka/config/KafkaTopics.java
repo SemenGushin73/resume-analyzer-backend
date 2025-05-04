@@ -19,6 +19,10 @@ public class KafkaTopics {
 
     public static final String DEEPSEEK_RESUME_SCORE_REQUESTS = "deepseek-resume-score-requests";
 
+    public static final String RESUME_GENERATION_REQUESTS = "resume-generation-requests";
+
+    public static final String DEEPSEEK_GENERATION_REQUESTS = "deepseek-generation-requests";
+
     private KafkaTopics() {
     }
 }
