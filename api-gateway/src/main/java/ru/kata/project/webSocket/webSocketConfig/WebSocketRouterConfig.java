@@ -13,17 +13,18 @@ import java.util.Map;
 
 @Configuration
 public class WebSocketRouterConfig {
-@Bean
+    @Bean
     public HandlerMapping handlerMapping(NotificationWebSocketHandler notificationWebSocketHandler) {
-        Map<String, WebSocketHandler> map = new HashMap<>();
+        final Map<String, WebSocketHandler> map = new HashMap<>();
         map.put("/ws/notification", notificationWebSocketHandler);
 
-        SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
+        final SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
         handlerMapping.setUrlMap(map);
         handlerMapping.setOrder(10);
         return handlerMapping;
     }
-@Bean
+
+    @Bean
     public WebSocketHandlerAdapter handlerAdapter() {
         return new WebSocketHandlerAdapter();
     }

@@ -26,7 +26,9 @@ public class WebSocketController {
     private final WebSocketSessionRegistry webSocketSessionRegistry;
 
     @Autowired
-    public WebSocketController(KafkaProducerService kafkaProducerService, WebSocketSessionRegistry webSocketSessionRegistry, KafkaConsumerService kafkaConsumerService) {
+    public WebSocketController(KafkaProducerService kafkaProducerService,
+                               WebSocketSessionRegistry webSocketSessionRegistry,
+                               KafkaConsumerService kafkaConsumerService) {
         this.kafkaProducerService = kafkaProducerService;
         this.kafkaConsumerService = kafkaConsumerService;
         this.webSocketSessionRegistry = webSocketSessionRegistry;
@@ -40,7 +42,7 @@ public class WebSocketController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     public ResponseEntity<Void> sendAnalysisRequestToKafka(@RequestBody AnalysisRequest analysisRequest) {
-        String requestId = UUID.randomUUID().toString();
+        final String requestId = UUID.randomUUID().toString();
         log.info("Сгенерирован requestId: {}, клиент должен установить WebSocket сессию и передать этот Id", requestId);
         analysisRequest.setRequestId(requestId);
         // Отправка запроса в Kafka
@@ -52,7 +54,7 @@ public class WebSocketController {
     @GetMapping("/ai/resume-score")
     @Operation(summary = "Получение результата анализа резюме")
     public ResponseEntity<ResumeScoreResult> getResumeScore(@RequestParam String resumeId) {
-        ResumeScoreResult result = kafkaConsumerService.getScoreResult(resumeId);
+        final ResumeScoreResult result = kafkaConsumerService.getScoreResult(resumeId);
         if (result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

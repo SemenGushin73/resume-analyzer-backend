@@ -41,7 +41,7 @@ public class KafkaConsumerService {
             //      Пробуем отправить клиенту по WebSocket
             sessionRegistry.getSessionByRequestId(result.getRequestId()).ifPresent(session -> {
                 try {
-                    String json = new ObjectMapper().writeValueAsString(result);
+                    final String json = new ObjectMapper().writeValueAsString(result);
                     session.send(Mono.just(session.textMessage(json))).subscribe();
                     log.info("Отправлено сообщение по WebSocket клиенту с requestId: {}", result.getRequestId());
                 } catch (Exception e) {

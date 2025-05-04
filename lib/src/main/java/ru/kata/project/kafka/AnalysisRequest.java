@@ -24,4 +24,11 @@ public class AnalysisRequest {
     @Schema(description = "Описание вакансии",
             example = "Looking for a backend developer with Java 21, Kafka and PostgreSQL knowledge.")
     private String jobDescription;
+
+    public AnalysisRequest(String resumeText, String jobDescription) {
+        this.jobDescription = jobDescription;
+        this.resumeText = resumeText;
+
+    }
+
 }

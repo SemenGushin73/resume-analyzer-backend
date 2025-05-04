@@ -32,19 +32,19 @@ public class WebSocketSessionRegistry {
     }
 
     public Optional<WebSocketSession> getSessionByRequestId(String requestId) {
-        String sessionId = requestIdToSessionsId.get(requestId);
+        final String sessionId = requestIdToSessionsId.get(requestId);
         if (sessionId == null) {
             return Optional.empty();
         }
-        RegisteredSession registeredSession = sessions.get(sessionId);
+        final RegisteredSession registeredSession = sessions.get(sessionId);
         return registeredSession != null ? Optional.of(registeredSession.getSession()) : Optional.empty();
     }
 
     public void clearIdleSessions() {
-        Instant now = Instant.now();
+        final Instant now = Instant.now();
         sessions.entrySet().removeIf(entry -> {
-            Instant connectedAt = entry.getValue().getConnectedAt();
-            Duration timeElapsed = Duration.between(connectedAt, now);
+            final Instant connectedAt = entry.getValue().getConnectedAt();
+            final Duration timeElapsed = Duration.between(connectedAt, now);
             return timeElapsed.compareTo(maxIdleTime) > 0;
         });
         // Чистим связанные requestId

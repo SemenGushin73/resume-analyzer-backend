@@ -22,8 +22,8 @@ public class NotificationWebSocketHandler implements WebSocketHandler {
         return session.receive()
                 .map(WebSocketMessage::getPayloadAsText)
                 .flatMap(payload -> {
-                    String requeatId = extractRequestId(payload);
-                    sessionRegistry.registerSession(requeatId, session);
+                    final String requestId = extractRequestId(payload);
+                    sessionRegistry.registerSession(requestId, session);
                     return Mono.empty();
                 })
                 .then();
