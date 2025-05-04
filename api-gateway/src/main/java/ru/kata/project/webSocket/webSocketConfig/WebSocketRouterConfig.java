@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Configuration
 public class WebSocketRouterConfig {
-
+@Bean
     public HandlerMapping handlerMapping(NotificationWebSocketHandler notificationWebSocketHandler) {
         Map<String, WebSocketHandler> map = new HashMap<>();
         map.put("/ws/notification", notificationWebSocketHandler);
@@ -23,7 +23,7 @@ public class WebSocketRouterConfig {
         handlerMapping.setOrder(10);
         return handlerMapping;
     }
-
+@Bean
     public WebSocketHandlerAdapter handlerAdapter() {
         return new WebSocketHandlerAdapter();
     }
