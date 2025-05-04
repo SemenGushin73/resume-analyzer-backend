@@ -1,12 +1,5 @@
 package webapp.resumeanalyzer.application.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -14,29 +7,38 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import webapp.resumeanalyzer.domain.model.ResumeFile;
 import webapp.resumeanalyzer.domain.repository.ResumeFileRepository;
+import webapp.resumeanalyzer.domain.repository.ResumeOwnerRepository;
 import webapp.resumeanalyzer.domain.service.ResumeFileService;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Сервис CRUD методов сущности ResumeFile.
- * TODO: рефакторинг фул класса
  */
 @Service
 @Transactional
 public class ResumeFileServiceImpl implements ResumeFileService {
 
     private final ResumeFileRepository resumeFileRepository;
+    private final ResumeOwnerRepository resumeOwnerRepository;
 
     @Autowired
-    public ResumeFileServiceImpl(ResumeFileRepository resumeFileRepository) {
+    public ResumeFileServiceImpl(ResumeFileRepository resumeFileRepository, ResumeOwnerRepository resumeOwnerRepository) {
         this.resumeFileRepository = resumeFileRepository;
+        this.resumeOwnerRepository = resumeOwnerRepository;
     }
 
     public void uploadResumeFile(ResumeFile resumeFile) {
-        if (resumeFileRepository.findByOwnerContainingIgnoreCase(resumeFile.getOwner()).size() < 3) {
+        if (resumeFileRepository.findByOwnerId(resumeFile.getOwner().getId()).size() < 3) {
             resumeFileRepository.save(resumeFile);
         } else {
             deleteResumeFile(resumeFileRepository
-                    .findByOwnerContainingIgnoreCase(resumeFile.getOwner())
+                    .findByOwnerId(resumeFile.getOwner().getId())
                     .getFirst());
             resumeFileRepository.save(resumeFile);
         }
@@ -46,12 +48,13 @@ public class ResumeFileServiceImpl implements ResumeFileService {
         return resumeFileRepository.findByFilenameContainingIgnoreCase(filename);
     }
 
-    public List<ResumeFile> getResumeFileByOwner(String owner) {
-        return resumeFileRepository.findByOwnerContainingIgnoreCase(owner);
+    public List<ResumeFile> getResumeFileByOwnerId(String ownerId) {
+        return resumeFileRepository.findByOwnerId(UUID.fromString(ownerId));
     }
 
     public ResumeFile getResumeFileById(String id) {
-        return resumeFileRepository.findById(UUID.fromString(id)).get();
+        return resumeFileRepository.findById(UUID.fromString(id))
+                .orElse(null);
     }
 
     @Override
@@ -64,14 +67,14 @@ public class ResumeFileServiceImpl implements ResumeFileService {
         return resumeFileRepository.findAll();
     }
 
-    //В дальнейшем заменить owner на пользователя и.т.д
     @Override
-    public ResumeFile createResumeFile(MultipartFile file, String ownersName) throws IOException {
+    public ResumeFile createResumeFile(MultipartFile file, String ownerId) throws IOException {
 
         final ResumeFile resumeFile = new ResumeFile();
         resumeFile.setFilename(file.getOriginalFilename());
         resumeFile.setFileType(file.getContentType());
-        resumeFile.setOwner(ownersName);
+        resumeFile.setOwner(
+                resumeOwnerRepository.findById(UUID.fromString(ownerId)).orElse(null));
         resumeFile.setSize(file.getSize());
         resumeFile.setData(file.getBytes());
         resumeFile.setCreatedAt(LocalDateTime.now());
@@ -86,7 +89,7 @@ public class ResumeFileServiceImpl implements ResumeFileService {
         final File file = new File(resumeFile.getFilename());
         try (FileOutputStream os = new FileOutputStream(file)) {
             os.write(resumeFile.getData());
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.getCause();
         }
 
