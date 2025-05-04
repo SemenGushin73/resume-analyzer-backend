@@ -3,6 +3,7 @@ package ru.kata.project.webSocket.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,6 +17,7 @@ import ru.kata.project.webSocket.component.WebSocketSessionRegistry;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class WebSocketController {
@@ -39,6 +41,7 @@ public class WebSocketController {
     })
     public ResponseEntity<Void> sendAnalysisRequestToKafka(@RequestBody AnalysisRequest analysisRequest) {
         String requestId = UUID.randomUUID().toString();
+        log.info("Сгенерирован requestId: {}, клиент должен установить WebSocket сессию и передать этот Id", requestId);
         analysisRequest.setRequestId(requestId);
         // Отправка запроса в Kafka
         kafkaProducerService.sendAnalysisRequest(requestId, analysisRequest);
