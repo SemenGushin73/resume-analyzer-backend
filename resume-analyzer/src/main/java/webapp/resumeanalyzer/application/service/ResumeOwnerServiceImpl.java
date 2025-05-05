@@ -8,6 +8,9 @@ import webapp.resumeanalyzer.domain.service.ResumeOwnerService;
 
 import java.util.UUID;
 
+/**
+ * Сервис CRUD методов сущности ResumeOwner.
+ */
 @Service
 public class ResumeOwnerServiceImpl implements ResumeOwnerService {
 

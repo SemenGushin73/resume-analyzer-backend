@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.exception;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,11 +39,11 @@ public class GlobalExceptionHandler {
     /**
      * Обрабатывает исключение, возникающее при некорректном запросе пользователя.
      *
-     * @param ex Исключение {@link InvalidRequestException}
+     * @param ex Может быть выброшено {@link InvalidRequestException} или {@link EmptyResultDataAccessException}
      * @return Ответ с HTTP-статусом 400 (Bad Request) и сообщением об ошибке
      */
-    @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<Object> handleInvalidRequestException(InvalidRequestException ex) {
+    @ExceptionHandler({InvalidRequestException.class, EmptyResultDataAccessException.class})
+    public ResponseEntity<Object> handleBadRequestExceptions(Exception ex) {
         final Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("status", HttpStatus.BAD_REQUEST.value());

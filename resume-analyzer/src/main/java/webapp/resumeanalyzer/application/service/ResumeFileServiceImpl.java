@@ -1,6 +1,7 @@
 package webapp.resumeanalyzer.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +53,10 @@ public class ResumeFileServiceImpl implements ResumeFileService {
         return resumeFileRepository.findByOwnerId(UUID.fromString(ownerId));
     }
 
-    public ResumeFile getResumeFileById(String id) {
+    public ResumeFile getResumeFileById(String id) throws EmptyResultDataAccessException {
         return resumeFileRepository.findById(UUID.fromString(id))
-                .orElse(null);
+                .orElseThrow(() -> new EmptyResultDataAccessException(
+                        "Resume file with id:" + id + " not found.", 1));
     }
 
     @Override
@@ -68,13 +70,16 @@ public class ResumeFileServiceImpl implements ResumeFileService {
     }
 
     @Override
-    public ResumeFile createResumeFile(MultipartFile file, String ownerId) throws IOException {
+    public ResumeFile createResumeFile(MultipartFile file, String ownerId)
+            throws IOException, EmptyResultDataAccessException {
 
         final ResumeFile resumeFile = new ResumeFile();
         resumeFile.setFilename(file.getOriginalFilename());
         resumeFile.setFileType(file.getContentType());
         resumeFile.setOwner(
-                resumeOwnerRepository.findById(UUID.fromString(ownerId)).orElse(null));
+                resumeOwnerRepository.findById(UUID.fromString(ownerId)).orElseThrow(() ->
+                        new EmptyResultDataAccessException(
+                                "Resume owner with id:" + ownerId + " not found.", 1)));
         resumeFile.setSize(file.getSize());
         resumeFile.setData(file.getBytes());
         resumeFile.setCreatedAt(LocalDateTime.now());
@@ -83,7 +88,7 @@ public class ResumeFileServiceImpl implements ResumeFileService {
     }
 
     @Override
-    public File getFile(String id) throws IOException {
+    public File getFile(String id) {
         final ResumeFile resumeFile = getResumeFileById(id);
 
         final File file = new File(resumeFile.getFilename());
