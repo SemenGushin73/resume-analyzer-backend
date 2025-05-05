@@ -37,6 +37,19 @@ services:
     depends_on:
       - loki
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9091:9091"
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - resume-analyzer
+      - resume-generator
+      - deepseek-service
+      - api-gateway
+
   postgres:
     image: postgres:15
     container_name: postgres
