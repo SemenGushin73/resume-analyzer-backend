@@ -1,29 +1,24 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import java.io.IOException;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import webapp.resumeanalyzer.domain.model.ResumeFile;
 import webapp.resumeanalyzer.domain.service.ResumeFileService;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Тестовый класс для проверки функциональности ResumeFile.
@@ -41,12 +36,23 @@ public class ResumeFileTestController {
     }
 
     @Operation(summary = "Загрузка резюме в БД",
-            description = "Загружает файл резюме в формате .pdf или .docx в БД")
-    @ApiResponse(responseCode = "200", description = "Резюме успешно загружено")
-    @ApiResponse(responseCode = "400", description = "Недопустимый формат файла")
-    @PostMapping(value = "/upload")
+            description = "Загружает файл резюме в формате .pdf или .docx в БД",
+            parameters = {
+                    @Parameter(name = "ownerId", in = ParameterIn.QUERY,
+                            description = "Идентификатор владельца резюме файла",
+                            required = true, example = "550e8400-e29b-41d4-a716-446655440000"),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Резюме успешно загружено",
+                            content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                                    schema = @Schema(type = "string", example = "Резюме успешно загружено!"))),
+                    @ApiResponse(responseCode = "400", description = "Недопустимый формат файла",
+                            content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                                    schema = @Schema(type = "string", example = "Недопустимый формат файла!")))
+            })
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadResumeFile(@RequestPart("file") MultipartFile file,
-                                                   @RequestParam String ownersName)
+                                                   @RequestParam String ownerId)
             throws IOException {
 
         if (file.getContentType().equals("application/pdf") ||
@@ -54,7 +60,7 @@ public class ResumeFileTestController {
                     .equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
 
             resumeFileService.uploadResumeFile(
-                    resumeFileService.createResumeFile(file, ownersName));
+                    resumeFileService.createResumeFile(file, ownerId));
             return ResponseEntity.ok("Файл успешно загружен");
         } else {
             return ResponseEntity.badRequest()
@@ -76,9 +82,18 @@ public class ResumeFileTestController {
     }
 
     @Operation(summary = "Удалить файл резюме по ID",
-            description = "Удаление файла резюме из БД по ID")
-    @ApiResponse(responseCode = "200", description = "Файл удален")
-    @ApiResponse(responseCode = "400", description = "Файл не найден")
+            description = "Удаление файла резюме из БД по ID",
+            parameters = {
+                    @Parameter(name = "id", description = "ID файла резюме для удаления",
+                            required = true, example = "f9876543-210e-dcba-9876-543210fedcba")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Файл удален",
+                            content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                                    schema = @Schema(type = "string", example = "Файл удален!"))),
+                    @ApiResponse(responseCode = "400", description = "Файл не найден")
+            }
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteResumeFile(@PathVariable String id) {
         if (resumeFileService.getResumeFileById(id) == null) {
@@ -90,9 +105,17 @@ public class ResumeFileTestController {
     }
 
     @Operation(summary = "Загрузить файл резюме",
-            description = "Загружает файл резюме из БД по идентификатору")
-    @ApiResponse(responseCode = "200", description = "Загрузка файла")
-    @ApiResponse(responseCode = "400", description = "Файл не найден")
+            description = "Загружает файл резюме из БД по идентификатору",
+            parameters = {
+                    @Parameter(name = "id", description = "ID файла резюме для загрузки",
+                            required = true, example = "f9876543-210e-dcba-9876-543210fedcba")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Загрузка файла",
+                            content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)),
+                    @ApiResponse(responseCode = "400", description = "Файл не найден")
+            }
+    )
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> downloadResumeFile(@PathVariable String id) throws IOException {
         if (resumeFileService.getResumeFileById(id) == null) {

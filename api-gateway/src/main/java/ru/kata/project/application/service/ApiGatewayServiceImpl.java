@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.kata.project.domain.model.ResumeWithTemplate;
@@ -18,7 +20,22 @@ import ru.kata.project.resumeDto.TemplateDTO;
  * Сервис для получения Резюме с соответствующими Шаблонами
  */
 @Service
+@Slf4j
 public class ApiGatewayServiceImpl implements ApiGatewayService {
+
+    private final WebClient analyzerClient;
+    private final WebClient builderClient;
+
+    public ApiGatewayServiceImpl(WebClient.Builder webClientBuilder) {
+        this.analyzerClient = webClientBuilder
+                .baseUrl("http://resume-analyzer:8083")
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+        this.builderClient = webClientBuilder
+                .baseUrl("http://resume-generator:8082")
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+    }
 
     public <T> Mono<List<T>> makeRequest(String uri, Class<T> elementClass) {
         final WebClient webClient = WebClient.create();
@@ -52,45 +69,32 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
     /**
      * Метод для создания резюме, отправляя данные в сервис Resume-Builder.
      *
-     * @param resumeJson Данные резюме для передачи в Resume-Builder.
-     * @return ResponseEntity с результатом обработки, включая статус и тело ответа.
+     * @param resumeDto Данные резюме для передачи в Resume-Builder.
+     * @return Mono<ResponseEntity> с результатом обработки, включая статус и тело ответа.
      */
     @Override
-    public ResponseEntity<JsonNode> createResume(JsonNode resumeJson) {
-        final WebClient webClient = WebClient.builder()
-                .baseUrl("http://localhost:8080")
-                .defaultHeader("Content-Type", "application/json")
-                .build();
+    public Mono<ResponseEntity<JsonNode>> createResume(ResumeDto resumeDto) {
+        log.info("Sending resume JSON to resume-analyzer");
 
-        // Отправляем запрос на resume-analyzer
-        final ResponseEntity<JsonNode> buildResume = webClient.post()
+        return analyzerClient.post()
                 .uri("/resumes")
-                .bodyValue(resumeJson)
+                .bodyValue(resumeDto)
                 .retrieve()
                 .toEntity(JsonNode.class)
-                .block();
+                .flatMap(buildResume -> {
+                    JsonNode responseJson = buildResume.getBody();
 
-        if (buildResume.getStatusCode().is2xxSuccessful()) {
-            // Получаем тело ответа
-            final JsonNode responseJson = buildResume.getBody();
+                    if (responseJson == null || responseJson.isEmpty()) {
+                        return Mono.error(new RestClientException("resume-analyzer returned an empty response"));
+                    }
 
-            // WebClient для resume-builder
-            final WebClient secondWebClient = WebClient.builder()
-                    .baseUrl("http://localhost:8082")
-                    .defaultHeader("Content-Type", "application/json")
-                    .build();
+                    log.info("Sending analyzed resume to resume-builder");
 
-            // Отправляем полученный JSON на resume-builder для обработки
-            final ResponseEntity<JsonNode> secondResponse = secondWebClient.post()
-                    .uri("/builder") // Укажите путь на втором микросервисе
-                    .bodyValue(responseJson)
-                    .retrieve()
-                    .toEntity(JsonNode.class)
-                    .block();
-
-            return ResponseEntity.status(secondResponse.getStatusCode()).body(secondResponse.getBody());
-        } else {
-            return ResponseEntity.status(buildResume.getStatusCode()).body(buildResume.getBody());
-        }
+                    return builderClient.post()
+                            .uri("/builder")
+                            .bodyValue(responseJson)
+                            .retrieve()
+                            .toEntity(JsonNode.class);
+                });
     }
 }

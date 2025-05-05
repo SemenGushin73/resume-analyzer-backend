@@ -1,53 +1,64 @@
 package webapp.resumeanalyzer.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
- * Сущность ResumeFile для хранения файлов резюме в базе данных.
- * <p>
- * TODO: owner превратить в модель
+ * Сущность: ResumeFile для хранения файлов резюме в базе данных.
  */
 @Entity
 @Table(name = "resume_file")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Сущность: ResumeFile для хранения " +
+        "файлов резюме в базе данных.")
 public class ResumeFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true)
+    @Schema(description = "Идентификатор файла резюме в БД",
+            example = "f9876543-210e-dcba-9876-543210fedcba")
     private UUID id;
 
     @Column(unique = true)
+    @Schema(description = "Имя файл резюме",
+            example = "CV_Senior_Java")
     private String filename;
 
+    @Schema(description = "Тип файла резюме",
+            example = "application/pdf")
     private String fileType;
 
+    @Schema(description = "Размер файла",
+            example = "512")
     private long size;
 
+    @Schema(description = "Данные файла резюме")
     private byte[] data;
 
+    @Schema(description = "Дата создания резюме файла",
+            example = "2007-12-03T10:15:30")
     private LocalDateTime createdAt;
 
-    private String owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @Schema(description = "Владелец резюме файла",
+            implementation = ResumeOwner.class)
+    private ResumeOwner owner;
 
-    public ResumeFile(String filename) {
+    public ResumeFile(String filename, ResumeOwner owner) {
         this.filename = filename;
+        this.owner = owner;
     }
 
     @Override
