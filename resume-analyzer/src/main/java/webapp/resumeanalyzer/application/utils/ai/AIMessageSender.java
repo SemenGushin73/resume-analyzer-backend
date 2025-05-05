@@ -18,7 +18,7 @@ public class AIMessageSender {
         this.chatClient = chatClientBuilder.build();
     }
 
-    public String send( String message ) {
+    public String send(String message) {
         return chatClient.prompt(message).call().content();
     }
 }
