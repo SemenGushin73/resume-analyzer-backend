@@ -1,12 +1,12 @@
 package webapp.resumeanalyzer.domain.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 import webapp.resumeanalyzer.domain.model.ResumeFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Интерфейс CRUD методов для сервиса сущности ResumeFile.
@@ -22,8 +22,8 @@ public interface ResumeFileService {
     //Метод для получения ResumeFile по ид
     ResumeFile getResumeFileById(String id);
 
-    // Метод для получения ResumeFile по имени владельца. (В дальнейшем заменить на поиск по пользователю)
-    List<ResumeFile> getResumeFileByOwner(String owner);
+    // Метод для получения ResumeFile по Id владельца.
+    List<ResumeFile> getResumeFileByOwnerId(String ownerId);
 
     //Метод для удаления ResumeFile
     void deleteResumeFile(ResumeFile resumeFile);
@@ -32,7 +32,7 @@ public interface ResumeFileService {
     List<ResumeFile> getAllResumeFiles();
 
     //Создание экземпляра ResumeFile из файла
-    ResumeFile createResumeFile(MultipartFile file, String ownersName) throws IOException;
+    ResumeFile createResumeFile(MultipartFile file, String ownerId) throws IOException;
 
     //Метод для получения файла из ResumeFile
     File getFile(String id) throws IOException;

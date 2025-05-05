@@ -72,7 +72,15 @@ processRequest() в сервисе Deepseek Service. Он в свою очере
 Итоговое сообщение из топика RESUME_ANALYZE_RESULTS, можно вычитать
 консольным Kafka Consumer.
 
-
+#### 2. Документация Resume Analyzer API
+```http
+POST /resumes/files/upload
+```
+Отправляет POST запрос на сохранение файла резюме в БД. Для корректной
+работы запроса необходимо, что бы в БД (postgres test_db resume_owners)
+присутствовала запись с ownerId отправляемого в запросе (например
+550e8400-e29b-41d4-a716-446655440000), так же необходимо создать любой
+файл *.docx или *.pdf для выбора его в поле Request body file.
 ## 🗂️ Структура проекта
 
 ```
