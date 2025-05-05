@@ -4,6 +4,10 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
+/*
+ * класс для отправки сообщений в ИИ модель
+*/
 @Component
 public class AIMessageSender {
 

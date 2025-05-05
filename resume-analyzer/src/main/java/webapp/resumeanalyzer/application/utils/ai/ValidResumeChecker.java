@@ -2,6 +2,10 @@ package webapp.resumeanalyzer.application.utils.ai;
 
 import org.springframework.stereotype.Component;
 
+/*
+ * класс для проверки на корректность резюме и описания профессий 
+ * 
+*/
 @Component
 public class ValidResumeChecker {
 

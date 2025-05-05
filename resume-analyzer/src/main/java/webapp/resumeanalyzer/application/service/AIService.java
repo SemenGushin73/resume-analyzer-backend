@@ -6,6 +6,13 @@ import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.application.utils.ai.AIMessageSender;
 import webapp.resumeanalyzer.application.utils.ai.PromptGenerator;
 
+/*
+ * сервис для работы с ИИ
+ * 
+ * в данный момент имеет функционал:
+ * 1) анализ резюме
+ * 2) генерация резюме
+*/
 @Service
 public class AIService {
 

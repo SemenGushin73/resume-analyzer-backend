@@ -2,6 +2,9 @@ package webapp.resumeanalyzer.application.utils.ai;
 
 import org.springframework.stereotype.Component;
 
+/*
+ * класс для генерации промптов
+*/
 @Component
 public class PromptGenerator {
 
