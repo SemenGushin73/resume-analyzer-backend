@@ -1,4 +1,4 @@
-package webapp.deepseek;
+package webapp.resumeanalyzer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
+import webapp.resumeanalyzer.ResumeAnalyzerApplication;
 import webapp.resumeanalyzer.application.utils.ai.AIMessageSender;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @SpringBootTest
 @ActiveProfiles("test")
+@TestPropertySource(locations = "classpath:application-test.yml")
 @EmbeddedKafka
 public class DeepseekAPIKeyTest {
 

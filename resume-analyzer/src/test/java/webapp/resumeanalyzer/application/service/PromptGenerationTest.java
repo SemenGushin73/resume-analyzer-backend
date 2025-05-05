@@ -1,4 +1,4 @@
-package webapp.deepseek.application.service;
+package webapp.resumeanalyzer.application.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +10,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import webapp.resumeanalyzer.ResumeAnalyzerApplication;
 import webapp.resumeanalyzer.application.utils.ai.PromptGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;

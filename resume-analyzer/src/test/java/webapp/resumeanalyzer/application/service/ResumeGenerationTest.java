@@ -1,4 +1,4 @@
-package webapp.deepseek.application.service;
+package webapp.resumeanalyzer.application.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,10 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import webapp.deepseek.utils.TestDataBuilder;
 import webapp.resumeanalyzer.application.service.AIService;
 import webapp.resumeanalyzer.application.utils.ai.AIMessageSender;
 import webapp.resumeanalyzer.application.utils.ai.PromptGenerator;
+import webapp.resumeanalyzer.utils.TestDataBuilder;
 
 import java.util.stream.Stream;
 

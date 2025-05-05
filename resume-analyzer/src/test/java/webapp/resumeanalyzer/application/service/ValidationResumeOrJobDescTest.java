@@ -1,4 +1,4 @@
-package webapp.deepseek.application.service;
+package webapp.resumeanalyzer.application.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 
+import webapp.resumeanalyzer.ResumeAnalyzerApplication;
 import webapp.resumeanalyzer.application.utils.ai.ValidResumeChecker;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
