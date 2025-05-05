@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Header;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,15 +36,14 @@ public class KafkaConsumerService {
     private final ValidResumeChecker validResumeChecker;
     private final ObjectMapper mapper;
 
-
     @Autowired
     public KafkaConsumerService(KafkaTemplate<String, AnalysisResult> kafkaTemplate,
-                                KafkaTemplate<String, ResumeScoreResult> kafkaScoreTemplate, 
-                                ResumeService resumeService,
-                                ResumeMapper resumeMapper, 
-                                AIService aiService,
-                                ValidResumeChecker validResumeChecker,
-                                ObjectMapper mapper) {
+                              KafkaTemplate<String, ResumeScoreResult> kafkaScoreTemplate, 
+                              ResumeService resumeService,
+                              ResumeMapper resumeMapper, 
+                              AIService aiService,
+                              ValidResumeChecker validResumeChecker,
+                              ObjectMapper mapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.kafkaScoreTemplate = kafkaScoreTemplate;
         this.resumeService = resumeService;
@@ -54,6 +53,7 @@ public class KafkaConsumerService {
         this.mapper = mapper;
     }
 
+    @Transactional(readOnly = true)
     @KafkaListener(topics = KafkaTopics.RESUME_ANALYZE_REQUESTS)
     public void AnalysisRequest(@Header("kafka_receivedMessageKey") String requestId, AnalysisRequest request) {
         log.info("Получен запрос для анализа. Topic: {}, requestId: {}, данные: {}",
@@ -66,25 +66,27 @@ public class KafkaConsumerService {
             try {
                 final String result = aiService.analyzeResume(request.getResumeText(), request.getJobDescription());
                 kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_RESULTS, requestId, new AnalysisResult(requestId, result));
-                log.info("Request {} успешно отправлен в Kafka. Topic: {}, Data: {}",
-                        requestId, KafkaTopics.RESUME_ANALYZE_RESULTS, request);
+                log.info("Request {} успешно отправлен в Kafka. Topic: {}, Data: {}, Result: {}",
+                        requestId, KafkaTopics.RESUME_ANALYZE_RESULTS, request, result);
             } catch (Exception e) {
                 log.error("Ошибка при отправке запроса {} в Kafka. Topic: {}, Data: {}",
                         requestId, KafkaTopics.RESUME_ANALYZE_RESULTS, request, e);
             }
         } else {
-            if (validResumeChecker.isValidResumeAndJobDescribtion(request.getResumeText(), request.getJobDescription())) {
-                log.warn("Request {} failed validation. Причина: некорректное поле 'ResumeText'или 'JobDescription'. Data: {}",
-                        requestId, request);
-            }
+            log.warn("Request {} failed validation. Причина: некорректное поле 'ResumeText' или 'JobDescription'. Data: {}",
+                    requestId, request);
         }
     }
 
+    @Transactional
     @KafkaListener(topics = KafkaTopics.AI_RESUME_SCORE_REQUESTS, groupId = "resume-score-group")
     public void consume(ResumeScoreRequest request) {
         try {
-            final Resume resume = resumeService.getResumeById(request.getResumeId());
-            final ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
+            // Получаем резюме с инициализированными коллекциями
+            Resume resume = resumeService.getResumeById(request.getResumeId());
+            
+            // Преобразуем в DTO внутри транзакции
+            ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
                     resume.getId().toString(),
                     resumeMapper.toDto(resume)
             );
@@ -97,6 +99,7 @@ public class KafkaConsumerService {
             log.info("Отправлен запрос на анализ резюме {} в DeepSeek-service", request.getResumeId());
         } catch (Exception e) {
             log.error("Ошибка обработки запроса: ", e);
+            throw new RuntimeException("Ошибка обработки запроса оценки резюме", e);
         }
     }
 }
