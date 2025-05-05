@@ -34,7 +34,7 @@ public class WebSocketController {
         this.webSocketSessionRegistry = webSocketSessionRegistry;
     }
 
-    @PostMapping("/analyze")
+    @PostMapping("/ws/analyze")
     @Operation(summary = "Отправка запроса на анализ резюме")
     @ApiResponses({
             @ApiResponse(responseCode = "202", description = "Запрос принят"),
@@ -51,7 +51,7 @@ public class WebSocketController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @GetMapping("/ai/resume-score")
+    @GetMapping("/ws/ai/resume-score")
     @Operation(summary = "Получение результата анализа резюме")
     public ResponseEntity<ResumeScoreResult> getResumeScore(@RequestParam String resumeId) {
         final ResumeScoreResult result = kafkaConsumerService.getScoreResult(resumeId);
