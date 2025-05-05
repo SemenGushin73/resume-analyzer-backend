@@ -40,7 +40,7 @@ public class PersonalData {
     @JsonProperty("fullName")
     private String full_name;
 
-    @JsonProperty("adress")
+    @JsonProperty("address")
     private String address;
 
     private String bio;
@@ -52,7 +52,7 @@ public class PersonalData {
     private String website;
 
     @Email
-    @JsonProperty("mail")
+    @JsonProperty("email")
     @Schema(type = "string", example = "string@mail.com")
     private String email;
 
