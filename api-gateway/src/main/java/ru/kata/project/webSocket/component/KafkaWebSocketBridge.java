@@ -14,7 +14,11 @@ class KafkaWebSocketBridge {
     @Autowired
     private WebSocketNotificationService notificationService;
 
-    @KafkaListener(topics = "${kafka.topics.notifications}")
+    @KafkaListener(topics = {
+            "resume-analyze-results",
+            "deepseek-generation-result",
+            "ai-resume-score-results"
+    })
     public void listenForNotifications(ConsumerRecord<String, String> record) {
         String requestId = record.key();
         String message = record.value();
