@@ -1,6 +1,5 @@
 package ru.kata.project.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.kata.project.kafka.config.KafkaTopics;
-import ru.kata.project.webSocket.component.WebSocketSessionRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +22,7 @@ import java.util.Map;
 public class KafkaConsumerService {
     private final Map<String, AnalysisResult> results = new HashMap<>();
     private final Map<String, ResumeScoreResult> scoreResults = new HashMap<>();
-    private final WebSocketSessionRegistry sessionRegistry;
 
-    @Autowired
-    KafkaConsumerService(WebSocketSessionRegistry sessionRegistry) {
-        this.sessionRegistry = sessionRegistry;
-    }
 
     @KafkaListener(topics = KafkaTopics.RESUME_ANALYZE_RESULTS)
     public void consume(AnalysisResult result) {
@@ -38,16 +31,6 @@ public class KafkaConsumerService {
 
         try {
             results.put(result.getRequestId(), result);
-            //      Пробуем отправить клиенту по WebSocket
-            sessionRegistry.getSessionByRequestId(result.getRequestId()).ifPresent(session -> {
-                try {
-                    final String json = new ObjectMapper().writeValueAsString(result);
-                    session.send(Mono.just(session.textMessage(json))).subscribe();
-                    log.info("Отправлено сообщение по WebSocket клиенту с requestId: {}", result.getRequestId());
-                } catch (Exception e) {
-                    log.error("Ошибка при отправке WebSocket сообщения для requestId: {}", result.getRequestId(), e);
-                }
-            });
         } catch (Exception e) {
             log.error("Error processing message from topic: {}. Request ID: {}, Data: {}",
                     KafkaTopics.RESUME_ANALYZE_RESULTS, result.getRequestId(), result, e);

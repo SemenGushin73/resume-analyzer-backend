@@ -20,9 +20,9 @@ import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 import ru.kata.project.resumeDto.ResumeDto;
+import ru.kata.project.webSocket.service.WebSocketNotificationService;
 
 import java.util.UUID;
-
 
 /**
  * Контроллер для управления запросами в API Gateway.
@@ -36,18 +36,21 @@ public class GatewayController {
     private final KafkaProducerService kafkaProducerService;
     private final KafkaConsumerService kafkaConsumerService;
     private final WebClient webClient;
+    private final WebSocketNotificationService notificationService;
     private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
-
 
     @Autowired
     public GatewayController(ApiGatewayService apiGatewayService,
                              KafkaProducerService kafkaProducerService,
                              WebClient.Builder webClientBuilder,
-                             KafkaConsumerService kafkaConsumerService) {
+                             KafkaConsumerService kafkaConsumerService,
+                             WebSocketNotificationService notificationService
+    ) {
         this.apiGatewayService = apiGatewayService;
         this.kafkaProducerService = kafkaProducerService;
         this.kafkaConsumerService = kafkaConsumerService;
         this.webClient = webClientBuilder.baseUrl("http://deepseek-service:9090/").build();
+        this.notificationService = notificationService;
     }
 
     /**
@@ -163,4 +166,28 @@ public class GatewayController {
 
         return ResponseEntity.ok(analysisRequest);
     }
+
+    /**
+     * Эндпоинт для асинхронной обработки с WebSocket уведомлениями
+     */
+    @PostMapping("/async-process")
+    @Operation(summary = "Асинхронная обработка с WebSocket уведомлениями")
+    @ApiResponse(responseCode = "202", description = "Запрос принят. Подключитесь к WebSocket для получения результата.")
+    public ResponseEntity<String> asyncProcessWithNotification(
+            @RequestParam String requestId,
+            @RequestBody Object requestData) {
+
+        // 1. Отправляем запрос в Kafka
+        kafkaProducerService.sendAnalysisRequest(requestId, (AnalysisRequest) requestData);
+
+        // 2. Немедленно возвращаем 202 Accepted
+        return ResponseEntity.accepted()
+                .body("Запрос принят. Подключитесь к /ws/notifications?requestId=" + requestId);
+    }
 }
+
+
+
+
+
+
