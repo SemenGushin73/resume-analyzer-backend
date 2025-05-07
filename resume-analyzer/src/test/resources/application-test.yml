@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: resume-analyzer
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        max.request.size: 52428800
+    consumer:
+      group-id: resume-analyzer-group-test
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        fetch.max.bytes: 52428800
+        spring.json.value.default.type: ru.kata.project.kafka.AnalysisRequest
+        spring.json.trusted.packages: ru.kata.project.kafka
+  cloud:
+    config:
+      enabled: false 
+  config:
+    import: "optional:file:./config/"
+  ai:
+    openrouter:
+      chat:
+        options:
+          models:
+            - deepseek/deepseek-chat
+
+    openai:
+      base_url: https://openrouter.ai/api
+      api-key: ${OPENROUTER_API_KEY}
+      chat:
+        options:
+          model: deepseek/deepseek-chat
+
+server:
+  port: 0

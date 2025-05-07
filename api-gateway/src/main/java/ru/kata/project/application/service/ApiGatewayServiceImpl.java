@@ -82,7 +82,7 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
                 .retrieve()
                 .toEntity(JsonNode.class)
                 .flatMap(buildResume -> {
-                    JsonNode responseJson = buildResume.getBody();
+                    final JsonNode responseJson = buildResume.getBody();
 
                     if (responseJson == null || responseJson.isEmpty()) {
                         return Mono.error(new RestClientException("resume-analyzer returned an empty response"));

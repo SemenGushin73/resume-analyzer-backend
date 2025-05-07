@@ -1,0 +1,54 @@
+package webapp.resumeanalyzer.application.service;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
+
+import webapp.resumeanalyzer.ResumeAnalyzerApplication;
+import webapp.resumeanalyzer.application.utils.ai.ValidResumeChecker;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@SpringBootTest
+@ActiveProfiles("test")
+@EmbeddedKafka
+public class ValidationResumeOrJobDescTest {
+
+    @Autowired
+    private ValidResumeChecker service;
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "опыт работы",
+            "НАВЫКИ программирования",
+            "Образование: высшее",
+            "должностные обязанности инженера",
+            "Требования к кандидату",
+            "Моё резюме",
+            "Вакансия: разработчик"
+    })
+    void isValidResumeOrJobDescription_ShouldReturnTrue_WhenValidText(String text) {
+        assertTrue(service.isValidResumeOrJobDescription(text));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    void isValidResumeOrJobDescription_ShouldReturnFalse_WhenEmptyOrBlank(String text) {
+        assertFalse(service.isValidResumeOrJobDescription(text));
+    }
+
+    @Test
+    void isValidResumeOrJobDescription_ShouldReturnFalse_WhenNoKeywords() {
+        assertFalse(service.isValidResumeOrJobDescription("просто случайный текст"));
+    }
+}

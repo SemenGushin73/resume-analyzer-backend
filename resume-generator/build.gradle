@@ -57,8 +57,7 @@ dependencies {
     implementation 'org.hibernate.orm:hibernate-core:6.6.3.Final'
     implementation 'org.postgresql:postgresql:42.7.4'
 
-	//
-	
+	//pdf library
 	implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.22")
 
 	// MongoDB testing
