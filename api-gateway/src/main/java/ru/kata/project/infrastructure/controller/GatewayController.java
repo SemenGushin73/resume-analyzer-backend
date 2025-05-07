@@ -20,9 +20,9 @@ import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 import ru.kata.project.resumeDto.ResumeDto;
-import ru.kata.project.webSocket.service.WebSocketNotificationService;
 
 import java.util.UUID;
+
 
 /**
  * Контроллер для управления запросами в API Gateway.
@@ -35,22 +35,17 @@ public class GatewayController {
     private final ApiGatewayService apiGatewayService;
     private final KafkaProducerService kafkaProducerService;
     private final KafkaConsumerService kafkaConsumerService;
-    private final WebClient webClient;
-    private final WebSocketNotificationService notificationService;
     private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
+
 
     @Autowired
     public GatewayController(ApiGatewayService apiGatewayService,
                              KafkaProducerService kafkaProducerService,
                              WebClient.Builder webClientBuilder,
-                             KafkaConsumerService kafkaConsumerService,
-                             WebSocketNotificationService notificationService
-    ) {
+                             KafkaConsumerService kafkaConsumerService) {
         this.apiGatewayService = apiGatewayService;
         this.kafkaProducerService = kafkaProducerService;
         this.kafkaConsumerService = kafkaConsumerService;
-        this.webClient = webClientBuilder.baseUrl("http://deepseek-service:9090/").build();
-        this.notificationService = notificationService;
     }
 
     /**
@@ -61,42 +56,6 @@ public class GatewayController {
     @GetMapping("/status")
     public String status() {
         return "OK";
-    }
-
-    /**
-     * Маршрутизация запроса на анализ резюме в deepseek-service
-     *
-     * @param resumeText     текст резюме, который нужно проанализировать
-     * @param jobDescription описание вакансии требуемое контроллером deepseek-service
-     * @return возвращает результат работы deepseek-service
-     */
-    @PostMapping("/ai/analyze")
-    public Mono<ResponseEntity<String>> analyzeResume(
-            @RequestParam("resumeText") String resumeText,
-            @RequestParam("jobDescription") String jobDescription) {
-
-        return webClient.post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/api/resume/analyze")
-                        .queryParam("resumeText", resumeText)
-                        .queryParam("jobDescription", jobDescription)
-                        .build())
-                .retrieve()
-                .onStatus(status -> status.value() >= 400 && status.value() < 500, response -> {
-                    log.error("Ошибка 4xx: {}", response.statusCode());
-                    return Mono.error(new RuntimeException("Ошибка в запросе"));
-                })
-                .onStatus(status -> status.value() >= 500, response -> {
-                    log.error("Ошибка 5xx: {}", response.statusCode());
-                    return Mono.error(new RuntimeException("Ошибка на сервере"));
-                })
-                .bodyToMono(String.class)
-                .map(ResponseEntity::ok)
-                .onErrorResume(e -> {
-                    log.error("Ошибка анализа резюме: {}", e.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("Ошибка при анализе резюме: " + e.getMessage()));
-                });
     }
 
     /**
@@ -166,28 +125,4 @@ public class GatewayController {
 
         return ResponseEntity.ok(analysisRequest);
     }
-
-    /**
-     * Эндпоинт для асинхронной обработки с WebSocket уведомлениями
-     */
-    @PostMapping("/async-process")
-    @Operation(summary = "Асинхронная обработка с WebSocket уведомлениями")
-    @ApiResponse(responseCode = "202", description = "Запрос принят. Подключитесь к WebSocket для получения результата.")
-    public ResponseEntity<String> asyncProcessWithNotification(
-            @RequestParam String requestId,
-            @RequestBody Object requestData) {
-
-        // 1. Отправляем запрос в Kafka
-        kafkaProducerService.sendAnalysisRequest(requestId, (AnalysisRequest) requestData);
-
-        // 2. Немедленно возвращаем 202 Accepted
-        return ResponseEntity.accepted()
-                .body("Запрос принят. Подключитесь к /ws/notifications?requestId=" + requestId);
-    }
 }
-
-
-
-
-
-

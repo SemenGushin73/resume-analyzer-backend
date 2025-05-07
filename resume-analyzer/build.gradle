@@ -32,8 +32,15 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "2024.0.0-RC1")
+    set('springCloudVersion', "2024.0.0")
 }
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 
 dependencies {
     // Spring Boot Starters
@@ -44,6 +51,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
+    // // Spring Ai подробности в application/utils/ai/aiMessageSenderImpl/AIMessageSenderSpringAiImpl
+    // implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.0-M8'
+
+    // openfeighn
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'io.github.openfeign:feign-slf4j:13.1'
+
     // SpringDoc OpenAPI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
@@ -53,6 +67,8 @@ dependencies {
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Logging
     implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
@@ -75,10 +91,4 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
 }
