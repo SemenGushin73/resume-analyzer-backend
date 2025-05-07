@@ -68,8 +68,6 @@ dependencies {
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     // WebSocket(основная библиотека)
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    // Для работы с WebSocket в тестах
-    testImplementation 'org.springframework.boot:spring-boot-starter-websocket-test'
     // Для работы с сообщениями
     implementation 'org.springframework:spring-messaging'
 }
