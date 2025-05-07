@@ -83,10 +83,10 @@ public class KafkaConsumerService {
     public void consume(ResumeScoreRequest request) {
         try {
             // Получаем резюме с инициализированными коллекциями
-            Resume resume = resumeService.getResumeById(request.getResumeId());
+            final Resume resume = resumeService.getResumeById(request.getResumeId());
             
             // Преобразуем в DTO внутри транзакции
-            ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
+            final ResumeScoreAnalysisRequest resumeScoreAnalysisRequest = new ResumeScoreAnalysisRequest(
                     resume.getId().toString(),
                     resumeMapper.toDto(resume)
             );
