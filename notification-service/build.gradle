@@ -19,8 +19,18 @@ configurations {
 }
 repositories {
     mavenCentral()
+    mavenLocal()
+    maven {
+        url = uri("https://company/com/maven2")
+    }
+
 }
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'io.projectreactor:reactor-core:3.5.0'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.0'
     implementation 'org.springframework.boot:spring-boot-starter'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
