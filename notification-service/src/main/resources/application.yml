@@ -3,6 +3,8 @@ spring:
     web-application-type: reactive
   application:
     name: notification-service
+  kafka:
+    bootstrap-servers: kafka:9092
 #  config:
 #    import: "configserver:http://config-server:8888"
 #  cloud:
@@ -15,11 +17,9 @@ spring:
 
 server:
   port: 8885
-  kafka:
-    bootstrap-servers: localhost:29092
 
-  websocket:
-    path: /ws/notifications
+websocket:
+  path: /ws/notifications
 
 springdoc:
   api-docs:
