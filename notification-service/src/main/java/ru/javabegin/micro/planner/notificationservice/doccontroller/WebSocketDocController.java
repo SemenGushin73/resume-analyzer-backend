@@ -2,6 +2,7 @@ package ru.javabegin.micro.planner.notificationservice.doccontroller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ws")
+@Tag(name = "Контроллер WebSocket.", description = "Осуществление взаимодействия по протоколу webSocket.")
 public class WebSocketDocController {
 
     @Operation(
@@ -16,7 +18,7 @@ public class WebSocketDocController {
             description = """
                 ### Как подключиться к WebSocket
 
-                1. Подключитесь по адресу: `ws://localhost:8080/ws/notifications`
+                1. Подключитесь по адресу: `ws://localhost:8885/ws/notifications`
                 2. После подключения отправьте сообщение с `requestId`, который вы получили при отправке HTTP-запроса.
                 3. Ожидайте ответ от сервиса — он придёт по этому же соединению.
 
