@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: notification-service
 #  config:
@@ -12,9 +14,17 @@ spring:
 #        max-attempts: 10
 
 server:
-  port: 8085 # ??? ?????? ????????? ????
+  port: 8885
   kafka:
-    bootstrap-servers: localhost:29092  # ????? ??????? Kafka
+    bootstrap-servers: localhost:29092
 
   websocket:
     path: /ws/notifications
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
