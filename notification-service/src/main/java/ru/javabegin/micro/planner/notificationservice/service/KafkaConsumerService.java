@@ -17,7 +17,7 @@ public class KafkaConsumerService {
         this.registry = registry;
     }
 
-    @KafkaListener(topics = "resume-analysis-result", groupId = "notification-group")
+    @KafkaListener(topics = "KafkaTopics.RESUME_ANALYZE_REQUESTS", groupId = "notification-group")
     public void listen(String message) {
         // Предположим, что message содержит requestId в формате: "{\"requestId\": \"...\", ...}"
         final String requestId = extractRequestIdFromMessage(message);
