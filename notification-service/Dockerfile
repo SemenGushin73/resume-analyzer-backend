@@ -10,4 +10,4 @@ COPY notification-service/build/libs/notification-service-*.jar ./app.jar
 
 ENTRYPOINT [ "java", "-javaagent:/opentelemetry-javaagent.jar", "-jar", "/app/app.jar" ]
 
-EXPOSE 8085  # Или другой порт, на котором работает notification-service
+EXPOSE 8885
