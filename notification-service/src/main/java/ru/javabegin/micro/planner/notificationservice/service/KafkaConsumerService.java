@@ -20,10 +20,10 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "resume-analysis-result", groupId = "notification-group")
     public void listen(String message) {
         // Предположим, что message содержит requestId в формате: "{\"requestId\": \"...\", ...}"
-        String requestId = extractRequestIdFromMessage(message);
-        WebSocketSession session = registry.getSessionByRequestId(requestId);
+        final String requestId = extractRequestIdFromMessage(message);
+        final WebSocketSession session = registry.getSessionByRequestId(requestId);
         if (session != null && session.isOpen()) {
-            WebSocketMessage wsMessage = session.textMessage(message);
+            final WebSocketMessage wsMessage = session.textMessage(message);
             Mono.from(session.send(Mono.just(wsMessage))).subscribe();
         }
     }
