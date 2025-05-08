@@ -25,7 +25,7 @@ public class WebSocketDocController {
                 ### Пример (JavaScript):
 
                 ```javascript
-                const socket = new WebSocket("ws://localhost:8080/ws/notifications");
+                const socket = new WebSocket("ws://localhost:8885/ws/notifications");
 
                 socket.onopen = () => {
                     socket.send("123e4567-e89b-12d3-a456-426614174000");
