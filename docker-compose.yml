@@ -8,13 +8,13 @@ services:
       context: .
       dockerfile: notification-service/Dockerfile
     ports:
-          - "8885:8885"
+      - "8885:8885"
     depends_on:
-          - otel-collector
-          - postgres
-          - kafka
-          - redis
-          - mongodb
+      - kafka
+      - otel-collector
+      - postgres
+      - redis
+      - mongodb
     environment:
       SPRING_PROFILES_ACTIVE: docker
       OTEL_SERVICE_NAME: "notification-service"
