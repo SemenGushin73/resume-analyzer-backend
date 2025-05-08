@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: notification-service
+#  config:
+#    import: "configserver:http://config-server:8888"
+#  cloud:
+#    config:
+#      fail-fast: true
+#      retry:
+#        initial-interval: 1000
+#        max-interval: 2000
+#        max-attempts: 10
+
+server:
+  port: 8085 # ??? ?????? ????????? ????
+  kafka:
+    bootstrap-servers: localhost:29092  # ????? ??????? Kafka
+
+  websocket:
+    path: /ws/notifications
