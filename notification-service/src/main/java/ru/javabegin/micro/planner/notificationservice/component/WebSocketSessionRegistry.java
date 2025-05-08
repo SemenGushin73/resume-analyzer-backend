@@ -20,13 +20,17 @@ public class WebSocketSessionRegistry {
     }
 
     public WebSocketSession getSessionByRequestId(String requestId) {
-        String sessionId = requestIdToSessionId.get(requestId);
-        RegisteredSession reg = sessions.get(sessionId);
-        return reg != null ? reg.getSession() : null;
+        final String sessionId = requestIdToSessionId.get(requestId);
+        final RegisteredSession reg = sessions.get(sessionId);
+        if (reg != null) {
+            return reg.getSession();
+        } else {
+            return null;
+        }
     }
 
     public void cleanupOldSessions(Duration maxAge) {
-        Instant now = Instant.now();
+        final Instant now = Instant.now();
         sessions.entrySet().removeIf(entry ->
                 Duration.between(entry.getValue().getConnectedAt(), now).compareTo(maxAge) > 0);
     }
