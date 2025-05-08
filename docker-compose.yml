@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: notification-service/Dockerfile
     ports:
-          - "8085:8085"
+          - "8885:8885"
     depends_on:
           - otel-collector
           - postgres
@@ -200,6 +200,7 @@ services:
       - otel-collector
       - resume-analyzer
       - resume-generator
+      - notification-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
       OTEL_SERVICE_NAME: "api-gateway"
