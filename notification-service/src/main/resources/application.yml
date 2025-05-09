@@ -5,6 +5,9 @@ spring:
     name: notification-service
   kafka:
     bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 #  config:
 #    import: "configserver:http://config-server:8888"
 #  cloud:
@@ -26,5 +29,8 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+
+
 
 

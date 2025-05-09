@@ -16,6 +16,9 @@ public class ResumeRequest {
     @Schema(description = "Описание вакансии",
             example = "Looking for a backend developer with Java 21, Kafka and PostgreSQL knowledge.")
     private String jobDescription;
+    public ResumeRequest() {
+
+    }
 
     @Override
     public boolean equals(Object o) {

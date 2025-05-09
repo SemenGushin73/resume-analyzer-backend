@@ -14,7 +14,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .addServersItem(new Server()
-                        .url("http://localhost:8765/ws/notification")
+                        .url("http://localhost:8885")
                         .description("webSocket protocol"));
     }
 }

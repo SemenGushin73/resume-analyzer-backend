@@ -26,7 +26,7 @@ public class KafkaConnectionCheck {
     @PostConstruct
     public void checkConnection() {
         try {
-            kafkaTemplate.send("test-topic", "ping");
+            kafkaTemplate.send("resume-analyze-requests", "ping");
             System.out.println("Kafka доступна");
         } catch (Exception e) {
             System.err.println("Ошибка подключения к Kafka: " + e.getMessage());
