@@ -50,6 +50,7 @@ docker compose -f docker-compose.yml up -d
 ### 📚 Документация Swagger:
 
 - [http://localhost:8765/swagger-ui/index.html](http://localhost:8765/analyzer/swagger-ui/index.html)
+- [http://localhost:8885/swagger-ui/index.html](http://localhost:8885/notification/swagger-ui/index.html)
 
 ### 🔧 Примеры запросов:
 
