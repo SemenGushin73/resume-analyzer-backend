@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import ru.javabegin.micro.planner.notificationservice.component.NotificationWebSocketHandler;
 
 import java.util.Map;
