@@ -18,14 +18,11 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": null,
   "links": [],
   "panels": [
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "fef1qzrx6sav4d"
-      },
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -104,10 +101,7 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "fef1qzrx6sav4d"
-          },
+          "datasource": "Prometheus",
           "editorMode": "code",
           "expr": "rate(process_cpu_usage[1m])",
           "legendFormat": "__auto",
@@ -133,7 +127,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Загрузка CPU",
-  "uid": "aef1r6sccwbuoc",
+  "uid": "Downloading CPU",
   "version": 1,
   "weekStart": ""
 }

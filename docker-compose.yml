@@ -8,6 +8,7 @@ services:
       - "3000:3000"
     volumes:
       - ./config/grafana/datasources/grafana.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -41,14 +42,28 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     ports:
-      - "9091:9091"
+      - "9091:9090"
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/alertmanager/alert.rules.yml:/etc/prometheus/alert.rules.yml
     depends_on:
       - resume-analyzer
       - resume-generator
       - deepseek-service
       - api-gateway
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./config/alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
+      - ./smtp-password.txt:/etc/alertmanager/smtp-password.txt
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+    depends_on:
+      - prometheus
 
   postgres:
     image: postgres:15
@@ -140,7 +155,7 @@ services:
     container_name: otel-collector
     command: [ "--config=/etc/otel-config.yaml" ]
     volumes:
-      - ./utils/otel-config.yml:/etc/otel-config.yaml
+      - ./config/otel-collector/otel-config.yml:/etc/otel-config.yaml
     logging:
       driver: json-file
       options:

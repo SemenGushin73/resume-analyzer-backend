@@ -1,0 +1,32 @@
+groups:
+  - name: example
+    rules:
+      # Алерт: микросервис упал
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Сервис {{ $labels.job }} на {{ $labels.instance }} упал!"
+          description: "Экспортер {{ $labels.job }} не отвечает."
+
+      # Алерт: Kafka не обрабатывает сообщения
+      - alert: KafkaNotProcessing
+        expr: rate(kafka_consumer_request_total[5m]) == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Kafka не обрабатывает сообщения!"
+          description: "Kafka не отправляет запросы более 5 минут."
+
+      # Алерт: API отвечает слишком медленно
+      - alert: APISlowResponse
+        expr: histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket[1m])) by (le)) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API отвечает слишком медленно!"
+          description: "95-й перцентиль времени ответа API превышает 2 секунды."

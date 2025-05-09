@@ -113,15 +113,19 @@ resume-analyzer-backend/
 ### Grafana
 
 - [http://localhost:3000](http://localhost:3000)
-- Логин: `admin`, Пароль: `admin`
+
+### Promtail
+
+- [http://localhost:9080](http://localhost:9080)
 
 ### Prometheus
 
-- [http://localhost:9099](http://localhost:9099)
+- [http://localhost:9091](http://localhost:9091)
 
 ### Alertmanager
 
 - [http://localhost:9093](http://localhost:9093)
+- Для отправки алертов на сервер Yandex email необходимо создать app password и добавить в корень проекта файл smtp-password.txt
 
 ### Jaeger
 

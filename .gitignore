@@ -41,3 +41,6 @@ out/
 **/.env
 **/.env*
 !.env.example
+
+# Игнорировать файл с SMTP-паролем
+smtp-password.txt

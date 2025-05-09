@@ -18,14 +18,11 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": null,
   "links": [],
   "panels": [
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "fef1qzrx6sav4d"
-      },
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -72,10 +69,7 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "fef1qzrx6sav4d"
-          },
+          "datasource": "Prometheus",
           "editorMode": "code",
           "expr": "jvm_memory_used_bytes{area=\"heap\"}",
           "legendFormat": "__auto",
@@ -101,7 +95,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Использование памяти",
-  "uid": "bef1r9yjm9zwgc",
+  "uid": "used memory",
   "version": 1,
   "weekStart": ""
 }
