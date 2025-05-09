@@ -1,0 +1,59 @@
+package webapp.resumeanalyzer.application.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import webapp.resumeanalyzer.application.utils.ai.AIMessageSender;
+import webapp.resumeanalyzer.application.utils.ai.PromptGenerator;
+
+/*
+ * сервис для работы с ИИ
+ * 
+ * в данный момент имеет функционал:
+ * 1) анализ резюме
+ * 2) генерация резюме
+*/
+@Service
+public class AIService {
+
+    private final AIMessageSender aiMessageSender;
+    private final PromptGenerator promtptGenerator;
+
+    @Autowired
+    public AIService(AIMessageSender aiMessageSender, PromptGenerator promtptGenerator) {
+        this.aiMessageSender = aiMessageSender;
+        this.promtptGenerator = promtptGenerator;
+    }
+    
+    public String analyzeResume(String resumeText, String jobDescription) {
+        final String prompt = promtptGenerator.createPrompt(resumeText, jobDescription);
+        final String response = sendPromptAndGetResponse( prompt );
+        return response;
+    }
+
+    public String analyzeResumeScore(String resumeText) {
+        final String prompt = promtptGenerator.createPromptForScoring(resumeText);
+        final String response = sendPromptAndGetResponse( prompt );
+        return response;
+    }
+
+    public String generateResume(String template, String departmentDescription) {
+        final String prompt = promtptGenerator.createPromptForGeneration(template, departmentDescription);
+        final String response = sendPromptAndGetResponse( prompt );
+        return response;
+    }
+
+    private String sendPromptAndGetResponse( String prompt ) {
+        try {
+            final String response = aiMessageSender.send( prompt );
+                    
+        if (response == null || response.isBlank()) {
+            throw new RuntimeException("Ошибка: AI не смог обработать запрос.");
+        }
+        
+        return response;
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Ошибка: AI не смог обработать запрос.", e);
+        }
+    }
+}

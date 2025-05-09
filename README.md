@@ -22,7 +22,6 @@ AI-интеграцию (DeepSeek), API Gateway и мониторинг инфр
 
 - `resume-analyzer` — анализ резюме, сохранение и Kafka-интеграция
 - `resume-generator` — генерация текста по шаблонам и через AI
-- `deepseek-service` — вызов AI-модели через OpenRouter API
 - `api-gateway` — маршрутизация, OpenAPI Proxy, CircuitBreaker
 - `lib` — общий модуль с DTO, исключениями и утилитами
 - `bitbucket-config-server` — централизованная конфигурация микросервисов для удобства поддержки и масштабирования
@@ -90,7 +89,6 @@ resume-analyzer-backend/
 ├── bitbucket-config-server/    # Централизованная конфигурация микросервисов Spring Cloud Config
 ├── resume-analyzer/            # Анализ резюме (PostgreSQL)
 ├── resume-generator/           # Генератор резюме (MongoDB)
-├── deepseek-service/           # Интеграция с AI (OpenRouter)
 ├── lib/                        # Общие DTO, утилиты, исключения
 ├── docker-compose.yml          # Полный стек инфраструктуры
 └── utils/                      # Настройки Prometheus, Loki, Grafana, otel-Collector
@@ -102,7 +100,6 @@ resume-analyzer-backend/
 - MongoDB: `localhost:27017`
 - Kafka: `localhost:9092` внешний порт '29092'
 - Redis: `localhost:6379`
-- DeepSeek: `localhost:9090`
 - Resume Analyzer: `localhost:8083`
 - Resume Generator: `localhost:8082`
 - API Gateway: `localhost:8765`
