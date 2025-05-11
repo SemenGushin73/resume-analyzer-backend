@@ -46,41 +46,14 @@ pipeline {
                 }
             }
         }
-
-        stage('Docker Build & Push') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USERNAME',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )]) {
-                        sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-                        dir('resume-analyzer-backend') {
-							sh "docker build -t ${env.DOCKER_IMAGE_NAME} ."
-                            sh "docker push ${env.DOCKER_IMAGE_NAME}"
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Deploy') {
-			steps {
-				script {
-					withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USERNAME',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )]) {
-						sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-                        sh """
-                            docker pull ${env.DOCKER_IMAGE_NAME}
-                            docker stop resume-analyzer || true
-                            docker rm resume-analyzer || true
-                            docker run -d --name resume-analyzer -p 8080:8080 ${env.DOCKER_IMAGE_NAME}
-                        """
-                    }
+      
+      	stage('Deploy with Docker Compose') {
+        	steps {
+            	dir('resume-analyzer-backend') {
+                	sh '''
+                    	docker compose -f docker-compose.yml down
+                        docker compose -f docker-compose.yml up -d --build
+                    '''
                 }
             }
         }
