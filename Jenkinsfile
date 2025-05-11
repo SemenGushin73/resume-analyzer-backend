@@ -58,7 +58,7 @@ pipeline {
                             docker build -t $DOCKER_IMAGE_ANALYZER -f resume-analyzer/Dockerfile .
                             docker build -t $DOCKER_IMAGE_GENERATOR -f resume-generator/Dockerfile .
                             docker build -t $DOCKER_IMAGE_GATEWAY -f api-gateway/Dockerfile .
-                            docker build -t $DOCKER_IMAGE_CONFIG -f bitbucket-config-server/Dockerfile .
+                            docker build -t $DOCKER_IMAGE_CONFIG -f bitbucket-config-server/Dockerfile bitbucket-config-server
                         '''
                     }
                 }
