@@ -10,7 +10,10 @@ pipeline {
     environment {
       	BITBUCKET_CREDS = credentials('bitbucket-credentials')
         DOCKER_CREDS = credentials('dockerhub-creds')
-		DOCKER_IMAGE_NAME = "${params.DOCKER_REPO}:${env.BUILD_NUMBER}"
+      	DOCKER_IMAGE_ANALYZER = "${params.DOCKER_REPO}-resume-analyzer:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE_GENERATOR = "${params.DOCKER_REPO}-resume-generator:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE_GATEWAY = "${params.DOCKER_REPO}-api-gateway:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE_CONFIG = "${params.DOCKER_REPO}-config-server:${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -43,6 +46,39 @@ pipeline {
 						sh 'chmod +x gradlew'
                         sh './gradlew test'
                     }
+                }
+            }
+        }
+      
+      	stage('Build Docker Images') {
+        	steps {
+                script {
+                    dir('resume-analyzer-backend') {
+                        sh '''
+                            docker build -t $DOCKER_IMAGE_ANALYZER -f resume-analyzer/Dockerfile resume-analyzer/
+                            docker build -t $DOCKER_IMAGE_GENERATOR -f resume-generator/Dockerfile resume-generator/
+                            docker build -t $DOCKER_IMAGE_GATEWAY -f api-gateway/Dockerfile api-gateway/
+                            docker build -t $DOCKER_IMAGE_CONFIG -f bitbucket-config-server/Dockerfile bitbucket-config-server
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Images') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USERNAME',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker push $DOCKER_IMAGE_ANALYZER
+                        docker push $DOCKER_IMAGE_GENERATOR
+                        docker push $DOCKER_IMAGE_GATEWAY
+                        docker push $DOCKER_IMAGE_CONFIG
+                    '''
                 }
             }
         }
