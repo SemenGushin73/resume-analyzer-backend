@@ -10,6 +10,8 @@ pipeline {
     environment {
       	BITBUCKET_CREDS = credentials('bitbucket-credentials')
         DOCKER_CREDS = credentials('dockerhub-creds')
+      	GIT_USER = credentials('bitbucket-user')
+        GIT_PASS = credentials('bitbucket-token')
       	DOCKER_IMAGE_ANALYZER = "${params.DOCKER_REPO}-resume-analyzer:${env.BUILD_NUMBER}"
         DOCKER_IMAGE_GENERATOR = "${params.DOCKER_REPO}-resume-generator:${env.BUILD_NUMBER}"
         DOCKER_IMAGE_GATEWAY = "${params.DOCKER_REPO}-api-gateway:${env.BUILD_NUMBER}"
