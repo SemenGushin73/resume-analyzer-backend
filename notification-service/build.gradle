@@ -32,19 +32,42 @@ repositories {
     maven {
         url = uri("https://company/com/maven2")
     }
+    flatDir {
+        dirs "lib"
+    }
 }
 
 dependencies {
+    //WebSocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    //Flux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    //Kafka
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.apache.kafka:kafka-clients'
+    // SpringDoc OpenAPI
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.6'
+    //Lombok
     compileOnly 'org.projectlombok:lombok'
+    //Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0'
+
+    // Logging
+    implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
+    implementation 'com.github.loki4j:loki-logback-appender:1.6.0'
+    // Monitoring
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    // Networking
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    //Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     // Project Modules
-//    implementation(project(":lib"))
+    implementation 'webapp.common:resume-analyzer-common:1.0.0'
 }
 ext {
     set('springCloudVersion', "2024.0.0")

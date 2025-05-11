@@ -1,5 +1,8 @@
 package ru.javabegin.micro.planner.notificationservice.component;
 
+import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import ru.javabegin.micro.planner.notificationservice.registration.RegisteredSession;
@@ -12,11 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Хранилище активных WebSocket-сессий
  */
-
 @Component
+@Data
 public class WebSocketSessionRegistry {
     private final Map<String, RegisteredSession> sessions = new ConcurrentHashMap<>();
     private final Map<String, String> requestIdToSessionId = new ConcurrentHashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(WebSocketSessionRegistry.class);
 
     public void registerSession(String requestId, WebSocketSession session) {
         sessions.put(session.getId(), new RegisteredSession(session, Instant.now()));
@@ -24,28 +28,18 @@ public class WebSocketSessionRegistry {
     }
 
     public WebSocketSession getSessionByRequestId(String requestId) {
-        final String sessionId = requestIdToSessionId.get(requestId);
-        if (sessionId != null) {
-            final RegisteredSession reg = sessions.get(sessionId);
-            if (reg != null) {
-                return reg.getSession();
-            } else return null;
-        } else {
-            return null;
-        }
+        String sessionId = requestIdToSessionId.get(requestId);
+        RegisteredSession registeredSession = sessions.get(sessionId);
+        return registeredSession != null ? registeredSession.getSession() : null;
     }
+
     public void cleanupOldSessions(Duration maxAge) {
-        final Instant now = Instant.now();
+        Instant cutoff = Instant.now().minus(maxAge);
         sessions.entrySet().removeIf(entry -> {
-                RegisteredSession reg = entry.getValue();
-                boolean expired = Duration.between(reg.getConnectedAt(), now).compareTo(timeout) > 0;
+            boolean expired = entry.getValue().getConnectedAt().isBefore(cutoff);
             if (expired) {
-                requestIdToSessionId.values().removeIf(id -> id.equals(entry.getKey()));
-                try {
-                    reg.getSession().close();
-                } catch (IOException e) {
-                    log.warn("Failed to close WebSocket session", e);
-                }
+                String sessionId = entry.getKey();
+                requestIdToSessionId.values().remove(sessionId);
             }
             return expired;
         });

@@ -4,16 +4,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
-import ru.javabegin.micro.planner.notificationservice.model.ResumeRequest;
-
+import ru.javabegin.micro.planner.notificationservice.service.KafkaProducerService;
+import ru.kata.project.kafka.AnalysisRequest;
+import ru.kata.project.kafka.config.KafkaTopics;
 
 import java.util.UUID;
 
@@ -21,12 +22,13 @@ import java.util.UUID;
 @RequestMapping("/analyze")
 @Tag(name = "Контроллер клиента.", description = "Осуществляет HTTP-запрос через Swagger")
 public class ResumeAnalysisController {
-
-    private final KafkaTemplate<String, ResumeRequest> kafkaTemplate;
+    private final KafkaTemplate<String, AnalysisRequest> kafkaTemplate;
+    private final KafkaProducerService kafkaProducerService;
     private static final Logger log = LoggerFactory.getLogger(ResumeAnalysisController.class);
 
     @Autowired
-    public ResumeAnalysisController(KafkaTemplate<String, ResumeRequest> kafkaTemplate) {
+    public ResumeAnalysisController(KafkaTemplate<String, AnalysisRequest> kafkaTemplate, KafkaProducerService kafkaProducerService) {
+        this.kafkaProducerService = kafkaProducerService;
         this.kafkaTemplate = kafkaTemplate;
     }
 
@@ -35,14 +37,29 @@ public class ResumeAnalysisController {
             Немедленно возвращается 202 Accepted.
             """)
     @ApiResponse(responseCode = "202", description = "Запрос ушел в Kafka", content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ResumeRequest.class)))
+            schema = @Schema(implementation = AnalysisRequest.class)))
     @CrossOrigin(origins = "http://localhost:8885")
     @PostMapping()
-    public ResponseEntity<Void> analyzeResume(@RequestBody ResumeRequest request) {
+    public ResponseEntity<Void> analyzeResume(@RequestBody AnalysisRequest request) {
         String requestId = UUID.randomUUID().toString();
-        log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}", request, "resume-analyze-requests");
-        kafkaTemplate.send("resume-analyze-requests", requestId, request);
+        log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}", request, KafkaTopics.RESUME_ANALYZE_REQUESTS);
+        kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);
         // Немедленно возвращаем 202 Accepted и requestId
+        return ResponseEntity.accepted().header("X-Request-ID", requestId).build();
+    }
+
+    @PostMapping("/ws")
+    @Operation(summary = "Отправка AnalysisRequest в kafka топик RESUME_ANALYZE_REQUESTS")
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "Успешная отправка"),
+
+    })
+    public ResponseEntity<AnalysisRequest> sendAnalysisRequestToKafka(@RequestBody AnalysisRequest request) {
+        log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}, ",
+                request, KafkaTopics.RESUME_ANALYZE_REQUESTS);
+        String requestId = UUID.randomUUID().toString();
+        kafkaProducerService.sendAnalysisRequest(requestId,
+                request);
         return ResponseEntity.accepted().header("X-Request-ID", requestId).build();
     }
 }

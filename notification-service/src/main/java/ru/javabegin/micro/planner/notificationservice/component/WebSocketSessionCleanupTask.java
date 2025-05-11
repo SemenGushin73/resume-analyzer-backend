@@ -13,7 +13,7 @@ public class WebSocketSessionCleanupTask {
         this.registry = registry;
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 120000)
     public void cleanOldSessions() {
         registry.cleanupOldSessions(Duration.ofMinutes(5));
     }

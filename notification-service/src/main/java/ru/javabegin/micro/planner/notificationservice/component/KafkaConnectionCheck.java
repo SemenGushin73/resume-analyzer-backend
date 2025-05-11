@@ -1,15 +1,9 @@
 package ru.javabegin.micro.planner.notificationservice.component;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import ru.kata.project.kafka.config.KafkaTopics;
 
 /**
  * Для проверки на каком порту Kafka. Если выводится localhost:9092 — точно идет переопределение.
@@ -26,7 +20,7 @@ public class KafkaConnectionCheck {
     @PostConstruct
     public void checkConnection() {
         try {
-            kafkaTemplate.send("resume-analyze-requests", "ping");
+            kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_REQUESTS, "ping");
             System.out.println("Kafka доступна");
         } catch (Exception e) {
             System.err.println("Ошибка подключения к Kafka: " + e.getMessage());

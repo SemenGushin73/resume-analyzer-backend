@@ -1,6 +1,7 @@
 package ru.javabegin.micro.planner.notificationservice.component;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
@@ -10,7 +11,8 @@ import reactor.core.publisher.Mono;
 @Component
 public class NotificationWebSocketHandler implements WebSocketHandler {
     private final WebSocketSessionRegistry registry;
-@Autowired
+    private static final Logger log = LoggerFactory.getLogger(NotificationWebSocketHandler.class);
+
     public NotificationWebSocketHandler(WebSocketSessionRegistry registry) {
         this.registry = registry;
     }
@@ -19,9 +21,10 @@ public class NotificationWebSocketHandler implements WebSocketHandler {
     public Mono<Void> handle(WebSocketSession session) {
         return session.receive()
                 .map(WebSocketMessage::getPayloadAsText)
-                .flatMap(requestId -> {
-                    registry.registerSession(session, requestId);
-                    return Mono.empty();
+                .doOnNext(requestId -> {
+                    log.info("Registering session {} for requestId {}", session.getId(), requestId);
+                    registry.registerSession(requestId, session);
+                    log.info("session {} for requestId {} fully registered", session.getId(), requestId);
                 })
                 .then();
     }

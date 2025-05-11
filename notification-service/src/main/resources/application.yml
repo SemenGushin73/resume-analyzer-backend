@@ -3,27 +3,25 @@ spring:
     web-application-type: reactive
   application:
     name: notification-service
+
   kafka:
+    consumer:
+      request-timeout-ms: 60000
+      session-timeuot-ms: 30000
+      heartbeat-interval: 10000
     bootstrap-servers: kafka:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-#  config:
-#    import: "configserver:http://config-server:8888"
-#  cloud:
-#    config:
-#      fail-fast: true
-#      retry:
-#        initial-interval: 1000
-#        max-interval: 2000
-#        max-attempts: 10
-
+    listener:
+      ack-mode: record
+      retry:
+        enabled: true
 server:
   port: 8885
-
 websocket:
   path: /ws/notifications
-
 springdoc:
   api-docs:
     path: /v3/api-docs
