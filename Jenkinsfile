@@ -55,7 +55,7 @@ pipeline {
                 script {
                     dir('resume-analyzer-backend') {
                         sh '''
-                            docker build -t $DOCKER_IMAGE_ANALYZER -f resume-analyzer/Dockerfile resume-analyzer/
+                            docker build -t $DOCKER_IMAGE_ANALYZER -f resume-analyzer/Dockerfile .
                             docker build -t $DOCKER_IMAGE_GENERATOR -f resume-generator/Dockerfile resume-generator/
                             docker build -t $DOCKER_IMAGE_GATEWAY -f api-gateway/Dockerfile api-gateway/
                             docker build -t $DOCKER_IMAGE_CONFIG -f bitbucket-config-server/Dockerfile bitbucket-config-server
