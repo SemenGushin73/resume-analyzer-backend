@@ -98,11 +98,15 @@ pipeline {
     }
 
     post {
-		success {
-			echo 'Build & Deployment Success!'
+        always {
+            mail to: 'sadyckov.vitya@yandex.ru',
+                subject: "Build ${currentBuild.fullDisplayName}",
+                body: "The build was ${currentBuild.result}: Check console output at ${env.BUILD_URL} to view the results."
         }
         failure {
-			echo 'Build Failed'
+            mail to: 'team@example.com',
+                subject: "Failed Build ${currentBuild.fullDisplayName}",
+                body: "The build FAILED: Check console output at ${env.BUILD_URL} to view the results."
         }
     }
 }
