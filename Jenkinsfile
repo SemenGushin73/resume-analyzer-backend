@@ -10,8 +10,8 @@ pipeline {
     environment {
       	BITBUCKET_CREDS = credentials('bitbucket-credentials')
         DOCKER_CREDS = credentials('dockerhub-creds')
-      	GIT_USER = credentials('bitbucket-user')
-        GIT_PASS = credentials('bitbucket-credentials')
+      	GIT_USER = credentials('bitbucket-git-username')
+        GIT_PASS = credentials('bitbucket-git-password')
       	DOCKER_IMAGE_ANALYZER = "${params.DOCKER_REPO}-resume-analyzer:${env.BUILD_NUMBER}"
         DOCKER_IMAGE_GENERATOR = "${params.DOCKER_REPO}-resume-generator:${env.BUILD_NUMBER}"
         DOCKER_IMAGE_GATEWAY = "${params.DOCKER_REPO}-api-gateway:${env.BUILD_NUMBER}"
@@ -90,6 +90,8 @@ pipeline {
             	dir('resume-analyzer-backend') {
                 	sh '''
                     	docker compose -f docker-compose.yml down
+                        echo SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=${GIT_USER} > .env
+                        echo SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${GIT_PASS} >> .env
                         docker compose -f docker-compose.yml up -d --build
                     '''
                 }
