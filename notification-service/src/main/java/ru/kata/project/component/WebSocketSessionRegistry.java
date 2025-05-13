@@ -34,7 +34,10 @@ public class WebSocketSessionRegistry {
     }
 
     public void removeSession(String requestId) {
-        sessions.remove(requestId);
+        String sessionId = requestIdToSessionId.remove(requestId);
+        if (sessionId != null) {
+            sessions.remove(sessionId);
+        }
     }
 
     public void cleanupOldSessions(Duration maxAge) {
