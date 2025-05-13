@@ -6,13 +6,14 @@ spring:
 
   kafka:
     consumer:
-      request-timeout-ms: 60000
-      session-timeuot-ms: 30000
-      heartbeat-interval: 10000
+      request.timeout.ms: 60000
+      session.timeuot.ms: 80000
+      heartbeat.interval: 70000
     bootstrap-servers: kafka:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     listener:
       ack-mode: record

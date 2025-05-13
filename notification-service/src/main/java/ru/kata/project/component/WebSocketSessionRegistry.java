@@ -33,6 +33,10 @@ public class WebSocketSessionRegistry {
         return registeredSession != null ? registeredSession.getSession() : null;
     }
 
+    public void removeSession(String requestId) {
+        sessions.remove(requestId);
+    }
+
     public void cleanupOldSessions(Duration maxAge) {
         Instant cutoff = Instant.now().minus(maxAge);
         sessions.entrySet().removeIf(entry -> {
