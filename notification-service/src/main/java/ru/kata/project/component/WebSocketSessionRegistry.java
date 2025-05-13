@@ -1,11 +1,11 @@
-package ru.javabegin.micro.planner.notificationservice.component;
+package ru.kata.project.component;
 
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketSession;
-import ru.javabegin.micro.planner.notificationservice.registration.RegisteredSession;
+import ru.kata.project.domain.RegisteredSession;
 
 import java.time.Duration;
 import java.time.Instant;

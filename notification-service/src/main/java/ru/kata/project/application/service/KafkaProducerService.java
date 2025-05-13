@@ -1,4 +1,4 @@
-package ru.javabegin.micro.planner.notificationservice.service;
+package ru.kata.project.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

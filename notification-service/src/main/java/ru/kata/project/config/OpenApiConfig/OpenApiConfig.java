@@ -1,4 +1,4 @@
-package ru.javabegin.micro.planner.notificationservice.config;
+package ru.kata.project.config.OpenApiConfig;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;

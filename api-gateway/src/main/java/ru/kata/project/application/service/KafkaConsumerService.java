@@ -31,6 +31,8 @@ public class KafkaConsumerService {
 
         try {
             results.put(result.getRequestId(), result);
+            log.info("Message processed successfully. Topic: {}, RequestId: {}",
+                    KafkaTopics.RESUME_ANALYZE_RESULTS, result.getRequestId());
         } catch (Exception e) {
             log.error("Error processing message from topic: {}. Request ID: {}, Data: {}",
                     KafkaTopics.RESUME_ANALYZE_RESULTS, result.getRequestId(), result, e);

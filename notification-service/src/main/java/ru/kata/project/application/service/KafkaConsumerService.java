@@ -1,4 +1,4 @@
-package ru.javabegin.micro.planner.notificationservice.service;
+package ru.kata.project.application.service;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
-import ru.javabegin.micro.planner.notificationservice.component.WebSocketSessionRegistry;
+import ru.kata.project.component.WebSocketSessionRegistry;
 import ru.kata.project.kafka.config.KafkaTopics;
 
 @Service

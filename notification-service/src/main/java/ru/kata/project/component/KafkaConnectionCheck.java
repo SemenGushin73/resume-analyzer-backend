@@ -1,6 +1,8 @@
-package ru.javabegin.micro.planner.notificationservice.component;
+package ru.kata.project.component;
 
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import ru.kata.project.kafka.config.KafkaTopics;
@@ -10,8 +12,8 @@ import ru.kata.project.kafka.config.KafkaTopics;
  */
 @Component
 public class KafkaConnectionCheck {
-
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private static final Logger log = LoggerFactory.getLogger(KafkaConnectionCheck.class);
 
     public KafkaConnectionCheck(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
@@ -21,9 +23,9 @@ public class KafkaConnectionCheck {
     public void checkConnection() {
         try {
             kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_REQUESTS, "ping");
-            System.out.println("Kafka доступна");
+            log.info("Kafka доступна");
         } catch (Exception e) {
-            System.err.println("Ошибка подключения к Kafka: " + e.getMessage());
+            log.error("Ошибка подключения к Kafka" + e.getMessage());
         }
     }
 }

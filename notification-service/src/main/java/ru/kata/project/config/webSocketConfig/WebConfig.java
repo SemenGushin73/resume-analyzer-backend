@@ -1,4 +1,4 @@
-package ru.javabegin.micro.planner.notificationservice.config;
+package ru.kata.project.config.webSocketConfig;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
