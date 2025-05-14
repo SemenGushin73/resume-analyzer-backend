@@ -22,23 +22,59 @@
   "links": [],
   "panels": [
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "fef1qzrx6sav4d"
-      },
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
           },
-          "mappings": []
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
         },
         "overrides": []
       },
@@ -51,17 +87,10 @@
       "id": 1,
       "options": {
         "legend": {
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -72,19 +101,16 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "fef1qzrx6sav4d"
-          },
+          "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "jvm_memory_used_bytes{area=\"heap\"}",
+          "expr": "http_server_requests_seconds_count",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Использование памяти",
-      "type": "piechart"
+      "title": "Количество запросов",
+      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -100,8 +126,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Использование памяти",
-  "uid": "bef1r9yjm9zwgc",
+  "title": "Количество запросов",
+  "uid": "http-requests",
   "version": 1,
   "weekStart": ""
 }

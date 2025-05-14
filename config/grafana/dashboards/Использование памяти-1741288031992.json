@@ -18,66 +18,24 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 1,
   "links": [],
   "panels": [
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "fef1qzrx6sav4d"
-      },
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "mappings": []
         },
         "overrides": []
       },
@@ -90,10 +48,17 @@
       "id": 1,
       "options": {
         "legend": {
-          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -104,19 +69,16 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "fef1qzrx6sav4d"
-          },
+          "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "http_server_requests_seconds_count",
+          "expr": "jvm_memory_used_bytes{area=\"heap\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Количество запросов",
-      "type": "timeseries"
+      "title": "Использование памяти",
+      "type": "piechart"
     }
   ],
   "preload": false,
@@ -132,8 +94,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Количество запросов",
-  "uid": "cef1rdgr3l5vkf",
+  "title": "Использование памяти",
+  "uid": "used-memory",
   "version": 1,
   "weekStart": ""
 }

@@ -1,9 +1,76 @@
 version: '2.4'
 
 services:
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/grafana/datasources/grafana.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_FEATURE_TOGGLES_ENABLE=accessControlOnCall lokiLogsDataplane
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki.yaml
+    volumes:
+      - ./config/loki/loki.yaml:/etc/loki/loki.yaml
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: promtail
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./config/promtail/promtail.yaml:/etc/promtail/docker-config.yaml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/docker-config.yaml
+    depends_on:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/alertmanager/alert.rules.yml:/etc/prometheus/alert.rules.yml
+    depends_on:
+      - resume-analyzer
+      - resume-generator
+      - api-gateway
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./config/alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
+      - ./smtp-password.txt:/etc/alertmanager/smtp-password.txt
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+    depends_on:
+      - prometheus
+
   postgres:
     image: postgres:15
     container_name: postgres
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     environment:
       POSTGRES_DB: test_db
       POSTGRES_USER: root
@@ -16,6 +83,10 @@ services:
   mongodb:
     image: mongo:6
     container_name: mongodb
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "27017:27017"
     mem_limit: 512m
@@ -25,6 +96,10 @@ services:
     image: redis:7.4.2
     container_name: redis-container
     restart: always
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning --requirepass root
@@ -33,6 +108,11 @@ services:
 
   zookeeper:
     image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "21810:2181"
     environment:
@@ -42,6 +122,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:latest
+    container_name: kafka
     ports:
       - "29092:29092"
       - "9092:9092"
@@ -61,12 +142,23 @@ services:
       - zookeeper
     mem_limit: 1g
     cpus: 1.0
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+        tag: "{{.Name}}"
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.92.0
+    container_name: otel-collector
     command: [ "--config=/etc/otel-config.yaml" ]
     volumes:
-      - ./utils/otel-config.yml:/etc/otel-config.yaml
+      - ./config/otel-collector/otel-config.yml:/etc/otel-config.yaml
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "4317:4317"
       - "4318:4318"
@@ -79,6 +171,11 @@ services:
 
   jaeger:
     image: jaegertracing/all-in-one:1.53
+    container_name: jaeger
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     ports:
       - "16686:16686"
       - "14250:14250"
@@ -93,6 +190,10 @@ services:
       dockerfile: resume-analyzer/Dockerfile
     ports:
       - "8083:8083"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     depends_on:
       - config-server
       - otel-collector
@@ -123,6 +224,10 @@ services:
   resume-generator:
     image: resume-generator
     container_name: resume-generator
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     build:
       context: .
       dockerfile: resume-generator/Dockerfile
@@ -156,6 +261,10 @@ services:
   api-gateway:
     image: api-gateway
     container_name: api-gateway
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
@@ -190,6 +299,10 @@ services:
   config-server:
     image: config-server
     container_name: config-server
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     build:
       context: ./bitbucket-config-server
       dockerfile: Dockerfile

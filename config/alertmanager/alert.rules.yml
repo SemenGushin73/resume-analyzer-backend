@@ -8,8 +8,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Микросервис {{ $labels.instance }} упал!"
-          description: "Микросервис {{ $labels.instance }} недоступен более 1 минуты."
+          summary: "Сервис {{ $labels.job }} на {{ $labels.instance }} упал!"
+          description: "Экспортер {{ $labels.job }} не отвечает."
 
       # Алерт: Kafka не обрабатывает сообщения
       - alert: KafkaNotProcessing
