@@ -10,13 +10,13 @@ import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.config.KafkaTopics;
 
 /**
- * Сервис для отправки данных в Kafka.
+ * Класс является продюсером (producer) сообщений в Kafka.
+ * Отправляет запросы на анализ резюме в топик RESUME_ANALYZE_REQUESTS.
+ * Связывает каждый запрос с уникальным requestId для последующей обработки и отслеживания.
  */
 @Service
 public class KafkaProducerService {
-    /**
-     * KafkaTemplate для отправки сообщений в Kafka.
-     */
+
     private final KafkaTemplate<String, AnalysisRequest> kafkaTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(KafkaProducerService.class);
@@ -31,6 +31,7 @@ public class KafkaProducerService {
                 KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);
         try {
             String json = objectMapper.writeValueAsString(request);
+            log.info("Sending request to Kafka. Topic: {}, Request ID: {}, Data: {}", KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, json);
             kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);
             log.info("Request successfully sent to Kafka. Topic: {}, Request ID: {}, Data: {}",
                     KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);

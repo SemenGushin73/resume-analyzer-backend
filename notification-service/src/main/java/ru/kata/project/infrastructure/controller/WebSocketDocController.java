@@ -22,24 +22,24 @@ public class WebSocketDocController {
     @Operation(
             summary = "Инструкция по использованию WebSocket для получения уведомлений",
             description = """
-                *** Как подключиться к WebSocket:
-                1.Можно установить расширение браузера (Advanced Websocket Client) или JavaScript.
-                Описание кода ниже.
-                2. Подключитесь по адресу: `ws://localhost:8885/ws/notifications`
-                3. После подключения отправьте сообщение с `requestId`, который вы получили при отправке HTTP-запроса.
-                4. Ожидайте ответ от сервиса — он придёт по этому же соединению.
-                ### Пример (JavaScript):
-                ```javascript
-                const socket = new WebSocket("ws://localhost:8885/ws/notifications");
-                socket.onopen = () => {
-                    socket.send("123e4567-e89b-12d3-a456-426614174000");
-                };
-                socket.onmessage = (event) => {
-                    console.log("Ответ от сервера:", event.data);
-                };
-                ```
-                WebSocket-сессии автоматически очищаются при бездействии.
-                """
+                    *** Как подключиться к WebSocket:
+                    1.Можно установить расширение браузера (Advanced Websocket Client) или JavaScript.
+                    Описание кода ниже.
+                    2. Подключитесь по адресу: `ws://localhost:8885/ws/notifications`
+                    3. После подключения отправьте сообщение с `requestId`, который вы получили при отправке HTTP-запроса.
+                    4. Ожидайте ответ от сервиса — он придёт по этому же соединению.
+                    ### Пример (JavaScript):
+                    ```javascript
+                    const socket = new WebSocket("ws://localhost:8885/ws/notifications");
+                    socket.onopen = () => {
+                        socket.send("123e4567-e89b-12d3-a456-426614174000");
+                    };
+                    socket.onmessage = (event) => {
+                        console.log("Ответ от сервера:", event.data);
+                    };
+                    ```
+                    WebSocket-сессии автоматически очищаются при бездействии.
+                    """
     )
     @ApiResponse(responseCode = "200", description = "Инструкция отображена")
     @GetMapping("/instructions")

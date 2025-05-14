@@ -1,4 +1,5 @@
 package ru.kata.project.infrastructure.controller;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.project.application.service.KafkaProducerService;
 import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.config.KafkaTopics;
+
 import java.util.UUID;
 
 /**

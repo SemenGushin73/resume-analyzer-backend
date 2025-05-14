@@ -11,6 +11,11 @@ import ru.kata.project.component.WebSocketSessionRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * WebSocketRouterConfig — конфигурационный класс приложения,
+ * который настраивает обработку WebSocket-соединений. Он не использует аннотации @EnableWebSocket или @ServerEndpoint,
+ * а вместо этого настраивает WebSocket через Spring WebFlux или Spring WebSocket API с программной маршрутизацией.
+ */
 @Configuration
 public class WebSocketRouterConfig {
     @Bean

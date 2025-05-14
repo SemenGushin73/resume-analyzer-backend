@@ -1,6 +1,5 @@
 package ru.kata.project.application.service;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -10,15 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
-
 import reactor.core.publisher.Mono;
 import ru.kata.project.component.WebSocketSessionRegistry;
-import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.AnalysisResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 
+/**
+ * Класс является потребителем (consumer) сообщений из Kafka, который:
+ * Получает результаты анализа резюме (из топика RESUME_ANALYZE_RESULTS).
+ * Отправляет эти результаты через WebSocket соответствующему клиенту (фронтенду).
+ */
 @Service
 public class KafkaConsumerService {
     private final WebSocketSessionRegistry registry;
@@ -49,7 +50,6 @@ public class KafkaConsumerService {
             }
             String response = "Result: " + result.getResult();  // Пример
             session.send(Mono.just(session.textMessage(response))).subscribe();
-
         } catch (
                 Exception e) {
             log.error("Error while processing Kafka message", e);
