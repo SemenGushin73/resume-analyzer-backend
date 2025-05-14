@@ -10,7 +10,7 @@ spring:
         git:
           uri: https://gitpacket.kata.academy/scm/fit/resume-config-repo.git
           search-paths: '{application}'
-          default-label: FIT-config-repo  #Было main
+          default-label: main
           force-pull: true
 
 logging:
