@@ -30,4 +30,13 @@ public class FallbackController {
 
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
+
+    @GetMapping("/notification")
+    public ResponseEntity<Map<String, Object>> notificationFallback() {
+        final Map<String, Object> response = new HashMap<>();
+        response.put("message", "Сервис notification-service временно недоступен");
+        response.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
+
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
+    }
 }
