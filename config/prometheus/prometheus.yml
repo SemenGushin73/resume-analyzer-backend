@@ -5,17 +5,17 @@ scrape_configs:
   - job_name: 'resume-analyzer'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:8080' ]
+      - targets: [ 'resume-analyzer:8083' ]
 
   - job_name: 'resume-generator'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:8082' ]
+      - targets: [ 'resume-generator:8082' ]
 
   - job_name: 'api-gateway'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:8765' ]
+      - targets: [ 'api-gateway:8765' ]
 
 alerting:
   alertmanagers:
@@ -23,4 +23,4 @@ alerting:
         - targets: [ 'alertmanager:9093' ]  # Адрес AlertManager
 
 rule_files:
-  - "alert.rules.yml"
+  - "/etc/prometheus/alert.rules.yml"

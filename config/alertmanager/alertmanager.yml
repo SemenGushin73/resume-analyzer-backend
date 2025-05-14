@@ -1,0 +1,21 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'email_notifications'
+
+receivers:
+  - name: 'email_notifications'
+    email_configs:
+      - to: 'your-email@yandex.ru'
+        from: 'your-email@yandex.ru'
+        smarthost: 'smtp.yandex.ru:587'
+        auth_username: 'your-email@yandex.ru'
+        auth_identity: 'your-email@yandex.ru'
+        auth_password: '{{ file "/etc/alertmanager/smtp-password.txt" }}'
+        send_resolved: true  # Отправлять уведомления о восстановлении
+        require_tls: true

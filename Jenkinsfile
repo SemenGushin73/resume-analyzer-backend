@@ -10,7 +10,12 @@ pipeline {
     environment {
       	BITBUCKET_CREDS = credentials('bitbucket-credentials')
         DOCKER_CREDS = credentials('dockerhub-creds')
-		DOCKER_IMAGE_NAME = "${params.DOCKER_REPO}:${env.BUILD_NUMBER}"
+      	GIT_USER = credentials('bitbucket-git-username')
+        GIT_PASS = credentials('bitbucket-git-password')
+      	DOCKER_IMAGE_ANALYZER = "${params.DOCKER_REPO}-resume-analyzer:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE_GENERATOR = "${params.DOCKER_REPO}-resume-generator:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE_GATEWAY = "${params.DOCKER_REPO}-api-gateway:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE_CONFIG = "${params.DOCKER_REPO}-config-server:${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -46,52 +51,64 @@ pipeline {
                 }
             }
         }
-
-        stage('Docker Build & Push') {
-            steps {
+      
+      	stage('Build Docker Images') {
+        	steps {
                 script {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USERNAME',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )]) {
-                        sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-                        dir('resume-analyzer-backend') {
-							sh "docker build -t ${env.DOCKER_IMAGE_NAME} ."
-                            sh "docker push ${env.DOCKER_IMAGE_NAME}"
-                        }
+                    dir('resume-analyzer-backend') {
+                        sh '''
+                            docker build -t $DOCKER_IMAGE_ANALYZER -f resume-analyzer/Dockerfile .
+                            docker build -t $DOCKER_IMAGE_GENERATOR -f resume-generator/Dockerfile .
+                            docker build -t $DOCKER_IMAGE_GATEWAY -f api-gateway/Dockerfile .
+                            docker build -t $DOCKER_IMAGE_CONFIG -f bitbucket-config-server/Dockerfile bitbucket-config-server
+                        '''
                     }
                 }
             }
         }
 
-        stage('Deploy') {
-			steps {
-				script {
-					withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USERNAME',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )]) {
-						sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-                        sh """
-                            docker pull ${env.DOCKER_IMAGE_NAME}
-                            docker stop resume-analyzer || true
-                            docker rm resume-analyzer || true
-                            docker run -d --name resume-analyzer -p 8080:8080 ${env.DOCKER_IMAGE_NAME}
-                        """
-                    }
+        stage('Push Docker Images') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USERNAME',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker push $DOCKER_IMAGE_ANALYZER
+                        docker push $DOCKER_IMAGE_GENERATOR
+                        docker push $DOCKER_IMAGE_GATEWAY
+                        docker push $DOCKER_IMAGE_CONFIG
+                    '''
+                }
+            }
+        }
+      
+      	stage('Deploy with Docker Compose') {
+        	steps {
+            	dir('resume-analyzer-backend') {
+                	sh '''
+                    	docker compose -f docker-compose.yml down
+                        echo SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=${GIT_USER} > .env
+                        echo SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${GIT_PASS} >> .env
+                        docker compose -f docker-compose.yml up -d --build
+                    '''
                 }
             }
         }
     }
 
     post {
-		success {
-			echo 'Build & Deployment Success!'
+        always {
+            mail to: 'sadyckov.vitya@yandex.ru',
+                subject: "Build ${currentBuild.fullDisplayName}",
+                body: "The build was ${currentBuild.result}: Check console output at ${env.BUILD_URL} to view the results."
         }
         failure {
-			echo 'Build Failed'
+            mail to: 'team@example.com',
+                subject: "Failed Build ${currentBuild.fullDisplayName}",
+                body: "The build FAILED: Check console output at ${env.BUILD_URL} to view the results."
         }
     }
 }
