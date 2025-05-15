@@ -30,7 +30,9 @@ public class WebSocketSessionRegistry {
     public WebSocketSession getSessionByRequestId(String requestId) {
         final String sessionId = requestIdToSessionId.get(requestId);
         final RegisteredSession registeredSession = sessions.get(sessionId);
-        return registeredSession != null ? registeredSession.getSession() : null;
+        if (registeredSession != null) {
+            return registeredSession.getSession();
+        } else return null;
     }
 
     public void removeSession(String requestId) {
