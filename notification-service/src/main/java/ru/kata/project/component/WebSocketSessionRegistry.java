@@ -28,24 +28,24 @@ public class WebSocketSessionRegistry {
     }
 
     public WebSocketSession getSessionByRequestId(String requestId) {
-        String sessionId = requestIdToSessionId.get(requestId);
-        RegisteredSession registeredSession = sessions.get(sessionId);
+        final String sessionId = requestIdToSessionId.get(requestId);
+        final RegisteredSession registeredSession = sessions.get(sessionId);
         return registeredSession != null ? registeredSession.getSession() : null;
     }
 
     public void removeSession(String requestId) {
-        String sessionId = requestIdToSessionId.remove(requestId);
+        final String sessionId = requestIdToSessionId.remove(requestId);
         if (sessionId != null) {
             sessions.remove(sessionId);
         }
     }
 
     public void cleanupOldSessions(Duration maxAge) {
-        Instant cutoff = Instant.now().minus(maxAge);
+        final Instant cutoff = Instant.now().minus(maxAge);
         sessions.entrySet().removeIf(entry -> {
-            boolean expired = entry.getValue().getConnectedAt().isBefore(cutoff);
+            final boolean expired = entry.getValue().getConnectedAt().isBefore(cutoff);
             if (expired) {
-                String sessionId = entry.getKey();
+                final String sessionId = entry.getKey();
                 requestIdToSessionId.values().remove(sessionId);
             }
             return expired;

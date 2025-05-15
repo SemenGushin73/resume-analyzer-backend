@@ -45,7 +45,7 @@ public class ResumeAnalysisController {
     @CrossOrigin(origins = "http://localhost:8885")
     @PostMapping()
     public ResponseEntity<Void> analyzeResume(@RequestBody AnalysisRequest request) {
-        String requestId = UUID.randomUUID().toString();
+        final String requestId = UUID.randomUUID().toString();
         log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}", request, KafkaTopics.RESUME_ANALYZE_REQUESTS);
         kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);
         // Немедленно возвращаем 202 Accepted и requestId
@@ -60,7 +60,7 @@ public class ResumeAnalysisController {
     public ResponseEntity<AnalysisRequest> sendAnalysisRequestToKafka(@RequestBody AnalysisRequest request) {
         log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}, ",
                 request, KafkaTopics.RESUME_ANALYZE_REQUESTS);
-        String requestId = UUID.randomUUID().toString();
+        final String requestId = UUID.randomUUID().toString();
         kafkaProducerService.sendAnalysisRequest(requestId,
                 request);
         return ResponseEntity.accepted().header("X-Request-ID", requestId).build();

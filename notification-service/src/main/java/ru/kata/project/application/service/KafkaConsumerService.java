@@ -37,7 +37,7 @@ public class KafkaConsumerService {
         try {
             log.info("Received Kafka message with requestId={}", requestId);
             //Парсим JSON в DTO
-            AnalysisResult result = objectMapper.readValue(jsonPayload, AnalysisResult.class);
+            final AnalysisResult result = objectMapper.readValue(jsonPayload, AnalysisResult.class);
             final WebSocketSession session = registry.getSessionByRequestId(requestId);
             if (session == null) {
                 log.warn("No session found for requestId={}", requestId);
@@ -48,7 +48,7 @@ public class KafkaConsumerService {
                 registry.removeSession(requestId);
                 return;
             }
-            String response = "Result: " + result.getResult();  // Пример
+            final String response = "Result: " + result.getResult();  // Пример
             session.send(Mono.just(session.textMessage(response))).subscribe();
         } catch (
                 Exception e) {

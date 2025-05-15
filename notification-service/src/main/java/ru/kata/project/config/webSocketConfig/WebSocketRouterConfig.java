@@ -25,9 +25,9 @@ public class WebSocketRouterConfig {
 
     @Bean
     public HandlerMapping webSocketMapping(WebSocketHandler notificationWebSocketHandler) {
-        Map<String, WebSocketHandler> map = new HashMap<>();
+        final Map<String, WebSocketHandler> map = new HashMap<>();
         map.put("/ws/notifications", notificationWebSocketHandler);
-        SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
+        final SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
         mapping.setOrder(10); // порядок обработки
         mapping.setUrlMap(map);
         return mapping;

@@ -30,7 +30,7 @@ public class KafkaProducerService {
         log.info("Sending request to Kafka. Topic: {}, Request ID: {}, Data: {}",
                 KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);
         try {
-            String json = objectMapper.writeValueAsString(request);
+            final String json = objectMapper.writeValueAsString(request);
             log.info("Sending request to Kafka. Topic: {}, Request ID: {}, Data: {}", KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, json);
             kafkaTemplate.send(KafkaTopics.RESUME_ANALYZE_REQUESTS, requestId, request);
             log.info("Request successfully sent to Kafka. Topic: {}, Request ID: {}, Data: {}",

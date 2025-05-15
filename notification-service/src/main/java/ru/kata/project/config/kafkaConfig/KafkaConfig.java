@@ -27,7 +27,7 @@ import java.util.Map;
 public class KafkaConfig {
     @Bean
     public ConsumerFactory<String, AnalysisRequest> consumerFactory() {
-        Map<String, Object> consumerProps = new HashMap<>();
+        final Map<String, Object> consumerProps = new HashMap<>();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "notification-group");
         consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "ru.kata.project.kafka");
