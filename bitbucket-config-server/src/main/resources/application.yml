@@ -9,7 +9,8 @@ spring:
       server:
         git:
 #          uri: https://gitpacket.kata.academy/scm/fit/resume-config-repo.git
-          uri: D:\Users\ARCHI_GIN\Kata_academy\Proect\FITPROECT\repository-repo\resume-config-repo
+          uri: file///D:/Users/ARCHI_GIN/Kata_academy/Proect/FITPROECT/repository-repo/resume-config-repo/ #Артур
+          clone-on-start: false #Артур
           search-paths: '{application}'
           default-label: main
           force-pull: true
