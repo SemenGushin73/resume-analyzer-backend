@@ -1,5 +1,7 @@
 server:
   port: 8888
+  profiles:        #Артур
+    active: git #Артур
 
 spring:
   application:
@@ -9,11 +11,11 @@ spring:
       server:
         git:
 #          uri: https://gitpacket.kata.academy/scm/fit/resume-config-repo.git
-          uri: file:///D:/Users/ARCHI_GIN/Kata_academy/Proect/FITPROECT/repository-repo/resume-config-repo/ #Артур
+          uri: file:///D:/Users/ARCHI_GIN/Kata_academy/Proect/FITPROECT/repository-repo/resume-config-repo #Артур
           clone-on-start: false #Артур
           search-paths: '{application}'
-          default-label: main
-          force-pull: true
+          default-label: FIT-config-repo
+          force-pull: false  # Было true
 
 logging:
   level:
