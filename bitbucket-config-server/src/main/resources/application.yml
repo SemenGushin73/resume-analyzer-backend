@@ -8,7 +8,8 @@ spring:
     config:
       server:
         git:
-          uri: https://gitpacket.kata.academy/scm/fit/resume-config-repo.git
+#          uri: https://gitpacket.kata.academy/scm/fit/resume-config-repo.git
+          uri: D:\Users\ARCHI_GIN\Kata_academy\Proect\FITPROECT\repository-repo\resume-config-repo
           search-paths: '{application}'
           default-label: main
           force-pull: true
