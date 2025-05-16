@@ -32,7 +32,9 @@ public class WebSocketSessionRegistry {
         final RegisteredSession registeredSession = sessions.get(sessionId);
         if (registeredSession != null) {
             return registeredSession.getSession();
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     public void removeSession(String requestId) {
