@@ -33,7 +33,7 @@ public class KafkaConfig {
         consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "ru.kata.project.kafka");
         consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, AnalysisResult.class);
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, AnalysisResult.class);
         return new DefaultKafkaConsumerFactory<>(consumerProps);
     }
 
