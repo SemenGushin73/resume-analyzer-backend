@@ -54,8 +54,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     // Validation
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-      // Для работы с сообщениями
+    // Для работы с сообщениями
     implementation 'org.springframework:spring-messaging'
+    //WebSocket
+    implementation 'org.springframework:spring-websocket'
 }
 dependencyManagement {
     imports {
