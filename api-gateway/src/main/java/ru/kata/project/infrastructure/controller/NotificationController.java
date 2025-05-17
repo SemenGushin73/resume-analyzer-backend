@@ -24,7 +24,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
-@Tag(name = "Контроллер WebSocket.", description = "Осуществление взаимодействия по протоколу webSocket.")
+@Tag(name = "Контроллер WebSocket.",
+        description = "Осуществление " +
+                      "взаимодействия по протоколу webSocket.")
 public class NotificationController {
     private final KafkaProducerService kafkaProducerService;
     private final NotificationWebSocketHandler webSocketHandler;
