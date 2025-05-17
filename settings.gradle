@@ -1,6 +1,5 @@
 rootProject.name = 'resume-analyzer-backend'
 
-include 'notification-service'
 include 'resume-analyzer'
 include 'resume-generator'
 include 'api-gateway'
