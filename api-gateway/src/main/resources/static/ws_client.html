@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>WebSocket клиент</h2>
+<label for="requestId">Введите requestId:</label>
+<input type="text" id="requestId" placeholder="123e4567-e89b-12d3-a456-426614174000" size="40"/>
+<button onclick="connectWebSocket()">Подключиться</button>
+<pre id="response">Ожидание подключения...</pre>
+<script>
+    let socket;
+
+    function connectWebSocket() {
+        const requestId = document.getElementById("requestId").value.trim();
+        const responseEl = document.getElementById("response");
+
+        if (!requestId) {
+            alert("Введите requestId!");
+            return;
+        }
+        responseEl.textContent = "Открытие соединения...";
+        socket = new WebSocket("ws://localhost:8765/ws/notifications");
+        socket.onopen = () => {
+            console.log("Соединение открыто, отправка requestId:", requestId);
+            socket.send(requestId);
+            responseEl.textContent = "RequestId отправлен. Ожидание ответа...";
+        };
+        socket.onmessage = (event) => {
+            console.log("Ответ от сервера:", event.data);
+            responseEl.textContent = "Ответ от сервера:\n" + event.data;
+        };
+        socket.onerror = (error) => {
+            console.error("Ошибка WebSocket:", error);
+            responseEl.textContent = "Ошибка WebSocket: " + error;
+        };
+        socket.onclose = () => {
+            console.log("Соединение закрыто");
+            responseEl.textContent += "\nСоединение закрыто.";
+        };
+    }
+</script>
+</body>
+</html>
