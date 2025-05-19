@@ -21,7 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Регистрирует клиентов, слушает сообщения с requestId, и отправляет соответствующий результат
  * анализа по WebSocket, когда он будет готов (из Kafka).
  */
-
 @Slf4j
 @Component
 public class NotificationWebSocketHandler implements WebSocketHandler {
