@@ -23,7 +23,6 @@ import ru.kata.project.resumeDto.ResumeDto;
 
 import java.util.UUID;
 
-
 /**
  * Контроллер для управления запросами в API Gateway.
  */
@@ -31,18 +30,14 @@ import java.util.UUID;
 @RequestMapping("/api")
 @Tag(name = "Контроллер API Gateway.", description = "Осуществляет взаимодействие между сервисами.")
 public class GatewayController {
-
     private final ApiGatewayService apiGatewayService;
     private final KafkaProducerService kafkaProducerService;
     private final KafkaConsumerService kafkaConsumerService;
     private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
 
-
     @Autowired
-    public GatewayController(ApiGatewayService apiGatewayService,
-                             KafkaProducerService kafkaProducerService,
-                             WebClient.Builder webClientBuilder,
-                             KafkaConsumerService kafkaConsumerService) {
+    public GatewayController(ApiGatewayService apiGatewayService, KafkaProducerService kafkaProducerService,
+                             WebClient.Builder webClientBuilder, KafkaConsumerService kafkaConsumerService) {
         this.apiGatewayService = apiGatewayService;
         this.kafkaProducerService = kafkaProducerService;
         this.kafkaConsumerService = kafkaConsumerService;
@@ -94,11 +89,9 @@ public class GatewayController {
      */
     @PostMapping("/resume/create")
     @Operation(summary = "Отправка JSON данных для создания резюме")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Успешная отправка"),
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Успешная отправка"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос"),
-            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
-    })
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")})
     public Mono<ResponseEntity<JsonNode>> createResume(@RequestBody ResumeDto resumeDto) {
         return apiGatewayService.createResume(resumeDto);
     }
@@ -112,16 +105,13 @@ public class GatewayController {
      */
     @PostMapping("/analyze")
     @Operation(summary = "Отправка AnalysisRequest в kafka топик RESUME_ANALYZE_REQUESTS")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Успешная отправка"),
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Успешная отправка"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос"),
-            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
-    })
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")})
     public ResponseEntity<AnalysisRequest> sendAnalysisRequestToKafka(@RequestBody AnalysisRequest analysisRequest) {
-        log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}",
-                analysisRequest, KafkaTopics.RESUME_ANALYZE_REQUESTS);
-        kafkaProducerService.sendAnalysisRequest(UUID.randomUUID().toString(),
-                analysisRequest);
+        log.info("Получен запрос на отправку сообщения: {}, в кафка топик: {}", analysisRequest,
+                KafkaTopics.RESUME_ANALYZE_REQUESTS);
+        kafkaProducerService.sendAnalysisRequest(UUID.randomUUID().toString(), analysisRequest);
 
         return ResponseEntity.ok(analysisRequest);
     }
