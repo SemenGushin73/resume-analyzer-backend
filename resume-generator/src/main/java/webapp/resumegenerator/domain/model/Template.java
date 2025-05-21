@@ -124,7 +124,7 @@ public class Template {
         }
         final Template template = (Template) o;
         return Objects.equals(id, template.id) &&
-               Objects.equals(name, template.name);
+                Objects.equals(name, template.name);
     }
 
     @Override

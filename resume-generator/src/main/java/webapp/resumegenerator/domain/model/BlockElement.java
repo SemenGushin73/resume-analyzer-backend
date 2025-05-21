@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -50,9 +51,6 @@ public class BlockElement {
     @JsonProperty("layout")
     private Layout layout;
 
-    public BlockElement() {
-        this.id = UUID.randomUUID();
-    }
 
     public BlockElement(String name, String title, String type, String source, Integer columns,
                         SectionElementProps props, List<BlockElement> children, Layout layout) {
@@ -116,27 +114,27 @@ public class BlockElement {
     }
 
     public SectionElementProps getProps() {
-        return props;
+        return props.copy();
     }
 
     public void setProps(SectionElementProps props) {
-        this.props = props;
+        this.props = props == null ? null : props.copy();
     }
 
     public List<BlockElement> getChildren() {
-        return children;
+        return children == null? null : new ArrayList<>(children);
     }
 
     public void setChildren(List<BlockElement> children) {
-        this.children = children;
+        this.children = children == null ? null : new ArrayList<>(children);
     }
 
     public Layout getLayout() {
-        return layout;
+        return layout.copy();
     }
 
     public void setLayout(Layout layout) {
-        this.layout = layout;
+        this.layout = layout == null ? null : layout.copy();
     }
 
     @Override

@@ -6,6 +6,7 @@ import jakarta.persistence.ElementCollection;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -71,9 +72,7 @@ public class Layout {
     public Layout() {
     }
 
-    public Layout(UUID id, String i, int x, int y, int w, int h, Integer minW, Integer maxW, Integer minH,
-                  Integer maxH, Boolean moved, Boolean isStatic, Boolean isDraggable, Boolean isResizable,
-                  List<String> resizeHandles, Boolean isBounded) {
+    public Layout(UUID id, String i, int x, int y, int w, int h, Integer minW, Integer maxW, Integer minH, Integer maxH, Boolean moved, Boolean isStatic, Boolean isDraggable, Boolean isResizable, List<String> resizeHandles, Boolean isBounded) {
         this.id = id;
         this.i = i;
         this.x = x;
@@ -88,7 +87,7 @@ public class Layout {
         this.isStatic = isStatic;
         this.isDraggable = isDraggable;
         this.isResizable = isResizable;
-        this.resizeHandles = resizeHandles;
+        this.resizeHandles = resizeHandles == null ? null : new ArrayList<>(resizeHandles);
         this.isBounded = isBounded;
     }
 
@@ -201,11 +200,11 @@ public class Layout {
     }
 
     public void setResizable(Boolean resizable) {
-        isResizable = resizable;
+        this.resizeHandles = resizeHandles == null ? null : new ArrayList<>(resizeHandles);
     }
 
     public List<String> getResizeHandles() {
-        return resizeHandles;
+        return resizeHandles == null? null : new ArrayList<>(resizeHandles);
     }
 
     public void setResizeHandles(List<String> resizeHandles) {
@@ -234,5 +233,27 @@ public class Layout {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+    public Layout copy() {
+        Layout copy = new Layout();
+        copy.setId(UUID.randomUUID()); // генерируем новый ID, чтобы избежать конфликтов
+        copy.setI(this.i);
+        copy.setX(this.x);
+        copy.setY(this.y);
+        copy.setW(this.w);
+        copy.setH(this.h);
+        copy.setMinW(this.minW);
+        copy.setMaxW(this.maxW);
+        copy.setMinH(this.minH);
+        copy.setMaxH(this.maxH);
+        copy.setMoved(this.moved);
+        copy.setStatic(this.isStatic);
+        copy.setDraggable(this.isDraggable);
+        copy.setResizable(this.isResizable);
+        copy.setBounded(this.isBounded);
+
+        copy.setResizeHandles(this.resizeHandles == null ? null : List.copyOf(this.resizeHandles));
+
+        return copy;
     }
 }
