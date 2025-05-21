@@ -208,7 +208,7 @@ public class Layout {
     }
 
     public void setResizeHandles(List<String> resizeHandles) {
-        this.resizeHandles = resizeHandles;
+        this.resizeHandles = resizeHandles != null ? new ArrayList<>(resizeHandles): null;
     }
 
     public Boolean getBounded() {

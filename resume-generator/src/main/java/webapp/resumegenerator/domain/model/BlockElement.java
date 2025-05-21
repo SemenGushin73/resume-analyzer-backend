@@ -60,9 +60,10 @@ public class BlockElement {
         this.type = type;
         this.source = source;
         this.columns = columns;
-        this.props = props;
-        this.children = children;
-        this.layout = layout;
+        this.props = props != null ? props.copy() : null;
+        this.children = children != null ? new ArrayList<>(children) : new ArrayList<>();
+        this.layout = layout != null ? layout.copy() : null;
+
     }
 
     public UUID getId() {
