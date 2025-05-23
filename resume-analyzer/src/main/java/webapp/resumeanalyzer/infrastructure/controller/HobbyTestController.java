@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,9 +31,11 @@ import webapp.resumeanalyzer.domain.service.HobbyService;
 @Tag(name = "Hobby API", description = "Управление сущностями Hobby")
 @RestController
 @RequestMapping("/hobbies")
+@SuppressFBWarnings("SPRING_ENDPOINT")
 public class HobbyTestController {
 
     //сервис для выполнения бизнес-логики
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     private final HobbyService hobbyService;
 
     //конструктор для внедрения зависимости

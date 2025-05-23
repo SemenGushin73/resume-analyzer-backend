@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,9 +31,11 @@ import webapp.resumeanalyzer.domain.service.EducationService;
 @Tag(name = "Education API", description = "Управление сущностями Education")
 @RestController
 @RequestMapping("/educations")
+@SuppressFBWarnings("SPRING_ENDPOINT")
 public class EducationTestController {
 
     //сервис для выполнения бизнес-логики
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     private final EducationService educationService;
 
     //конструктор для внедрения зависимости

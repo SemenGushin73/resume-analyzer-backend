@@ -95,6 +95,9 @@ dependencies {
 
     // SpotBugs
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.8.3'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
 spotbugs {
     toolVersion = '4.8.3'

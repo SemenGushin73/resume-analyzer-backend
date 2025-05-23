@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,9 +31,11 @@ import webapp.resumeanalyzer.domain.service.ExperienceService;
 @Tag(name = "Experience API", description = "Управление сущностями Experience")
 @RestController
 @RequestMapping("/experiences")
+@SuppressFBWarnings("SPRING_ENDPOINT")
 public class ExperienceTestController {
 
     //сервис для выполнения бизнес-логики
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     private final ExperienceService experienceService;
 
     //конструктор для внедрения зависимости
