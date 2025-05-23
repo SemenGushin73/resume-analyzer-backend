@@ -10,6 +10,8 @@ import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreRequest;
 import ru.kata.project.kafka.config.KafkaTopics;
 
+import java.util.Objects;
+
 /**
  * Сервис для отправки данных в Kafka.
  */
@@ -26,10 +28,11 @@ public class KafkaProducerService {
     private final KafkaTemplate<String, ResumeScoreRequest> kafkaScoreTemplate;
 
     @Autowired
-    public KafkaProducerService(KafkaTemplate<String, AnalysisRequest> kafkaTemplate,
-                                KafkaTemplate<String, ResumeScoreRequest> kafkaScoreTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.kafkaScoreTemplate = kafkaScoreTemplate;
+    public KafkaProducerService(
+            KafkaTemplate<String, AnalysisRequest> kafkaTemplate,
+            KafkaTemplate<String, ResumeScoreRequest> kafkaScoreTemplate) {
+        this.kafkaTemplate = Objects.requireNonNull(kafkaTemplate, "kafkaTemplate не должен быть null");
+        this.kafkaScoreTemplate = Objects.requireNonNull(kafkaScoreTemplate, "kafkaScoreTemplate не должен быть null");
     }
 
     public void sendScoreRequest(String resumeId) {

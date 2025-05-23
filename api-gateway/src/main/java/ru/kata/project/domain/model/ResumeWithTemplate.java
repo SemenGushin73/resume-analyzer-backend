@@ -1,12 +1,11 @@
 package ru.kata.project.domain.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.kata.project.resumeDto.ResumeDto;
 import ru.kata.project.resumeDto.TemplateDTO;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,15 +13,35 @@ import java.util.Objects;
  * POJO для вывода резюме с соответствующими Шаблонами
  */
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class ResumeWithTemplate {
 
-    private List<TemplateDTO> templates;
+    private List<TemplateDTO> templates = new ArrayList<>();
     private ResumeDto resume;
 
+    public ResumeWithTemplate(List<TemplateDTO> templates, ResumeDto resume) {
+        this.templates = templates != null ? new ArrayList<>(templates) : new ArrayList<>();
+        this.resume = resume != null ? new ResumeDto(resume) : null;
+    }
+
     public ResumeWithTemplate(ResumeDto resume) {
-        this.resume = resume;
+        this.resume = resume != null ? new ResumeDto(resume) : null;
+    }
+
+    public List<TemplateDTO> getTemplates() {
+        return new ArrayList<>(templates); // Возвращаем копию
+    }
+
+    public void setTemplates(List<TemplateDTO> templates) {
+        this.templates = templates != null ? new ArrayList<>(templates) : new ArrayList<>();
+    }
+
+    public ResumeDto getResume() {
+        return resume != null ? new ResumeDto(resume) : null; // Возвращаем копию
+    }
+
+    public void setResume(ResumeDto resume) {
+        this.resume = resume != null ? new ResumeDto(resume) : null;
     }
 
     public void addTemplate(TemplateDTO template) {

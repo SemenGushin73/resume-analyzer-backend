@@ -101,4 +101,8 @@ public class ResumeDto implements Serializable {
                     """
     )
     private Set<HobbyDto> hobbies;
+
+    public ResumeDto(ResumeDto resume) {
+    }
+
 }

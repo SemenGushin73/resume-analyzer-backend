@@ -29,7 +29,6 @@ import java.util.UUID;
                       "взаимодействия по протоколу webSocket.")
 public class NotificationController {
     private final KafkaProducerService kafkaProducerService;
-    private final NotificationWebSocketHandler webSocketHandler;
 
     @Operation(
             summary = "Отправка сообщения для анализа резюме",

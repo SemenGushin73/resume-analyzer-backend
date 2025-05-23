@@ -32,7 +32,7 @@ class PdfGenerationServiceWithHtmlImplTest {
 
     @Test
     void returnPdfBytesTest() throws Exception {
-        ResumeDto resume = new ResumeDto();
+        ResumeDto resume = new ResumeDto(resume);
         TemplateDTO template = new TemplateDTO();
         String mockHtml = "<html>Mock HTML</html>";
         byte[] expectedPdfBytes = new byte[]{1, 2, 3};

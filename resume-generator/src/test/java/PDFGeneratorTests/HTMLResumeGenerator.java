@@ -30,7 +30,7 @@ class HTMLResumeGeneratorTest {
 
     @Test
     void createHTML_ShouldProcessTemplateCorrectly() {
-        ResumeDto resume = new ResumeDto();
+        ResumeDto resume = new ResumeDto(resume);
         TemplateDTO template = new TemplateDTO();
         String expectedHtml = "<html>Generated HTML</html>";
         String convertedTemplate = "template-name";
