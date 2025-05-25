@@ -102,7 +102,13 @@ public class ResumeDto implements Serializable {
     )
     private Set<HobbyDto> hobbies;
 
-    public ResumeDto(ResumeDto resume) {
+    public ResumeDto(ResumeDto other) {
+        this.id = other.id;
+        this.personalData = other.personalData;
+        this.educations = other.educations != null ? Set.copyOf(other.educations) : null;
+        this.experiences = other.experiences != null ? Set.copyOf(other.experiences) : null;
+        this.socialLinks = other.socialLinks != null ? Set.copyOf(other.socialLinks) : null;
+        this.hobbies = other.hobbies != null ? Set.copyOf(other.hobbies) : null;
     }
 
 }

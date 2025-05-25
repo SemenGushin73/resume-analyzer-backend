@@ -17,6 +17,7 @@ AI-интеграцию (DeepSeek), API Gateway и мониторинг инфр
 - **OpenTelemetry-Collector + Jaeger** для трейсов
 - **Docker + Docker Compose**
 - **JUnit5 / Mockito / Testcontainers**
+- **SpotBugs** поиск ошибок в байт-коде
 
 ## 🖨 Модули
 
@@ -132,6 +133,12 @@ resume-analyzer-backend/
 
 ```bash
 ./gradlew test
+```
+
+## ✅ SpotBugs
+
+```bash
+./gradlew spotbugsMain
 ```
 
 - Репорты: `build/reports/tests`
