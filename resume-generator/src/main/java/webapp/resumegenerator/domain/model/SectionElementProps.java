@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -51,11 +52,11 @@ public class SectionElementProps {
         this.id = UUID.randomUUID();
         this.key = key;
         this.text = text;
-        this.wrapperStyle = wrapperStyle;
-        this.textStyle = textStyle;
-        this.inputStyle = inputStyle;
+        this.wrapperStyle = wrapperStyle == null ? null : new HashMap<>(wrapperStyle);
+        this.textStyle = textStyle == null ? null : new HashMap<>(textStyle);
+        this.inputStyle = inputStyle == null ? null : new HashMap<>(inputStyle);
         this.url = url;
-        this.style = style;
+        this.style = style == null ? null : new HashMap<>(style);
     }
 
     public UUID getId() {
@@ -83,27 +84,27 @@ public class SectionElementProps {
     }
 
     public Map<String, String> getWrapperStyle() {
-        return wrapperStyle;
+        return wrapperStyle == null? null : new HashMap<>(wrapperStyle);
     }
 
     public void setWrapperStyle(Map<String, String> wrapperStyle) {
-        this.wrapperStyle = wrapperStyle;
+        this.wrapperStyle = wrapperStyle == null ? null : new HashMap<>(wrapperStyle);
     }
 
     public Map<String, String> getTextStyle() {
-        return textStyle;
+        return textStyle== null? null : new HashMap<>(textStyle);
     }
 
     public void setTextStyle(Map<String, String> textStyle) {
-        this.textStyle = textStyle;
+        this.textStyle = textStyle == null ? null : new HashMap<>(textStyle);
     }
 
     public Map<String, String> getInputStyle() {
-        return inputStyle;
+        return inputStyle == null? null : new HashMap<>(inputStyle);
     }
 
     public void setInputStyle(Map<String, String> inputStyle) {
-        this.inputStyle = inputStyle;
+        this.inputStyle = inputStyle == null ? null : new HashMap<>(inputStyle);
     }
 
     public String getUrl() {
@@ -115,11 +116,11 @@ public class SectionElementProps {
     }
 
     public Map<String, String> getStyle() {
-        return style;
+        return style == null? null : new HashMap<>(style);
     }
 
     public void setStyle(Map<String, String> style) {
-        this.style = style;
+        this.style = style == null ? null : new HashMap<>(style);
     }
 
     @Override
@@ -136,5 +137,19 @@ public class SectionElementProps {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public SectionElementProps copy() {
+        SectionElementProps copy = new SectionElementProps();
+        copy.setKey(this.key);
+        copy.setText(this.text);
+        copy.setUrl(this.url);
+
+        copy.setWrapperStyle(this.wrapperStyle == null ? null : Map.copyOf(this.wrapperStyle));
+        copy.setTextStyle(this.textStyle == null ? null : Map.copyOf(this.textStyle));
+        copy.setInputStyle(this.inputStyle == null ? null : Map.copyOf(this.inputStyle));
+        copy.setStyle(this.style == null ? null : Map.copyOf(this.style));
+
+        return copy;
     }
 }

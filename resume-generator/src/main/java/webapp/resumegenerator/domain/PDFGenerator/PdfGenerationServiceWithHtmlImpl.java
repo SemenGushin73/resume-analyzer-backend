@@ -25,7 +25,7 @@ import webapp.resumegenerator.domain.service.PdfGenerationService;
 public class PdfGenerationServiceWithHtmlImpl extends PdfGenerationService{
 
     private final HTMLResumeGenerator htmlGenerator;
-    private final String fontPath = "fonts/ARIAL.TTF";
+    private static final String FONT_PATH = "fonts/ARIAL.TTF";
 
     @Override
     public byte[] createPdfFile(ResumeDto resume, TemplateDTO template) throws Exception {
@@ -49,7 +49,7 @@ public class PdfGenerationServiceWithHtmlImpl extends PdfGenerationService{
 
     private void addFontToRenderer( ITextRenderer renderer ) throws DocumentException, IOException {
         renderer.getFontResolver().addFont(
-            new ClassPathResource(fontPath).getURL().toString(),
+            new ClassPathResource(FONT_PATH).getURL().toString(),
             BaseFont.IDENTITY_H,
             BaseFont.EMBEDDED
         );
