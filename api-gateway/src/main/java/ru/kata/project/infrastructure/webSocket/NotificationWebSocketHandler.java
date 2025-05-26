@@ -31,7 +31,7 @@ public class NotificationWebSocketHandler implements WebSocketHandler {
 
     public NotificationWebSocketHandler(@Lazy KafkaConsumerService kafkaConsumerService, ObjectMapper objectMapper) {
         this.kafkaConsumerService = kafkaConsumerService;
-        this.objectMapper = objectMapper;
+        this.objectMapper = objectMapper.copy();
     }
 
     /**
@@ -113,7 +113,6 @@ public class NotificationWebSocketHandler implements WebSocketHandler {
      * @param maxLifetime максимальное время подключения
      */
     public void cleanupInactiveSessions(Duration maxLifetime) {
-        final Instant now = Instant.now();
         sessionsById.entrySet().removeIf(entry -> {
             final WebSocketSession session = entry.getValue();
             final boolean shouldRemove = !session.isOpen();
