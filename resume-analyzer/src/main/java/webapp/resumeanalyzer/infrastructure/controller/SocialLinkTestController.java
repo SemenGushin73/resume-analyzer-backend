@@ -32,7 +32,6 @@ import webapp.resumeanalyzer.domain.service.SocialLinkService;
 @RestController
 @RequestMapping("/socialLinks")
 @SuppressFBWarnings("SPRING_ENDPOINT")
-
 public class SocialLinkTestController {
 
     //сервис для выполнения бизнес-логики
