@@ -2,6 +2,8 @@ package webapp.resumeanalyzer.application.utils.ai;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
+
 /*
  * класс для проверки на корректность резюме и описания профессий 
  * 
@@ -19,7 +21,7 @@ public class ValidResumeChecker {
         if (text == null || text.trim().isEmpty()) {
             return false;
         }
-        final String lowerCaseText = text.toLowerCase();
+        final String lowerCaseText = text.toLowerCase(Locale.ROOT);
 
         return lowerCaseText.contains("опыт работы") ||
                lowerCaseText.contains("навыки") ||

@@ -3,6 +3,7 @@ package webapp.resumeanalyzer.application.service.impl;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -85,7 +86,7 @@ public class ResumeServiceImpl implements ResumeService {
         if (query == null || query.trim().isEmpty()) {
             return Page.empty();
         }
-        return resumeRepository.searchResumes(query.toLowerCase(), pageable);
+        return resumeRepository.searchResumes(query.toLowerCase(Locale.ROOT), pageable);
     }
 
     @Transactional

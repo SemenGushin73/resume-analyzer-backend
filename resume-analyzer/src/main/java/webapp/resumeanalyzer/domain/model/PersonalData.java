@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -28,8 +30,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PersonalData {
+public class PersonalData implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(unique = true)
     private UUID id = UUID.randomUUID();

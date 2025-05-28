@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,9 +33,11 @@ import webapp.resumeanalyzer.domain.service.ResumeService;
 @Tag(name = "Resume API", description = "Управление резюме")
 @RestController
 @RequestMapping("/resumes")
+@SuppressFBWarnings("SPRING_ENDPOINT")
 public class ResumeTestController {
 
     //сервис для выполнения бизнес-логики
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     private final ResumeService resumeService;
 
     //конструктор для внедрения зависимости

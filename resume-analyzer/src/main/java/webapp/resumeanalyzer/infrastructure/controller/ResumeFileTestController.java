@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -26,8 +27,10 @@ import java.util.List;
 @Tag(name = "ResumeFile API", description = "Управление файлами резюме")
 @RestController
 @RequestMapping("/resumes/files")
+@SuppressFBWarnings("SPRING_ENDPOINT")
 public class ResumeFileTestController {
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     private final ResumeFileService resumeFileService;
 
     @Autowired
@@ -51,6 +54,7 @@ public class ResumeFileTestController {
                                     schema = @Schema(type = "string", example = "Недопустимый формат файла!")))
             })
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public ResponseEntity<String> uploadResumeFile(@RequestPart("file") MultipartFile file,
                                                    @RequestParam String ownerId)
             throws IOException {

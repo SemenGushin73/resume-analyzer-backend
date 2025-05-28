@@ -1,38 +1,62 @@
 package webapp.resumeanalyzer.application.utils.ai.aiMessageSenderImpl.feignClient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.Builder;
 
+import lombok.Singular;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
+
+import java.util.ArrayList;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Ответ от API OpenRouter
  * Содержит варианты ответов и данные об использовании токенов
  */
-@Data
+@Value
+@Builder
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenRouterResponse {
-    private List<Choice> choices;
-    private UsageTokens usageTokens;
+    @Singular
+    List<Choice> choices;
+    UsageTokens usageTokens;
+
+    public List<Choice> getChoices() {
+        return Optional.ofNullable(choices)
+                .map(ArrayList::new)
+                .map(Collections::unmodifiableList)
+                .orElse(Collections.emptyList());
+    }
 
     // Наилучший вариант ответа
-    @Data
+    @Value
+    @Builder
+    @Jacksonized
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Choice {
-        private Message message;
+        Message message;
     }
 
     // Tекст ответа
-    @Data
+    @Value
+    @Builder
+    @Jacksonized
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Message {
-        private String content;
+        String content;
     }
 
     // Расход токенов. Сколько токенов потрачено на запрос+ответ
-    @Data
+    @Value
+    @Builder
+    @Jacksonized
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UsageTokens {
-        private int total_tokens;
+        int total_tokens;
     }
 }

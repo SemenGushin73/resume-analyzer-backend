@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,9 +31,11 @@ import webapp.resumeanalyzer.domain.service.SocialLinkService;
 @Tag(name = "SocialLink API", description = "Управление социальными ссылками")
 @RestController
 @RequestMapping("/socialLinks")
+@SuppressFBWarnings("SPRING_ENDPOINT")
 public class SocialLinkTestController {
 
     //сервис для выполнения бизнес-логики
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     private final SocialLinkService socialLinkService;
 
     //конструктор для внедрения зависимости

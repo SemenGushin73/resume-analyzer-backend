@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -23,8 +25,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Education {
+public class Education implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(unique = true)
     private UUID id = UUID.randomUUID();
