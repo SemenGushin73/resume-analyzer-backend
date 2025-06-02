@@ -28,6 +28,8 @@ class ResumeServiceTest {
     @Test
     void getResume_shouldReturnResumeDto_whenRequestIsSuccessful() {
         UUID testId = UUID.randomUUID();
+        ResumeDto resume = new ResumeDto(); // Создаём объект
+        resume.setId(testId);
         ResumeDto expectedResume = new ResumeDto(resume); // или заполненный объект
         ResponseEntity<ResumeDto> responseEntity = new ResponseEntity<>(expectedResume, HttpStatus.OK);
 
@@ -60,7 +62,10 @@ class ResumeServiceTest {
         // Arrange
         UUID testId = UUID.randomUUID();
         String expectedUrl = "http://resume-analyzer:8083/resumes/" + testId;
+        ResumeDto resume = new ResumeDto(); // Создаём объект
+        resume.setId(testId);
         ResumeDto expectedResume = new ResumeDto(resume);
+
         ResponseEntity<ResumeDto> responseEntity = new ResponseEntity<>(expectedResume, HttpStatus.OK);
 
         when(restTemplate.getForEntity(eq(expectedUrl), eq(ResumeDto.class)))

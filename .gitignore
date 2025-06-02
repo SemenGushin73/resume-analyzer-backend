@@ -38,8 +38,8 @@ out/
 /data/
 
 ### Environment ###
-**/.env
-**/.env*
+.env
+.env
 !.env.example
 
 # Игнорировать файл с SMTP-паролем

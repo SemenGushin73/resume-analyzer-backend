@@ -1,5 +1,3 @@
-version: '2.4'
-
 services:
   grafana:
     image: grafana/grafana:11.0.0
@@ -298,7 +296,6 @@ services:
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
 
   config-server:
-    image: config-server
     container_name: config-server
     logging:
       driver: json-file
@@ -312,4 +309,3 @@ services:
     environment:
       - SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=${GIT_USER}
       - SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${GIT_PASS}
-

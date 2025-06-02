@@ -1,0 +1,41 @@
+spring:
+  config:
+    import: "optional:file:./config/"
+  application:
+    name: support-chatbot-service
+  cloud:
+    config:
+      enabled: false
+    compatibility-verifier:
+      enabled=false:
+deepseek:
+  api:
+    url: "https://api.deepseek.com/v1"
+    key: ${DEEPSEEK_API_KEY}
+
+  resilience4j:
+    circuitbreaker:
+      instances:
+        deepseek:
+          registerHealthIndicator: true
+          failureRateThreshold: 50%
+          minimumNumberOfCalls: 5
+          waitDurationInOpenState: 10s
+          slidingWindowType: COUNT_BASED
+          slidingWindowSize: 10
+
+faq:
+  answers:
+    reset_password: "Нажмите 'Забыли пароль?' на экране входа"
+    change_email: "Перейдите в настройки и измените e-mail"
+    contact_support: "Свяжитесь с нашей поддержкой через чат"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+metrics:
+  export:
+    prometheus:
+      enabled: true

@@ -12,6 +12,8 @@ import ru.kata.project.resumeDto.TemplateDTO;
 import webapp.resumegenerator.domain.PDFGenerator.HTMLResumeGenerator;
 import webapp.resumegenerator.domain.PDFGenerator.PdfGenerationServiceWithHtmlImpl;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +34,9 @@ class PdfGenerationServiceWithHtmlImplTest {
 
     @Test
     void returnPdfBytesTest() throws Exception {
-        ResumeDto resume = new ResumeDto(resume);
+        ResumeDto originalResume = new ResumeDto();
+        originalResume.setId(UUID.randomUUID());
+        ResumeDto resume = new ResumeDto(originalResume);
         TemplateDTO template = new TemplateDTO();
         String mockHtml = "<html>Mock HTML</html>";
         byte[] expectedPdfBytes = new byte[]{1, 2, 3};

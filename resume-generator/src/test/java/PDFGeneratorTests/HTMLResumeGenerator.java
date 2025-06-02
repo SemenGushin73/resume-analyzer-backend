@@ -12,6 +12,8 @@ import ru.kata.project.resumeDto.TemplateDTO;
 import webapp.resumegenerator.domain.PDFGenerator.HTMLResumeGenerator;
 import webapp.resumegenerator.domain.PDFGenerator.TemplateToHtmlConvertor;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -30,7 +32,9 @@ class HTMLResumeGeneratorTest {
 
     @Test
     void createHTML_ShouldProcessTemplateCorrectly() {
-        ResumeDto resume = new ResumeDto(resume);
+        ResumeDto originalResume = new ResumeDto();
+        originalResume.setId(UUID.randomUUID());
+        ResumeDto resume = new ResumeDto(originalResume);
         TemplateDTO template = new TemplateDTO();
         String expectedHtml = "<html>Generated HTML</html>";
         String convertedTemplate = "template-name";

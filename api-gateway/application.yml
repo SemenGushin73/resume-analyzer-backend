@@ -1,0 +1,117 @@
+spring:
+  config:
+    import:
+      - optional:classpath:common-actuator.yml
+
+  cloud:
+    gateway:
+      httpclient:
+        response-timeout: 5s
+      routes:
+        - id: api-gateway-route
+          uri: http://api-gateway:8765
+          predicates:
+            - Path=/gateway/**
+          filters:
+            - RewritePath=/gateway/(?<segment>.*), /${segment}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET, POST
+            - name: CircuitBreaker
+              args:
+                name: apiGatewayCircuitBreaker
+                fallbackUri: forward:/fallback/gateway
+
+        - id: resume-analyzer-route
+          uri: http://resume-analyzer:8083
+          predicates:
+            - Path=/analyzer/**
+          filters:
+            - RewritePath=/analyzer/(?<segment>.*), /${segment}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET, POST
+            - name: CircuitBreaker
+              args:
+                name: resumeAnalyzerCircuitBreaker
+                fallbackUri: forward:/fallback/analyzer
+
+        - id: resume-generator-route
+          uri: http://resume-generator:8082
+          predicates:
+            - Path=/generator/**
+          filters:
+            - RewritePath=/generator/(?<segment>.*), /${segment}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET, POST
+            - name: CircuitBreaker
+              args:
+                name: resumeGeneratorCircuitBreaker
+                fallbackUri: forward:/fallback/generator
+
+        - id: deepseek-service-route
+          uri: http://deepseek-service:9090
+          predicates:
+            - Path=/deepseek/**
+          filters:
+            - RewritePath=/deepseek/(?<segment>.*), /${segment}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET, POST
+            - name: CircuitBreaker
+              args:
+                name: deepseekServiceCircuitBreaker
+                fallbackUri: forward:/fallback/deepseek
+
+        - id: support-chatbot-service
+            uri: lb://support-chatbot-service
+            predicates:
+              - Path=/support-chatbot/**
+            filters:
+              - RewritePath=/support-chatbot/(?<segment>.*), /$\{segment}
+              - name: CircuitBreaker
+                args:
+                  name: supportChatbotCircuitBreaker
+                  fallbackUri: forward:/fallback/support-chatbot
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        max.request.size: 52428800
+    consumer:
+      group-id: api-gateway-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: ru.kata.project.kafka
+        spring.json.value.default.type: ru.kata.project.kafka.AnalysisResult
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    config-url: /v3/api-docs/swagger-config
+    max-parameter-length: 32768
+    urls:
+      - name: api gateway
+        url: /gateway/v3/api-docs
+      - name: resume analyzer
+        url: /analyzer/v3/api-docs
+      - name: resume generator
+        url: /generator/v3/api-docs
