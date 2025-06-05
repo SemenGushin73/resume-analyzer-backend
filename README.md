@@ -23,6 +23,7 @@ AI-интеграцию (DeepSeek), API Gateway и мониторинг инфр
 
 - `resume-analyzer` — анализ резюме, сохранение и Kafka-интеграция
 - `resume-generator` — генерация текста по шаблонам и через AI
+- `support-chatbot-service` — чат-бот поддержки с AI-интеграцией и fallback-механизмами
 - `api-gateway` — маршрутизация, OpenAPI Proxy, CircuitBreaker
 - `lib` — общий модуль с DTO, исключениями и утилитами
 - `bitbucket-config-server` — централизованная конфигурация микросервисов для удобства поддержки и масштабирования
@@ -55,38 +56,80 @@ docker compose -f docker-compose.yml up -d
 ### 🔧 Примеры запросов:
 
 #### 1. Документация Gateway API
+
 ```http
 POST /api/analyze
 ```
+
 Отправляет POST запрос в GatewayController(), в теле запроса
 JSON (DTO AnalysisRequest). Контроллер генерирует requestId,
-вызывает KafkaConsumerService API Gateway и отправляет сообщение 
+вызывает KafkaConsumerService API Gateway и отправляет сообщение
 в Kafka топик RESUME_ANALYZE_REQUESTS. На этот топик подписан
-слушатель AnalysisRequest(), в сервисе Resume Analyzer. Слушатель 
-отправляет прочитанное сообщение в Kafka топик 
-DEEPSEEK_ANALYSIS_REQUESTS, на который подписан слушатель 
+слушатель AnalysisRequest(), в сервисе Resume Analyzer. Слушатель
+отправляет прочитанное сообщение в Kafka топик
+DEEPSEEK_ANALYSIS_REQUESTS, на который подписан слушатель
 processRequest() в сервисе Deepseek Service. Он в свою очередь
 вызывает метод analyzeResume(), объявленный в DeepSeekService, который
-делает запрос непосредственно в ИИ модель, для анализа соответствия 
+делает запрос непосредственно в ИИ модель, для анализа соответствия
 текста резюме, описанию вакансии. Полученный ответ от ИИ модели,
 отправляется в Kafka топик RESUME_ANALYZE_RESULTS.
 Итоговое сообщение из топика RESUME_ANALYZE_RESULTS, можно вычитать
 консольным Kafka Consumer.
 
 #### 2. Документация Resume Analyzer API
+
 ```http
 POST /resumes/files/upload
 ```
+
 Отправляет POST запрос на сохранение файла резюме в БД. Для корректной
 работы запроса необходимо, что бы в БД (postgres test_db resume_owners)
 присутствовала запись с ownerId отправляемого в запросе (например
 550e8400-e29b-41d4-a716-446655440000), так же необходимо создать любой
 файл *.docx или *.pdf для выбора его в поле Request body file.
+
+#### 2. Документация ChatBot Service API
+
+```http
+POST /api/chatbot/ask
+Content-Type: application/json
+```
+
+Пример работы чат-бота:
+
+1. Установите WebSocket соединение
+
+2. Отправьте сообщение в формате:
+
+```
+{
+  "message": "Как улучшить моё резюме?",
+  "sessionId": "user123"
+}
+```
+
+### Архитектура
+
+- **WebSocket API** для real-time взаимодействия
+- **REST fallback** при недоступности WebSocket
+- **Интеграция с DeepSeek** через OpenRouter API
+- **Resilience4j** (Circuit Breaker, Retry, Rate Limiter)
+- **Кэширование ответов** (Redis)
+
+### Функционал
+
+✅ Автоматические ответы на FAQ (из конфига)  
+✅ Анализ вопросов через DeepSeek AI  
+✅ Отказоустойчивость при недоступности AI  
+✅ Контекстный диалог с пользователем  
+✅ Логирование и мониторинг всех запросов
+
 ## 🗂️ Структура проекта
 
 ```
 resume-analyzer-backend/
 ├── api-gateway/                # API Gateway с прокси и фолбэком
+├── support-chatbot-service/    # Микросервис чат-бота поддержки
 ├── bitbucket-config-server/    # Централизованная конфигурация микросервисов Spring Cloud Config
 ├── resume-analyzer/            # Анализ резюме (PostgreSQL)
 ├── resume-generator/           # Генератор резюме (MongoDB)
@@ -105,6 +148,7 @@ resume-analyzer-backend/
 - Resume Generator: `localhost:8082`
 - API Gateway: `localhost:8765`
 - Config Server: `localhost:8888`
+- ChatBot Service: `localhost:8080`
 
 ## 🔍 Мониторинг
 
@@ -123,7 +167,8 @@ resume-analyzer-backend/
 ### Alertmanager
 
 - [http://localhost:9093](http://localhost:9093)
-- Для отправки алертов на сервер Yandex email необходимо создать app password и добавить в корень проекта файл smtp-password.txt
+- Для отправки алертов на сервер Yandex email необходимо создать app password и добавить в корень проекта файл
+  smtp-password.txt
 
 ### Jaeger
 

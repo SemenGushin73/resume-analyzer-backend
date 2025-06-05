@@ -12,6 +12,7 @@ public class FAQService {
     private final FAQProperties faqProperties;
 
     public Optional<String> findAnswer(String question) {
-        return Optional.ofNullable(faqProperties.getAnswers().get(question));
+        final String normalized = question.toLowerCase().trim();
+        return Optional.ofNullable(faqProperties.getAnswers().get(normalized));
     }
 }

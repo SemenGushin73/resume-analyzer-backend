@@ -12,6 +12,10 @@ public class DeepSeekConfig {
 
     @Bean
     public RequestInterceptor apiKeyInterceptor() {
-        return request -> request.header("Authorization", "Bearer " + apiKey);
+        return request -> {
+            request.header("Authorization", "Bearer " + apiKey);
+            request.header("HTTP-Referer", "YOUR_SITE_URL");
+            request.header("X-Title", "Your App Name");
+        };
     }
 }

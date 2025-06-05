@@ -1,12 +1,17 @@
 package supportchatbotservice.domain.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import supportchatbotservice.domain.exception.AiServiceException;
 import supportchatbotservice.domain.model.BotResponse;
 import supportchatbotservice.domain.model.ChatMessage;
 import supportchatbotservice.domain.ports.AiServicePort;
 import supportchatbotservice.domain.ports.FaqServicePort;
 
+import java.util.Optional;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SupportBotService {
@@ -16,13 +21,20 @@ public class SupportBotService {
     public BotResponse processMessage(ChatMessage message) {
         message.validate();
 
+        final Optional<String> faqAnswer = faqService.findAnswer(message.getContent());
+        if (faqAnswer.isPresent()) {
+            return new BotResponse(faqAnswer.get(), true);
+        }
+
         try {
-            final String answer = aiService.getAiResponse(message.getContent());
-            return new BotResponse(answer, false);
+            final String aiResponse = aiService.getAiResponse(message.getContent());
+            if (aiResponse == null || aiResponse.isBlank()) {
+                throw new AiServiceException("Empty response from AI");
+            }
+            return new BotResponse(aiResponse, false);
         } catch (Exception ex) {
-            final String fallback = faqService.findAnswer(message.getContent())
-                    .orElse("Service is temporarily unavailable");
-            return new BotResponse(fallback, true);
+            log.error("AI service error: {}", ex.getMessage());
+            return new BotResponse("Сервис поддержки временно недоступен, повторите позже", true);
         }
     }
 }

@@ -273,6 +273,7 @@ services:
       - otel-collector
       - resume-analyzer
       - resume-generator
+      - support-chatbot-service
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -294,6 +295,34 @@ services:
       OTEL_METRIC_EXPORT_INTERVAL: 60000
       OTEL_BSP_SCHEDULE_DELAY: 5000
       OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
+
+
+  support-chatbot-service:
+    image: support-chatbot-service
+    container_name: support-chatbot-service
+    build:
+      context: .
+      dockerfile: support-chatbot-service/Dockerfile # или путь к вашему Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+      - OTEL_SERVICE_NAME=support-chatbot-service
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+    depends_on:
+      - config-server
+      - otel-collector
+      - redis
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8085/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   config-server:
     container_name: config-server

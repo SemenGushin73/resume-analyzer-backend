@@ -20,28 +20,51 @@ public class ResumeWithTemplate {
     private ResumeDto resume;
 
     public ResumeWithTemplate(List<TemplateDTO> templates, ResumeDto resume) {
-        this.templates = templates != null ? new ArrayList<>(templates) : new ArrayList<>();
-        this.resume = resume != null ? new ResumeDto(resume) : null;
+        if (templates != null) {
+            this.templates = new ArrayList<>(templates);
+        } else {
+            this.templates = new ArrayList<>();
+        }
+        if (resume != null) {
+            this.resume = new ResumeDto(resume);
+        } else {
+            this.resume = null;
+        }
     }
 
     public ResumeWithTemplate(ResumeDto resume) {
-        this.resume = resume != null ? new ResumeDto(resume) : null;
+        if (resume != null) {
+            this.resume = new ResumeDto(resume);
+        } else {
+            this.resume = null;
+        }
     }
 
     public List<TemplateDTO> getTemplates() {
-        return new ArrayList<>(templates); // Возвращаем копию
+        return new ArrayList<>(templates);
     }
 
     public void setTemplates(List<TemplateDTO> templates) {
-        this.templates = templates != null ? new ArrayList<>(templates) : new ArrayList<>();
+        if (templates != null) {
+            this.templates = new ArrayList<>(templates);
+        } else {
+            this.templates = new ArrayList<>();
+        }
     }
 
     public ResumeDto getResume() {
-        return resume != null ? new ResumeDto(resume) : null; // Возвращаем копию
+        if (resume != null) {
+            return new ResumeDto(resume);
+        }
+        return null;
     }
 
     public void setResume(ResumeDto resume) {
-        this.resume = resume != null ? new ResumeDto(resume) : null;
+        if (resume != null) {
+            this.resume = new ResumeDto(resume);
+        } else {
+            this.resume = null;
+        }
     }
 
     public void addTemplate(TemplateDTO template) {

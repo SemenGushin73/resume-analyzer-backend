@@ -8,11 +8,12 @@ import supportchatbotservice.application.dto.DeepSeekResponse;
 
 @FeignClient(
         name = "deepseek-client",
-        url = "${deepseek.api.url:https://api.deepseek.com/v1}",
-        configuration = DeepSeekConfig.class
+        url = "https://openrouter.ai/api/v1",
+        configuration = DeepSeekConfig.class,
+        fallback = DeepSeekClientFallback.class
 )
 public interface DeepSeekClient {
 
-    @PostMapping("/v1/chat/completions")
+    @PostMapping("/chat/completions")
     DeepSeekResponse askAI(@RequestBody DeepSeekRequest request);
 }
