@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import supportchatbotservice.application.dto.ChatRequest;
-import supportchatbotservice.application.dto.ChatResponse;
+import supportchatbotservice.application.dto.ChatRequestDTO;
+import supportchatbotservice.application.dto.ChatResponseDTO;
 import supportchatbotservice.application.service.ChatBotAppService;
 import supportchatbotservice.domain.ports.AiServicePort;
 import supportchatbotservice.domain.ports.FaqServicePort;
@@ -38,23 +38,23 @@ class ChatBotServiceTest {
 
     @Test
     void whenAiAvailable_thenReturnAiResponse() {
-        final ChatRequest request = ChatRequest.create("test", "session123");
+        final ChatRequestDTO request = ChatRequestDTO.create("test", "session123");
         when(aiServicePort.getAiResponse(any())).thenReturn("Ответ от AI");
         when(faqServicePort.findAnswer(any())).thenReturn(Optional.empty());
 
         chatBotAppService.handleUserMessage(request, principal);
 
-        verify(messageSenderPort).sendResponse(eq(principal.getName()), any(ChatResponse.class));
+        verify(messageSenderPort).sendResponse(eq(principal.getName()), any(ChatResponseDTO.class));
     }
 
     @Test
     void whenAiFails_thenReturnFallbackResponse() {
-        final ChatRequest request = ChatRequest.create("test", "session123");
+        final ChatRequestDTO request = ChatRequestDTO.create("test", "session123");
         when(aiServicePort.getAiResponse(any())).thenThrow(new RuntimeException());
         when(faqServicePort.findAnswer(any())).thenReturn(Optional.of("Fallback"));
 
         chatBotAppService.handleUserMessage(request, principal);
 
-        verify(messageSenderPort).sendResponse(eq(principal.getName()), any(ChatResponse.class));
+        verify(messageSenderPort).sendResponse(eq(principal.getName()), any(ChatResponseDTO.class));
     }
 }

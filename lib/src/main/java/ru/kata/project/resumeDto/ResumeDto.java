@@ -105,26 +105,10 @@ public class ResumeDto implements Serializable {
     public ResumeDto(ResumeDto other) {
         this.id = other.id;
         this.personalData = other.personalData;
-        if (other.educations != null) {
-            this.educations = Set.copyOf(other.educations);
-        } else {
-            this.educations = null;
-        }
-        if (other.experiences != null) {
-            this.experiences = Set.copyOf(other.experiences);
-        } else {
-            this.experiences = null;
-        }
-        if (other.socialLinks != null) {
-            this.socialLinks = Set.copyOf(other.socialLinks);
-        } else {
-            this.socialLinks = null;
-        }
-        if (other.hobbies != null) {
-            this.hobbies = Set.copyOf(other.hobbies);
-        } else {
-            this.hobbies = null;
-        }
+        this.educations = other.educations != null ? Set.copyOf(other.educations) : null;
+        this.experiences = other.experiences != null ? Set.copyOf(other.experiences) : null;
+        this.socialLinks = other.socialLinks != null ? Set.copyOf(other.socialLinks) : null;
+        this.hobbies = other.hobbies != null ? Set.copyOf(other.hobbies) : null;
     }
 
 }

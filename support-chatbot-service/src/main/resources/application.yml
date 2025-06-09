@@ -2,7 +2,7 @@
 #  application:
 #    name: support-chatbot-service
 #  config:
-#    import: "optional:configserver:http://config-server:8888"
+#    import: "configserver:http://config-server:8888"
 #  cloud:
 #    config:
 #      fail-fast: true
@@ -12,10 +12,18 @@
 #        max-attempts: 10
 #
 #server:
-#  port: 8080
+#  port: 8085
+server:
+  port: 8085
+
 spring:
   config:
-    import: "optional:configserver:"
+    activate:
+      on-profile: default
+    import:
+      - optional:file:.env
+      - optional:file:./.env
+      - optional:file:../.env
   application:
     name: support-chatbot-service
   cloud:
@@ -25,10 +33,24 @@ spring:
       enabled: true
     compatibility-verifier:
       enabled: false
+
+  logging:
+    level:
+      root: info
+      org.springframework.web: debug
+      supportchatbotservice: debug
+      feign: warn
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %logger{36} - %msg%n%ex"
+    file:
+      name: logs/app.log
+      max-history: 7
+      max-size: 10MB
+
 deepseek:
   api:
-    url: "https://openrouter.ai/api/v1"
-    key: ${DEEPSEEK_API_KEY}
+    url: ${DEEPSEEK_API_URL:https://openrouter.ai/api/v1}
+    key: ${DEEPSEEK_API_KEY:}
 
   resilience4j:
     circuitbreaker:
@@ -43,26 +65,11 @@ deepseek:
 
 faq:
   answers:
-    # Общие вопросы
-    "Как начать анализ резюме?": "Загрузите ваше резюме в формате PDF или DOCX, и система автоматически проведёт анализ"
-    "Какие форматы резюме поддерживаются?": "Мы поддерживаем PDF, DOCX и TXT форматы"
-
-    # Вопросы по улучшению
-    "Как улучшить моё резюме?": """
-      1. Укажите конкретные достижения с цифрами
-      2. Используйте ключевые слова из вакансии
-      3. Соблюдайте четкую структуру
-      4. Держите объем 1-2 страницы"""
-
-    # Технические вопросы
-    "Система не загружает резюме": """
-      1. Проверьте формат файла
-      2. Убедитесь, что размер не превышает 5MB
-      3. Попробуйте другой браузер
-      Если проблема осталась, свяжитесь с поддержкой"""
-
-    # Вопросы по функционалу
-    "Как сравнить резюме с вакансией?": "Загрузите резюме и текст вакансии, система покажет процент соответствия и даст рекомендации"
+    question1: "Загрузите ваше резюме в формате PDF или DOCX, и система автоматически проведёт анализ"
+    question2: "Мы поддерживаем PDF, DOCX и TXT форматы"
+    question3: "1. Укажите конкретные достижения с цифрами 2. Используйте ключевые слова из вакансии 3. Соблюдайте четкую структуру 4. Держите объем 1-2 страницы"
+    question4: "1. Проверьте формат файла 2. Убедитесь, что размер не превышает 5MB 3. Попробуйте другой браузер. Если проблема осталась, свяжитесь с поддержкой"
+    question5: "Загрузите резюме и текст вакансии, система покажет процент соответствия и даст рекомендации"
 
 management:
   endpoints:

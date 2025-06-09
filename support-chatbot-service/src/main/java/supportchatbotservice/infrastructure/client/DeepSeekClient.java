@@ -3,17 +3,20 @@ package supportchatbotservice.infrastructure.client;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import supportchatbotservice.application.dto.DeepSeekRequest;
-import supportchatbotservice.application.dto.DeepSeekResponse;
+import supportchatbotservice.application.dto.DeepSeekRequestDTO;
+import supportchatbotservice.application.dto.DeepSeekResponseDTO;
 
+/**
+ * Feign-клиент для DeepSeek API.
+ */
 @FeignClient(
         name = "deepseek-client",
-        url = "https://openrouter.ai/api/v1",
+        url = "${deepseek.api.url}",
         configuration = DeepSeekConfig.class,
         fallback = DeepSeekClientFallback.class
 )
 public interface DeepSeekClient {
 
     @PostMapping("/chat/completions")
-    DeepSeekResponse askAI(@RequestBody DeepSeekRequest request);
+    DeepSeekResponseDTO askAI(@RequestBody DeepSeekRequestDTO request);
 }

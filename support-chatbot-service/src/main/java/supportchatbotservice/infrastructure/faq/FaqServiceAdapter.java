@@ -6,6 +6,9 @@ import supportchatbotservice.domain.ports.FaqServicePort;
 
 import java.util.Optional;
 
+/**
+ * Адаптер для FAQ сервиса.
+ */
 @Service
 @RequiredArgsConstructor
 public class FaqServiceAdapter implements FaqServicePort {

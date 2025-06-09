@@ -1,22 +1,23 @@
 package supportchatbotservice.domain.model;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
-public final class ChatMessage {
-    private final String content;
-    private final String sessionId;
+/**
+ * Сообщение чата с содержимым и идентификатором сессии.
+ */
+@Getter
+public class ChatMessage {
+    private String content;
+    private String sessionId;
+
+    public ChatMessage() {
+    }
 
     public ChatMessage(String content, String sessionId) {
         this.content = Objects.requireNonNull(content, "Content cannot be null");
         this.sessionId = Objects.requireNonNull(sessionId, "SessionId cannot be null");
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getSessionId() {
-        return sessionId;
     }
 
     @Override

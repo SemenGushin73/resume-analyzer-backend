@@ -302,18 +302,32 @@ services:
     container_name: support-chatbot-service
     build:
       context: .
-      dockerfile: support-chatbot-service/Dockerfile # или путь к вашему Dockerfile
+      dockerfile: support-chatbot-service/Dockerfile
     ports:
-      - "8080:8080"
+      - "8085:8085"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - OTEL_SERVICE_NAME=support-chatbot-service
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_REDIS_HOST=redis
-      - SPRING_REDIS_PORT=6379
+      SPRING_PROFILES_ACTIVE: docker
+      OTEL_SERVICE_NAME: "support-chatbot-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_METRICS_EXPORTER: "otlp"
+      OTEL_LOGS_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_PROPAGATORS: "tracecontext,baggage,b3"
+      OTEL_RESOURCE_ATTRIBUTES: "service.version=1.0,deployment.environment=production"
+      OTEL_INSTRUMENTATION_KAFKA_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED: "true"
+      OTEL_INSTRUMENTATION_LOGBACK_ENABLED: "true"
+      OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
+      OTEL_JAVAAGENT_DEBUG: "false"
+      OTEL_LOG_LEVEL: "info"
+      OTEL_METRIC_EXPORT_INTERVAL: 60000
+      OTEL_BSP_SCHEDULE_DELAY: 5000
+      OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"
+      DEEPSEEK_API_URL: ${DEEPSEEK_API_URL}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+
     depends_on:
       - config-server
       - otel-collector
@@ -325,6 +339,7 @@ services:
       retries: 5
 
   config-server:
+    image: config-server
     container_name: config-server
     logging:
       driver: json-file

@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import supportchatbotservice.application.utils.PromptTemplates;
 import supportchatbotservice.domain.ports.AiServicePort;
-import supportchatbotservice.application.dto.DeepSeekRequest;
+import supportchatbotservice.application.dto.DeepSeekRequestDTO;
 
+/**
+ * Адаптер для работы с DeepSeek AI API.
+ */
 @Service
 @RequiredArgsConstructor
 public class DeepSeekAiAdapter implements AiServicePort {
@@ -16,7 +19,7 @@ public class DeepSeekAiAdapter implements AiServicePort {
     @CircuitBreaker(name = "deepseek", fallbackMethod = "fallback")
     public String getAiResponse(String message) {
         final String prompt = PromptTemplates.formatPrompt(message);
-        return deepSeekClient.askAI(new DeepSeekRequest(prompt)).getAnswer();
+        return deepSeekClient.askAI(new DeepSeekRequestDTO(prompt)).getAnswer();
     }
 
     private String fallback(String message, Exception ex) {

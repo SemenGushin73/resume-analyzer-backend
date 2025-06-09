@@ -10,4 +10,4 @@ COPY support-chatbot-service/build/libs/support-chatbot-service-*.jar ./app.jar
 
 ENTRYPOINT [ "java", "-javaagent:/opentelemetry-javaagent.jar", "-jar", "/app/app.jar" ]
 
-EXPOSE 8080
+EXPOSE 8085

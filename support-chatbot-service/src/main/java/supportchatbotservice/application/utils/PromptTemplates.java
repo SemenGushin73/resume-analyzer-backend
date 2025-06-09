@@ -1,5 +1,8 @@
 package supportchatbotservice.application.utils;
 
+/**
+ * Шаблоны промптов для AI-сервиса.
+ */
 public class PromptTemplates {
     public static final String SUPPORT_PROMPT = """
             Ты - виртуальный помощник службы поддержки. 

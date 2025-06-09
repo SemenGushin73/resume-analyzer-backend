@@ -148,7 +148,7 @@ resume-analyzer-backend/
 - Resume Generator: `localhost:8082`
 - API Gateway: `localhost:8765`
 - Config Server: `localhost:8888`
-- ChatBot Service: `localhost:8080`
+- ChatBot Service: `localhost:8085`
 
 ## 🔍 Мониторинг
 

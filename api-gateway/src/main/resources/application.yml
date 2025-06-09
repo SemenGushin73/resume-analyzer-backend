@@ -2,7 +2,7 @@
 #  application:
 #    name: api-gateway
 #  config:
-#    import: "optional:configserver:http://config-server:8888"
+#    import: "configserver:http://config-server:8888"
 #  cloud:
 #    config:
 #      fail-fast: true
@@ -17,7 +17,7 @@ spring:
   application:
     name: api-gateway
   config:
-    import: "optional:configserver:"
+    import: "configserver:http://config-server:8888"
   cloud:
     config:
       import-check:
@@ -93,7 +93,7 @@ spring:
                 fallbackUri: forward:/fallback/deepseek
 
         - id: support-chatbot-service
-          uri: http://support-chatbot-service:8080
+          uri: http://support-chatbot-service:8085
           predicates:
             - Path=/support-chatbot-service/**
           filters:

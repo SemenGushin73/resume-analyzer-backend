@@ -1,33 +1,34 @@
 package supportchatbotservice.application.dto;
 
 
+import lombok.Getter;
+
 import java.util.Objects;
 
-public final class ChatRequest {
-    private final String message;
-    private final String sessionId;
+/**
+ * DTO для передачи сообщения пользователя и идентификатора сессии в чат-сервис.
+ */
+@Getter
+public class ChatRequestDTO {
+    private String message;
+    private String sessionId;
 
-    public static ChatRequest create(String message, String sessionId) {
+    public ChatRequestDTO() {
+    }
+
+    public static ChatRequestDTO create(String message, String sessionId) {
         if (message == null || message.isBlank()) {
             throw new IllegalArgumentException("Message cannot be empty");
         }
         if (sessionId == null || sessionId.isBlank()) {
             throw new IllegalArgumentException("SessionId cannot be empty");
         }
-        return new ChatRequest(message, sessionId);
+        return new ChatRequestDTO(message, sessionId);
     }
 
-    private ChatRequest(String message, String sessionId) {
+    private ChatRequestDTO(String message, String sessionId) {
         this.message = message;
         this.sessionId = sessionId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getSessionId() {
-        return sessionId;
     }
 
     @Override
@@ -38,7 +39,7 @@ public final class ChatRequest {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ChatRequest that = (ChatRequest) o;
+        final ChatRequestDTO that = (ChatRequestDTO) o;
         return Objects.equals(message, that.message) && Objects.equals(sessionId, that.sessionId);
     }
 

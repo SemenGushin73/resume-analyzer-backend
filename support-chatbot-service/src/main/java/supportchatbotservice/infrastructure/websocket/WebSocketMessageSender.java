@@ -3,17 +3,20 @@ package supportchatbotservice.infrastructure.websocket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import supportchatbotservice.application.dto.ChatResponse;
-import supportchatbotservice.application.dto.ErrorResponse;
+import supportchatbotservice.application.dto.ChatResponseDTO;
+import supportchatbotservice.application.dto.ErrorResponseDTO;
 import supportchatbotservice.domain.ports.MessageSenderPort;
 
+/**
+ * Сервис для отправки сообщений через WebSocket.
+ */
 @Service
 @RequiredArgsConstructor
 public class WebSocketMessageSender implements MessageSenderPort {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public void sendResponse(String user, ChatResponse response) {
+    public void sendResponse(String user, ChatResponseDTO response) {
         messagingTemplate.convertAndSendToUser(
                 user,
                 "/queue/replies",
@@ -26,7 +29,7 @@ public class WebSocketMessageSender implements MessageSenderPort {
         messagingTemplate.convertAndSendToUser(
                 user,
                 "/queue/errors",
-                new ErrorResponse(error)
+                new ErrorResponseDTO(error)
         );
     }
 }

@@ -1,28 +1,29 @@
 package supportchatbotservice.application.dto;
 
 
+import lombok.Getter;
+
 import java.util.Objects;
 
-public final class ChatResponse {
-    private final String answer;
-    private final boolean isFallback;
+/**
+ * DTO для передачи ответа чат-бота пользователю, включая флаг fallback-режима.
+ */
+@Getter
+public class ChatResponseDTO {
+    private String answer;
+    private boolean isFallback;
 
-    public static ChatResponse create(String answer, boolean isFallback) {
-        Objects.requireNonNull(answer, "Answer cannot be null");
-        return new ChatResponse(answer, isFallback);
+    public ChatResponseDTO() {
     }
 
-    public ChatResponse(String answer, boolean isFallback) {
+    public static ChatResponseDTO create(String answer, boolean isFallback) {
+        Objects.requireNonNull(answer, "Answer cannot be null");
+        return new ChatResponseDTO(answer, isFallback);
+    }
+
+    public ChatResponseDTO(String answer, boolean isFallback) {
         this.answer = Objects.requireNonNull(answer, "Answer cannot be null");
         this.isFallback = isFallback;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public boolean isFallback() {
-        return isFallback;
     }
 
     @Override
@@ -33,7 +34,7 @@ public final class ChatResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ChatResponse that = (ChatResponse) o;
+        final ChatResponseDTO that = (ChatResponseDTO) o;
         return isFallback == that.isFallback && Objects.equals(answer, that.answer);
     }
 

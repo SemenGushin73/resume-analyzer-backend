@@ -20,24 +20,11 @@ public class ResumeWithTemplate {
     private ResumeDto resume;
 
     public ResumeWithTemplate(List<TemplateDTO> templates, ResumeDto resume) {
-        if (templates != null) {
-            this.templates = new ArrayList<>(templates);
-        } else {
-            this.templates = new ArrayList<>();
-        }
-        if (resume != null) {
-            this.resume = new ResumeDto(resume);
-        } else {
-            this.resume = null;
-        }
+        this.resume = resume != null ? new ResumeDto(resume) : null;
     }
 
     public ResumeWithTemplate(ResumeDto resume) {
-        if (resume != null) {
-            this.resume = new ResumeDto(resume);
-        } else {
-            this.resume = null;
-        }
+        this.resume = resume != null ? new ResumeDto(resume) : null;
     }
 
     public List<TemplateDTO> getTemplates() {

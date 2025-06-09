@@ -11,6 +11,9 @@ import supportchatbotservice.domain.ports.FaqServicePort;
 
 import java.util.Optional;
 
+/**
+ * Сервис для обработки сообщений поддержки, объединяющий FAQ и AI-сервисы.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
