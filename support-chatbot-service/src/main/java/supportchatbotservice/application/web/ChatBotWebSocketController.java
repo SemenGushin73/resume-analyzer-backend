@@ -1,5 +1,7 @@
 package supportchatbotservice.application.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Chat API", description = "API for chat operations via WebSocket")
 public class ChatBotWebSocketController {
     private final ChatBotAppService chatBotAppService;
 
@@ -31,6 +34,8 @@ public class ChatBotWebSocketController {
     }
 
     @MessageMapping("/chat")
+    @Operation(summary = "Handle chat message",
+            description = "Processes user chat message and returns response via WebSocket")
     public void handleChatMessage(ChatRequestDTO request, Principal principal) {
         chatBotAppService.handleUserMessage(request, principal);
     }

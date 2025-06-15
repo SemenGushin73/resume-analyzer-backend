@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<input id="message" placeholder="Type message...">
+<button onclick="send()">Send</button>
+<div id="output"></div>
+
+<script>
+    const socket = new SockJS('http://localhost:8085/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function(frame) {
+        console.log('Connected: ' + frame);
+
+        // Подписываемся на тему для ответов
+        stompClient.subscribe('/user/queue/replies', function(response) {
+            const data = JSON.parse(response.body);
+            console.log('Ответ:', data);
+            document.getElementById('output').innerHTML +=
+                `<p><strong>Ответ:</strong> ${data.answer} (fallback: ${data.isFallback})</p>`;
+        });
+
+        // Подписываемся на тему для ошибок
+        stompClient.subscribe('/user/queue/errors', function(error) {
+            console.error('Ошибка:', error.body);
+        });
+    });
+
+    function send() {
+        const msg = {
+            message: document.getElementById('message').value,
+            sessionId: "test-session-" + Math.random().toString(36).substring(2)
+        };
+        stompClient.send("/app/chat", {}, JSON.stringify(msg));
+        log('Отправлено: ' + msg.message);
+    }
+</script>
+</body>
+</html>

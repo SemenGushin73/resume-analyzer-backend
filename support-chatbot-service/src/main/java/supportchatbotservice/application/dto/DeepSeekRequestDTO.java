@@ -1,8 +1,10 @@
 package supportchatbotservice.application.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,29 +12,31 @@ import java.util.Objects;
  */
 @Getter
 public class DeepSeekRequestDTO {
-    private String message;
+    private String model = "deepseek/deepseek-chat";
+    private List<Message> messages;
 
-    public DeepSeekRequestDTO() {
+    public DeepSeekRequestDTO(String prompt) {
+        this.messages = List.of(new Message("user", prompt));
     }
 
-    public DeepSeekRequestDTO(String message) {
-        this.message = Objects.requireNonNull(message, "Message cannot be null");
+    @Getter
+    @AllArgsConstructor
+    public static class Message {
+        private String role;
+        private String content;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final DeepSeekRequestDTO that = (DeepSeekRequestDTO) o;
-        return Objects.equals(message, that.message);
+        DeepSeekRequestDTO that = (DeepSeekRequestDTO) o;
+        return Objects.equals(model, that.model) && Objects.equals(messages, that.messages);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(message);
+        return Objects.hash(model, messages);
     }
 }

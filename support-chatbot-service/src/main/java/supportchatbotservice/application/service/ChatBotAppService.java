@@ -22,16 +22,18 @@ public class ChatBotAppService {
 
     public void handleUserMessage(ChatRequestDTO request, Principal principal) {
         try {
+            String username = (principal != null) ? principal.getName() : "anonymous";
             final BotResponse response = supportBotService.processMessage(
                     new ChatMessage(request.getMessage(), request.getSessionId())
             );
 
             messageSender.sendResponse(
-                    principal.getName(),
+                    username,
                     new ChatResponseDTO(response.getContent(), response.isFallback())
             );
         } catch (Exception ex) {
-            messageSender.sendError(principal.getName(), ex.getMessage());
+            String username = (principal != null) ? principal.getName() : "anonymous";
+            messageSender.sendError(username, ex.getMessage());
         }
     }
 }

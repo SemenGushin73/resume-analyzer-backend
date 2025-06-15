@@ -1,8 +1,8 @@
 package supportchatbotservice.infrastructure.client;
 
 import feign.RequestInterceptor;
-import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,25 +10,16 @@ import org.springframework.context.annotation.Configuration;
  * Конфигурация для DeepSeek API.
  */
 @Configuration
+@Slf4j
 public class DeepSeekConfig {
 
-    private final Dotenv dotenv;
-
-    public DeepSeekConfig(Dotenv dotenv) {
-        this.dotenv = dotenv;
-    }
-
     @Bean
-    public RequestInterceptor apiKeyInterceptor() {
-        final String apiKey = dotenv.get("DEEPSEEK_API_KEY");
-        if (apiKey == null || apiKey.isEmpty()) {
-            throw new IllegalStateException("DEEPSEEK_API_KEY is not set in .env file");
-        }
-
+    public RequestInterceptor apiKeyInterceptor(@Value("${deepseek.api.key}") String apiKey) {
+        log.info("API Key loaded successfully.");
         return request -> {
             request.header("Authorization", "Bearer " + apiKey);
-            request.header("HTTP-Referer", "YOUR_SITE_URL");
-            request.header("X-Title", "Your App Name");
+            request.header("HTTP-Referer", "http://localhost:8085");
+            request.header("X-Title", "Support Chatbot");
         };
     }
 }

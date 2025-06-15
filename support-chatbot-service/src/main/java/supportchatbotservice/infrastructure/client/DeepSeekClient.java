@@ -12,8 +12,7 @@ import supportchatbotservice.application.dto.DeepSeekResponseDTO;
 @FeignClient(
         name = "deepseek-client",
         url = "${deepseek.api.url}",
-        configuration = DeepSeekConfig.class,
-        fallback = DeepSeekClientFallback.class
+        configuration = DeepSeekConfig.class
 )
 public interface DeepSeekClient {
 
