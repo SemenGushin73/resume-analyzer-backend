@@ -1,0 +1,55 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: subscription-service
+  # config:
+  #   import:
+  #     - optional:classpath:common-actuator.yml
+  cloud:
+    config:
+      enabled: false
+      fail-fast: false
+      retry:
+        initial-interval: 1000
+        max-interval: 2000
+        max-attempts: 10
+  datasource:
+    url: jdbc:postgresql://postgres:5432/test_db?autoReconnect=true
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 2000
+      maximum-pool-size: 90
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    generate-ddl: true
+
+  profiles:
+    active: docker
+
+payment:
+  yookassa:
+    shop-id: 1102577 # Заменить на реальный ID магазина
+    secret-key: test_9i8rruDAr_-6SiZPrBvLG1B7-aPgB_m5lCRqXkQwS9Q # Заменить на реальный секретный ключ
+    base-url: https://api.yookassa.ru/v3 # этот URL одинаковый и для всех операций и тестовых и нет
+app:
+  # это URL, по которому платежная система (в данном случае Yookassa) будет отправлять уведомления о статусе платежа. Это должен быть адрес, доступный извне или, в данном случае, внутри вашей Docker-сети, который Yookassa может достичь.
+  callback-url: https://yookassa.bruschatka-okt.ru/api/v1/payment/callback # Пример URL, измените по необходимости.

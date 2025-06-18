@@ -1,0 +1,20 @@
+package ru.kata.project.subscriptionDto;
+
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import ru.kata.project.model.SubscriptionType;
+
+
+import java.util.UUID;
+
+/**
+ * DTO для передачи информации, необходимой для создания новой подписки
+ **/
+@Data
+public class CreateSubscriptionRequest {
+    @NotNull
+    private UUID userId;
+    @NotNull
+    private SubscriptionType type;
+}
