@@ -117,6 +117,7 @@ dependencies {
     implementation 'io.opentelemetry:opentelemetry-api'
     implementation 'io.opentelemetry:opentelemetry-sdk'
     implementation 'io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.3.0'
+
 }
 
 spotbugs {

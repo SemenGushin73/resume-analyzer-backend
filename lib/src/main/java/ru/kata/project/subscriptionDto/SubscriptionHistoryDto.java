@@ -16,6 +16,6 @@ public class SubscriptionHistoryDto {
     private UUID userId;
     private SubscriptionType type;
     private SubscriptionEventType eventType;
-    private String meta;
+    private SubscriptionMetaDto meta;
     private LocalDateTime createdAt;
 }

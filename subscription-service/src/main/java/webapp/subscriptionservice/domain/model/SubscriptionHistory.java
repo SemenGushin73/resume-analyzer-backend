@@ -1,8 +1,11 @@
 package webapp.subscriptionservice.domain.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import ru.kata.project.model.SubscriptionEventType;
 import ru.kata.project.model.SubscriptionType;
 
@@ -37,10 +40,11 @@ public class SubscriptionHistory {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private String meta;
+    private JsonNode meta;
 
-    public SubscriptionHistory(UUID userId, SubscriptionType type, SubscriptionEventType eventType, String meta) {
+    public SubscriptionHistory(UUID userId, SubscriptionType type, SubscriptionEventType eventType, JsonNode meta) {
         this.userId = userId;
         this.type = type;
         this.eventType = eventType;

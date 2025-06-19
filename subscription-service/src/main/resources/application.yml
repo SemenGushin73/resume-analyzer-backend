@@ -53,3 +53,7 @@ payment:
 app:
   # это URL, по которому платежная система (в данном случае Yookassa) будет отправлять уведомления о статусе платежа. Это должен быть адрес, доступный извне или, в данном случае, внутри вашей Docker-сети, который Yookassa может достичь.
   callback-url: https://yookassa.bruschatka-okt.ru/api/v1/payment/callback # Пример URL, измените по необходимости.
+
+logging:
+  level:
+    org.hibernate: DEBUG

@@ -1,5 +1,9 @@
 package webapp.subscriptionservice.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,6 +48,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionHistoryRepository subscriptionHistoryRepository;
     private final PaymentGatewayService paymentGatewayService;
     private final SubscriptionMapper subscriptionMapper;
+    private final ObjectMapper objectMapper;
 
 
     /**
@@ -78,12 +83,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             paymentResponse = paymentGatewayService.createPaymentSession(userId, type, amount, description).get();
         } catch (PaymentGatewayException e) {
             log.error("Ошибка при создании платежной сессии с шлюзом для пользователя userId {}: {}", userId, e.getMessage());
+
+            ObjectNode metaNode = objectMapper.createObjectNode();
+            metaNode.put("error", "Платежный шлюз недоступен");
+            metaNode.put("details", e.getMessage());
+
             userSubscriptionRepository.save(subscription);
             subscriptionHistoryRepository.save(new SubscriptionHistory(
                     userId,
                     type,
                     SubscriptionEventType.CANCELLED,
-                    "Платежный шлюз недоступен: " + e.getMessage()
+                    metaNode
             ));
             throw e;
         }
@@ -94,11 +104,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         final UserSubscription savedSubscription = userSubscriptionRepository.save(subscription);
 
+        ObjectNode metaNode = objectMapper.createObjectNode();
+        metaNode.put("message", "Платежная сессия создана");
+        metaNode.put("paymentId", paymentResponse.paymentId());
+
         subscriptionHistoryRepository.save(new SubscriptionHistory(
                 userId,
                 type,
                 SubscriptionEventType.CREATED,
-                String.format("Платежная сессия создана, payment ID: %s. Awaiting payment callback.", paymentResponse.paymentId())
+                metaNode
         ));
 
         log.info("Подписка создана для пользователя userId: {}, type: {}. Payment URL: {}. Ожидание коллбэка о платеже для активации.", userId, type, paymentResponse.confirmationUrl());
@@ -125,15 +139,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             }
         } catch (PaymentGatewayException e) {
             log.error("Ошибка отмены платежа в шлюзе для пользователя userId {}: {}", userId, e.getMessage());
+
+            ObjectNode metaNode = objectMapper.createObjectNode();
+            metaNode.put("error", "Ошибка отмены платежа");
+            metaNode.put("details", e.getMessage());
+
             activeSubscription.setStatus(SubscriptionStatus.CANCELLED);
             activeSubscription.setExpiresAt(LocalDateTime.now());
             activeSubscription.setUpdatedAt(LocalDateTime.now());
             userSubscriptionRepository.save(activeSubscription);
+
             subscriptionHistoryRepository.save(new SubscriptionHistory(
                     userId,
                     activeSubscription.getType(),
                     SubscriptionEventType.CANCELLED,
-                    "Подписка отменена пользователем, но возникла проблема с платежным шлюзом: " + e.getMessage()
+                    metaNode  // Используем JsonNode вместо String
             ));
             throw e;
         }
@@ -142,12 +162,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         activeSubscription.setExpiresAt(LocalDateTime.now());
         activeSubscription.setUpdatedAt(LocalDateTime.now());
         userSubscriptionRepository.save(activeSubscription);
+        ObjectNode metaNode = objectMapper.createObjectNode();
+        metaNode.put("message", "Подписка отменена пользователем");
 
         subscriptionHistoryRepository.save(new SubscriptionHistory(
                 userId,
                 activeSubscription.getType(),
                 SubscriptionEventType.CANCELLED,
-                "Подписка отменена пользователем"
+                metaNode  // Используем JsonNode вместо String
         ));
         log.info("Отменена подписка для пользователя userId: {}", userId);
     }
@@ -192,39 +214,58 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     return new ResourceNotFoundException("Не найдена подписка для платежа payment ID: " + paymentId);
                 });
 
-        final SubscriptionEventType historyEventType;
-        final String historyMeta;
+        ObjectNode metaNode = objectMapper.createObjectNode();
+        metaNode.put("paymentId", paymentId);
+        metaNode.put("status", status);
+
+        if (metadataJson != null && !metadataJson.isEmpty()) {
+            try {
+                JsonNode externalMeta = objectMapper.readTree(metadataJson);
+                metaNode.set("externalData", externalMeta);
+            } catch (JsonProcessingException e) {
+                metaNode.put("parseError", "Ошибка парсинга metadata");
+                metaNode.put("rawData", metadataJson);
+            }
+        }
+
+        SubscriptionEventType historyEventType;
+        String logMessage;
 
         switch (status) {
             case "succeeded":
                 subscription.setStatus(SubscriptionStatus.ACTIVE);
                 subscription.setExpiresAt(LocalDateTime.now().plusMonths(1));
                 historyEventType = SubscriptionEventType.CREATED;
-                historyMeta = "Оплата прошла успешно. Подписка активирована.";
-                log.info("Активирована подписка для пользователя userId: {} (paymentId: {})", subscription.getUserId(), paymentId);
+                logMessage = "Оплата прошла успешно. Подписка активирована.";
+                metaNode.put("action", "Активация подписки");
                 break;
+
             case "failed":
                 subscription.setStatus(SubscriptionStatus.CANCELLED);
                 subscription.setExpiresAt(LocalDateTime.now());
                 historyEventType = SubscriptionEventType.CANCELLED;
-                historyMeta = "Ошибка или отмена платежа. Подписка установлена на CANCELLED. Original status: " + status;
-                log.info("Статус подписки установлен на CANCELLED для пользователя userId: {} (paymentId: {}) из-за статуса платежа: {}", subscription.getUserId(), paymentId, status);
+                logMessage = "Ошибка или отмена платежа. Подписка отменена.";
+                metaNode.put("action", "Автоматическая отмена");
                 break;
+
             default:
                 subscription.setStatus(SubscriptionStatus.CANCELLED);
                 historyEventType = SubscriptionEventType.CANCELLED;
-                historyMeta = "Неизвестный статус платежа: " + status + ". Подписка установлена на CANCELLED.";
-                log.warn("Получен неизвестный платежный статус '{}' для payment ID: {}. Подписка установлена на CANCELLED.", status, paymentId);
+                logMessage = "Неизвестный статус платежа: " + status + ". Подписка отменена.";
+                metaNode.put("action", "Отмена по неизвестному статусу");
+                metaNode.put("reason", "Неизвестный статус: " + status);
         }
+
+        log.info("{} Пользователь: {}, Подписка: {}", logMessage, subscription.getUserId(), subscription.getType());
 
         subscription.setUpdatedAt(LocalDateTime.now());
         userSubscriptionRepository.save(subscription);
-        String finalMeta = (metadataJson != null && !metadataJson.isEmpty()) ? metadataJson : historyMeta;
 
         subscriptionHistoryRepository.save(new SubscriptionHistory(
                 subscription.getUserId(),
                 subscription.getType(),
                 historyEventType,
-                finalMeta));
+                metaNode
+        ));
     }
 }
