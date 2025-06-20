@@ -1,6 +1,8 @@
 package ru.kata.project.subscriptionDto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.kata.project.model.PaymentProvider;
 import ru.kata.project.model.SubscriptionStatus;
 import ru.kata.project.model.SubscriptionType;
@@ -12,6 +14,8 @@ import java.util.UUID;
  * DTO для передачи информации о текущей или прошлых подписках пользователя
  **/
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserSubscriptionDto {
     private UUID id;
     private UUID userId;

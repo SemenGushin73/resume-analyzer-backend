@@ -59,30 +59,45 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
     private static final String PAYMENT_GATEWAY_CIRCUIT_BREAKER = "paymentGatewayCircuitBreaker";
 
     /**
+     * Вспомогательный метод для построения JSON-тела запроса на создание платежа.
+     * @param amountValue сумма
+     * @param callbackUrl URL коллбэка приложения
+     * @param userId идентификатор пользователя
+     * @param type тип подписки
+     * @param description описание платежа
+     * @return JSON-строка для тела запроса
+     */
+    private String buildPaymentRequestBodyJson(long amountValue, String callbackUrl,
+                                               String userId, String type, String description) {
+        return String.format(
+                "{" +
+                        "\"amount\": {\"value\": \"%s.00\", \"currency\": \"RUB\"}," +
+                        "\"capture\": true," +
+                        "\"confirmation\": {\"type\": \"redirect\", \"return_url\": \"%s/subscriptions/success?userId=%s&type=%s\"}," +
+                        "\"description\": \"%s\"," +
+                        "\"metadata\": {\"userId\": \"%s\", \"subscriptionType\": \"%s\", \"service\": \"subscription-service\"}" +
+                        "}",
+                amountValue, callbackUrl, userId, type, description, userId, type
+        );
+    }
+    /**
      * Метод для создания новой платежной сессии в YooKassa для оформления подписки
      **/
     @CircuitBreaker(name = PAYMENT_GATEWAY_CIRCUIT_BREAKER, fallbackMethod = "createPaymentSessionFallback")
     @Retry(name = PAYMENT_GATEWAY_CIRCUIT_BREAKER, fallbackMethod = "createPaymentSessionFallback")
     @TimeLimiter(name = PAYMENT_GATEWAY_CIRCUIT_BREAKER, fallbackMethod = "createPaymentSessionFallback")
     @Override
-    public CompletableFuture<PaymentGatewayService.PaymentSessionResponse> createPaymentSession(UUID userId, SubscriptionType type, double amount, String description) {
+    public CompletableFuture<PaymentGatewayService.PaymentSessionResponse> createPaymentSession(
+            UUID userId, SubscriptionType type, double amount, String description) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 final String idempotenceKey = UUID.randomUUID().toString();
-                final String authHeader = "Basic " + Base64.getEncoder().encodeToString((yookassaShopId + ":" + yookassaSecretKey).getBytes());
+                final String authHeader = "Basic " + Base64.getEncoder()
+                        .encodeToString((yookassaShopId + ":" + yookassaSecretKey).getBytes());
 
                 final long amountValue = (long) (amount * 100);
-
-                final String requestBodyJson = String.format(
-                        "{" +
-                                "\"amount\": {\"value\": \"%s.00\", \"currency\": \"RUB\"}," +
-                                "\"capture\": true," +
-                                "\"confirmation\": {\"type\": \"redirect\", \"return_url\": \"%s/subscriptions/success?userId=%s&type=%s\"}," +
-                                "\"description\": \"%s\"," +
-                                "\"metadata\": {\"userId\": \"%s\", \"subscriptionType\": \"%s\", \"service\": \"subscription-service\"}" +
-                                "}",
-                        amountValue, appCallbackUrl, userId.toString(), type.name(), description, userId.toString(), type.name()
-                );
+                final String requestBodyJson = buildPaymentRequestBodyJson(
+                        amountValue, appCallbackUrl, userId.toString(), type.name(), description);
 
                 final RequestBody body = RequestBody.create(requestBodyJson, MediaType.get("application/json; charset=utf-8"));
                 final Request request = new Request.Builder()
@@ -94,8 +109,14 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
 
                 try (Response response = httpClient.newCall(request).execute()) {
                     if (!response.isSuccessful()) {
-                        final String responseBody = response.body() != null ? response.body().string() : "нет ответа";
-                        log.error("Ошибка при создании платежной сессии Yookassa. Status: {}, Body: {}", response.code(), responseBody);
+                        final String responseBody;
+                        if (response.body() != null) {
+                            responseBody = response.body().string();
+                        } else {
+                            responseBody = "нет ответа";
+                        }
+                        log.error("Ошибка при создании платежной сессии Yookassa. Status: {}, Body: {}",
+                                response.code(), responseBody);
                         throw new PaymentGatewayException("Ошибка при создании платежной сессии: " + responseBody);
                     }
 
@@ -124,7 +145,8 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
      * Вызывается, если основной метод createPaymentSession завершается неудачей.
      * Логирует причину вызова и выбрасывает исключение
      **/
-    private CompletableFuture<PaymentSessionResponse> createPaymentSessionFallback(UUID userId, SubscriptionType type, double amount, String description, Throwable t) {
+    private CompletableFuture<PaymentSessionResponse> createPaymentSessionFallback(
+            UUID userId, SubscriptionType type, double amount, String description, Throwable t) {
         log.warn("Fallback triggered for createPaymentSession due to: {}", t.getMessage());
         throw new PaymentGatewayException("Платежный шлюз временно недоступен. Попробуйте позже. Статус подписки установлен на CANCELLED.", t);
     }
@@ -139,7 +161,8 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
     public CompletableFuture<Boolean> cancelPayment(String paymentId) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                final String authHeader = "Basic " + Base64.getEncoder().encodeToString((yookassaShopId + ":" + yookassaSecretKey).getBytes());
+                final String authHeader = "Basic " + Base64.getEncoder()
+                        .encodeToString((yookassaShopId + ":" + yookassaSecretKey).getBytes());
                 log.info("Попытка отменить платеж с ID: {}. (Симуляция для sandbox режима платежного шлюза YooKassa)", paymentId);
 
                 /** В Sandbox режиме просто возвращаем true. В реальной интеграции для отмены платежа нужно отправлять запрос

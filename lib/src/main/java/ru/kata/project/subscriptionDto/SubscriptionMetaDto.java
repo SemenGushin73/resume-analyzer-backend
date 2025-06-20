@@ -14,4 +14,6 @@ public class SubscriptionMetaDto {
     private String paymentId;
     private String error;
     private String details;
+    private String subscriptionType;
+    private String confirmationUrl;
 }

@@ -25,12 +25,14 @@ public interface SubscriptionMapper {
     UserSubscriptionDto toUserSubscriptionDto(UserSubscription subscription);
 
     default SubscriptionMetaDto mapMeta(JsonNode jsonNode) {
-        if (jsonNode == null) return null;
+        if (jsonNode == null) {
+            return null;
+        }
 
         try {
             return OBJECT_MAPPER.treeToValue(jsonNode, SubscriptionMetaDto.class);
         } catch (JsonProcessingException e) {
-            SubscriptionMetaDto dto = new SubscriptionMetaDto();
+            final SubscriptionMetaDto dto = new SubscriptionMetaDto();
             dto.setError("Ошибка конвертации метаданных");
             dto.setDetails(jsonNode.toString());
             return dto;

@@ -25,7 +25,8 @@ import webapp.subscriptionservice.domain.service.SubscriptionService;
 @RequestMapping("/payments")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Платежные Колбэки (Сервер-сервер)", description = "Эндпоинт для обработки входящих HTTP-уведомлений (вебхуков) от платежных шлюзов (YooKassa).")
+@Tag(name = "Платежные Колбэки (Сервер-сервер)",
+        description = "Эндпоинт для обработки входящих HTTP-уведомлений (вебхуков) от платежных шлюзов (YooKassa).")
 public class PaymentCallbackController {
 
     private final SubscriptionService subscriptionService;
@@ -67,7 +68,8 @@ public class PaymentCallbackController {
                 try {
                     metadataJson = objectMapper.writeValueAsString(metadataNode);
                 } catch (JsonProcessingException e) {
-                    log.error("Ошибка при сериализации метаданных из коллбэка платежного шлюза для paymentId {}: {}", paymentId, e.getMessage());
+                    log.error("Ошибка при сериализации метаданных из коллбэка платежного шлюза для paymentId {}: {}",
+                            paymentId, e.getMessage());
                     metadataJson = "{\"serialization_error\": \"" + e.getMessage() + "\"}";
                 }
             }

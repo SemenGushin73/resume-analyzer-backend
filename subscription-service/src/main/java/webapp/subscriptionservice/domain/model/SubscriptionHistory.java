@@ -51,24 +51,42 @@ public class SubscriptionHistory {
         this.meta = meta;
     }
 
+    public SubscriptionHistory(UUID userId, SubscriptionType type, SubscriptionEventType eventType, JsonNode meta, LocalDateTime createdAt) {
+        this.userId = userId;
+        this.type = type;
+        this.eventType = eventType;
+        this.meta = meta;
+        this.createdAt = createdAt;
+    }
+
     @PrePersist
     protected void onCreate() {
         if (id == null) {
             id = UUID.randomUUID();
         }
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SubscriptionHistory that = (SubscriptionHistory) o;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final SubscriptionHistory that = (SubscriptionHistory) o;
         return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? Objects.hash(id) : 0;
+        if (id != null) {
+            return Objects.hash(id);
+        } else {
+            return 0;
+        }
     }
 }

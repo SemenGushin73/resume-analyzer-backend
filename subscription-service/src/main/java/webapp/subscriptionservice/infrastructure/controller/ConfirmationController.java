@@ -27,16 +27,17 @@ public class ConfirmationController {
     @GetMapping("/success")
     @Operation(
             summary = "Перенаправление после успешной оплаты",
-            description = "Обрабатывает перенаправление пользователя от платежного шлюза после успешной оплаты. " +
-                    "Этот эндпоинт предназначен для пользовательского опыта; " +
-                    "обновление статуса подписки обрабатывается серверными колбэками от платежного шлюза. " +
-                    "Возвращает простое текстовое сообщение об успехе."
+            description = "Обрабатывает перенаправление пользователя от платежного шлюза после успешной оплаты. "
+                    + "Этот эндпоинт предназначен для пользовательского опыта; "
+                    + "обновление статуса подписки обрабатывается серверными колбэками от платежного шлюза. "
+                    + "Возвращает простое текстовое сообщение об успехе."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Возвращает простое сообщение об успехе")
     })
     public String paymentSuccess(
-            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, для которого создана подписка", required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
+            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, для которого создана подписка", required = true,
+                    example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId,
             @Parameter(in = ParameterIn.QUERY, description = "Тип подписки (BASIC, PRO)", required = true, example = "BASIC")
             @RequestParam String type) {
@@ -48,16 +49,17 @@ public class ConfirmationController {
     @GetMapping("/failure")
     @Operation(
             summary = "Перенаправление после неудачной или отмененной оплаты",
-            description = "Обрабатывает перенаправление пользователя от платежного шлюза после неудачной или отмененной оплаты. " +
-                    "Этот эндпоинт предназначен исключительно для пользовательского опыта; " +
-                    "обновление статуса подписки обрабатывается серверными колбэками от платежного шлюза. " +
-                    "Возвращает простое текстовое сообщение о неудаче."
+            description = "Обрабатывает перенаправление пользователя от платежного шлюза после неудачной или отмененной оплаты. "
+                    + "Этот эндпоинт предназначен исключительно для пользовательского опыта; "
+                    + "обновление статуса подписки обрабатывается серверными коллбэками от платежного шлюза. "
+                    + "Возвращает простое текстовое сообщение о неудаче."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Возвращает простое сообщение о неудаче")
     })
     public String paymentFailure(
-            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, для которого была предпринята попытка оплаты", required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
+            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, для которого была предпринята попытка оплаты",
+                    required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId) {
 
         log.info("Пользователь перенаправлен на /subscriptions/failure для userId: {}. Ошибка или отмена платежа.", userId);

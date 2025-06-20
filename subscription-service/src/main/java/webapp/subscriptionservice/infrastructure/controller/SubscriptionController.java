@@ -33,7 +33,8 @@ import java.util.concurrent.TimeoutException;
 @RequestMapping("/internal/subscriptions")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Управление Подписками (Внутреннее API)", description = "Эндпоинты для создания, отмены и получения информации о подписках. Доступны через API Gateway.")
+@Tag(name = "Управление Подписками (Внутреннее API)", description = "Эндпоинты для создания, "
+        + "отмены и получения информации о подписках. Доступны через API Gateway.")
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
@@ -43,9 +44,9 @@ public class SubscriptionController {
      **/
     @PostMapping("/create")
     @Operation(summary = "Создать новую подписку и платежную сессию",
-            description = "Инициирует процесс создания подписки для пользователя, " +
-                    "возвращая URL для оплаты или QR-код. " +
-                    "Статус подписки будет 'CANCELLED' до успешного коллбэка от платежного шлюза.")
+            description = "Инициирует процесс создания подписки для пользователя, "
+                    + "возвращает URL для оплаты или QR-код. "
+                    + "Статус подписки будет 'CANCELLED' до успешного коллбэка от платежного шлюза.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Подписка создана, возвращены данные платежной сессии",
                     content = @Content(mediaType = "application/json",
@@ -58,7 +59,8 @@ public class SubscriptionController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     public ResponseEntity<?> createSubscription(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Детали запроса на создание подписки", required = true,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Детали запроса на создание подписки",
+                    required = true,
                     content = @Content(schema = @Schema(implementation = CreateSubscriptionRequest.class)))
             @org.springframework.web.bind.annotation.RequestBody @Valid CreateSubscriptionRequest request) {
 
@@ -93,18 +95,20 @@ public class SubscriptionController {
      **/
     @PostMapping("/cancel")
     @Operation(summary = "Отменить активную подписку пользователя",
-            description = "Отменяет текущую активную подписку для указанного пользователя. " +
-                    "Возвращает статус 200 в случае успеха или 404, если подписка не найдена.")
+            description = "Отменяет текущую активную подписку для указанного пользователя. "
+                    + "Возвращает статус 200 в случае успеха или 404, если подписка не найдена.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Подписка успешно отменена",
                     content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "Подписка успешно создана"))),
             @ApiResponse(responseCode = "404", description = "Активная подписка не найдена для пользователя",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "Активная подписка не найдена для пользователя: [userId]"))),
+                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string",
+                            example = "Активная подписка не найдена для пользователя: [userId]"))),
             @ApiResponse(responseCode = "503", description = "Платежный шлюз временно недоступен для отмены"),
             @ApiResponse(responseCode = "504", description = "Платежный шлюз не ответил в срок во время отмены")
     })
     public ResponseEntity<String> cancelSubscription(
-            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чья подписка должна быть отменена", required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
+            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чья подписка должна быть отменена",
+                    required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId) {
         log.info("Получен запрос на отмену подписки для пользователя userId: {}", userId);
         try {
@@ -117,9 +121,11 @@ public class SubscriptionController {
             log.error("ExecutionException во время отмены подписки для пользователя userId: {}", userId, e);
             final Throwable cause = e.getCause();
             if (cause instanceof TimeoutException) {
-                return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Платежный шлюз не ответил вовремя при отмене подписки. Пожалуйста, попробуйте позже.");
+                return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT)
+                        .body("Платежный шлюз не ответил вовремя при отмене подписки. Пожалуйста, попробуйте позже.");
             } else if (cause != null) {
-                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Платежный шлюз временно не доступен для отмены: " + cause.getMessage());
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Платежный шлюз временно не доступен для отмены: "
+                        + cause.getMessage());
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("При отмене подписки возникла непредвиденная ошибка.");
         } catch (InterruptedException e) {
@@ -137,7 +143,8 @@ public class SubscriptionController {
      **/
     @GetMapping("/history")
     @Operation(summary = "Получить историю подписок пользователя",
-            description = "Возвращает список всех прошлых и текущих подписок для указанного пользователя, отсортированных по дате создания в обратном порядке.")
+            description = "Возвращает список всех прошлых и текущих подписок для указанного пользователя, "
+                    + "отсортированных по дате создания в обратном порядке.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список записей истории подписок",
                     content = @Content(mediaType = "application/json",
@@ -145,7 +152,8 @@ public class SubscriptionController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     public ResponseEntity<List<SubscriptionHistoryDto>> getSubscriptionHistory(
-            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чью историю подписок необходимо получить", required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
+            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чью историю подписок необходимо получить",
+                    required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId) {
         log.info("Получен запрос на получение истории подписок для пользователя userId: {}", userId);
         final List<SubscriptionHistoryDto> history = subscriptionService.getSubscriptionHistory(userId);
@@ -163,11 +171,13 @@ public class SubscriptionController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserSubscriptionDto.class))),
             @ApiResponse(responseCode = "404", description = "Активная подписка не найдена для пользователя",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "Активная подписка не найдена для пользователя: [userId]"))),
+                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string",
+                            example = "Активная подписка не найдена для пользователя: [userId]"))),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     public ResponseEntity<UserSubscriptionDto> getActiveSubscription(
-            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чью активную подписку необходимо получить", required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
+            @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чью активную подписку необходимо получить",
+                    required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId) {
         log.info("Получен запрос на информацию об активной подписке для пользователя userId: {}", userId);
         return subscriptionService.getActiveSubscription(userId)
