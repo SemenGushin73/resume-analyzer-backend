@@ -1,11 +1,8 @@
 package webapp.subscriptionservice.domain.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import ru.kata.project.model.SubscriptionEventType;
 import ru.kata.project.model.SubscriptionType;
 
@@ -14,59 +11,36 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Класс для хранения истории событий, связанных с подписками
+ * Класс, представляющий историю событий, связанных с подписками, в доменной модели.
+ * Он содержит только бизнес-атрибуты и поведение, без привязки к конкретной технологии хранения данных.
  **/
-@Entity
-@Table(name = "subscription_history")
 @Data
 @NoArgsConstructor
 public class SubscriptionHistory {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @Column(nullable = false)
     private UUID userId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SubscriptionType type;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SubscriptionEventType eventType;
-
-    @Column(nullable = false, updatable = false)
+    private JsonNode meta; // JsonNode остается в домене для гибкости метаданных
     private LocalDateTime createdAt;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private JsonNode meta;
-
     public SubscriptionHistory(UUID userId, SubscriptionType type, SubscriptionEventType eventType, JsonNode meta) {
+        this.id = UUID.randomUUID(); // Доменный объект сам генерирует свой ID
         this.userId = userId;
         this.type = type;
         this.eventType = eventType;
         this.meta = meta;
+        this.createdAt = LocalDateTime.now();
     }
 
-    public SubscriptionHistory(UUID userId, SubscriptionType type, SubscriptionEventType eventType, JsonNode meta, LocalDateTime createdAt) {
+    public SubscriptionHistory(UUID id, UUID userId, SubscriptionType type, SubscriptionEventType eventType, JsonNode meta, LocalDateTime createdAt) {
+        this.id = id;
         this.userId = userId;
         this.type = type;
         this.eventType = eventType;
         this.meta = meta;
         this.createdAt = createdAt;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        if (id == null) {
-            id = UUID.randomUUID();
-        }
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
     }
 
     @Override
@@ -83,10 +57,6 @@ public class SubscriptionHistory {
 
     @Override
     public int hashCode() {
-        if (id != null) {
-            return Objects.hash(id);
-        } else {
-            return 0;
-        }
+        return Objects.hash(id);
     }
 }

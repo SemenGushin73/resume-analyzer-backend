@@ -315,6 +315,17 @@ services:
       - SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=${GIT_USER}
       - SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${GIT_PASS}
 
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel
+    command: tunnel --protocol auto run
+    volumes:
+      - ./config/cloudflared/config.yml:/etc/cloudflared/config.yml
+      - ./config/cloudflared/creds.json:/etc/cloudflared/creds.json
+    restart: always
+    networks:
+      - default
+
   subscription-service:
     image: subscription-service
     container_name: subscription-service
@@ -334,6 +345,7 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      APP_CALLBACK_URL: https://yookassa.bruschatka-okt.ru/api/v1/payment/callback
       OTEL_SERVICE_NAME: "subscription-service"
       OTEL_TRACES_EXPORTER: "otlp"
       OTEL_METRICS_EXPORTER: "otlp"

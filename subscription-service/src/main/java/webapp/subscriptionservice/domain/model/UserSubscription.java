@@ -1,7 +1,5 @@
 package webapp.subscriptionservice.domain.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.kata.project.model.PaymentProvider;
@@ -13,61 +11,69 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Класс с информацией об активных и прошлых подписках пользователя
+ * Класс, представляющий текущую или прошлую подписку пользователя в доменной модели.
+ * Содержит только бизнес-атрибуты и поведение, без привязки к конкретной технологии хранения данных.
  **/
-@Entity
-@Table(name = "user_subscriptions")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserSubscription {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @Column(nullable = false)
     private UUID userId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SubscriptionType type;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SubscriptionStatus status;
-
-    @Column(nullable = false)
     private LocalDateTime startedAt;
-
     private LocalDateTime expiresAt;
-
-    @Enumerated(EnumType.STRING)
     private PaymentProvider paymentProvider;
-
     private String externalPaymentId;
-
     private String paymentSessionUrl;
     private String qrCodeData;
-
-    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        if (id == null) {
-            id = UUID.randomUUID();
-        }
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+    public UserSubscription(UUID userId, SubscriptionType type, SubscriptionStatus status,
+                            PaymentProvider paymentProvider, String externalPaymentId,
+                            String paymentSessionUrl, String qrCodeData) {
+        this.id = UUID.randomUUID();
+        this.userId = userId;
+        this.type = type;
+        this.status = status;
+        this.startedAt = LocalDateTime.now();
+        this.paymentProvider = paymentProvider;
+        this.externalPaymentId = externalPaymentId;
+        this.paymentSessionUrl = paymentSessionUrl;
+        this.qrCodeData = qrCodeData;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public UserSubscription(UUID id, UUID userId, SubscriptionType type, SubscriptionStatus status,
+                            LocalDateTime startedAt, LocalDateTime expiresAt, PaymentProvider paymentProvider,
+                            String externalPaymentId, String paymentSessionUrl, String qrCodeData,
+                            LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.userId = userId;
+        this.type = type;
+        this.status = status;
+        this.startedAt = startedAt;
+        this.expiresAt = expiresAt;
+        this.paymentProvider = paymentProvider;
+        this.externalPaymentId = externalPaymentId;
+        this.paymentSessionUrl = paymentSessionUrl;
+        this.qrCodeData = qrCodeData;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public void activate(LocalDateTime newExpiresAt) {
+        this.status = SubscriptionStatus.ACTIVE;
+        this.expiresAt = newExpiresAt;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void cancel() {
+        this.status = SubscriptionStatus.INACTIVE;
+        this.updatedAt = LocalDateTime.now();
     }
 
     @Override
@@ -84,10 +90,6 @@ public class UserSubscription {
 
     @Override
     public int hashCode() {
-        if (id != null) {
-            return Objects.hash(id);
-        } else {
-            return 0;
-        }
+        return Objects.hash(id);
     }
 }

@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 import ru.kata.project.exception.PaymentGatewayException;
 import ru.kata.project.model.SubscriptionType;
 import webapp.subscriptionservice.domain.service.PaymentGatewayService;
+
 import java.io.IOException;
 import java.util.Base64;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Класс отвечает за взаимодействие с внешним платежным шлюзом
@@ -54,16 +57,25 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
     private String appCallbackUrl;
 
     /**
+     * Регулярные выражения для поиска чувствительных данных
+     **/
+    private static final Pattern SENSITIVE_DATA_PATTERN = Pattern.compile(
+            "\"(token|auth_key|secret|password|api_key|access_token)\"\\s*:\\s*\"([^\"]+)\"",
+            Pattern.CASE_INSENSITIVE
+    );
+
+    /**
      * URL приложения, куда YooKassa будет отправлять коллбэки
      **/
     private static final String PAYMENT_GATEWAY_CIRCUIT_BREAKER = "paymentGatewayCircuitBreaker";
 
     /**
      * Вспомогательный метод для построения JSON-тела запроса на создание платежа.
+     *
      * @param amountValue сумма
      * @param callbackUrl URL коллбэка приложения
-     * @param userId идентификатор пользователя
-     * @param type тип подписки
+     * @param userId      идентификатор пользователя
+     * @param type        тип подписки
      * @param description описание платежа
      * @return JSON-строка для тела запроса
      */
@@ -80,6 +92,57 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
                 amountValue, callbackUrl, userId, type, description, userId, type
         );
     }
+
+    /**
+     * Маскирует чувствительные данные в строке JSON.
+     * Ищет поля, содержащие потенциально конфиденциальную информацию (например, токены, ключи),
+     * и заменяет их значения на маскированную строку.
+     *
+     * @param jsonBody JSON-строка, которую нужно маскировать.
+     * @return JSON-строка с маскированными чувствительными данными.
+     */
+    private String maskSensitiveData(String jsonBody) {
+        if (jsonBody == null || jsonBody.isEmpty()) {
+            return jsonBody;
+        }
+        final Matcher matcher = SENSITIVE_DATA_PATTERN.matcher(jsonBody);
+        final StringBuffer maskedBody = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(maskedBody, "\"" + matcher.group(1) + "\":\"[***MASKED***]\"");
+        }
+        matcher.appendTail(maskedBody);
+        return maskedBody.toString();
+    }
+
+    /**
+     * Метод для отправки HTTP-запроса и обработки ответа.
+     *
+     * @param request Объект OkHttp Request для выполнения.
+     * @return Представление JsonNode тела ответа.
+     * @throws PaymentGatewayException Если произошла ошибка во время HTTP-запроса или обработки ответа.
+     */
+    private JsonNode sendHttpRequest(Request request) throws PaymentGatewayException {
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                final String responseBody;
+                if (response.body() != null) {
+                    responseBody = response.body().string();
+                } else {
+                    responseBody = "нет ответа";
+                }
+                log.error("Ошибка при выполнении запроса к платежному шлюзу. Status: {}, Body: {}",
+                        response.code(), maskSensitiveData(responseBody));
+                throw new PaymentGatewayException("Ошибка при взаимодействии с платежным шлюзом: " + responseBody);
+            }
+
+            final String responseBody = response.body().string();
+            return objectMapper.readTree(responseBody);
+        } catch (IOException e) {
+            log.error("IO ошибка при выполнении HTTP запроса", e);
+            throw new PaymentGatewayException("Ошибка сети или сериализации/десериализации при взаимодействии с платежным шлюзом", e);
+        }
+    }
+
     /**
      * Метод для создания новой платежной сессии в YooKassa для оформления подписки
      **/
@@ -107,34 +170,18 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
                         .post(body)
                         .build();
 
-                try (Response response = httpClient.newCall(request).execute()) {
-                    if (!response.isSuccessful()) {
-                        final String responseBody;
-                        if (response.body() != null) {
-                            responseBody = response.body().string();
-                        } else {
-                            responseBody = "нет ответа";
-                        }
-                        log.error("Ошибка при создании платежной сессии Yookassa. Status: {}, Body: {}",
-                                response.code(), responseBody);
-                        throw new PaymentGatewayException("Ошибка при создании платежной сессии: " + responseBody);
-                    }
+                final JsonNode rootNode = sendHttpRequest(request);
 
-                    final String responseBody = response.body().string();
-                    final JsonNode rootNode = objectMapper.readTree(responseBody);
+                final String paymentId = rootNode.path("id").asText();
+                final String confirmationUrl = rootNode.path("confirmation").path("confirmation_url").asText();
+                final String qrCode = rootNode.path("confirmation").path("qr_code").asText();
 
-                    final String paymentId = rootNode.path("id").asText();
-                    final String confirmationUrl = rootNode.path("confirmation").path("confirmation_url").asText();
-                    final String qrCode = rootNode.path("confirmation").path("qr_code").asText();
+                return new PaymentGatewayService.PaymentSessionResponse(paymentId, confirmationUrl, qrCode);
 
-                    return new PaymentGatewayService.PaymentSessionResponse(paymentId, confirmationUrl, qrCode);
-
-                } catch (IOException e) {
-                    log.error("IO ошибка при создании платежной сессии", e);
-                    throw new PaymentGatewayException("IO при создании платежной сессии", e);
-                }
+            } catch (PaymentGatewayException e) {
+                throw e;
             } catch (Exception e) {
-                log.error("Exception при создании платежной сессии", e);
+                log.error("Исключение при создании платежной сессии", e);
                 throw new PaymentGatewayException("Ошибка при создании платежной сессии", e);
             }
         });
@@ -143,11 +190,11 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
     /**
      * Fallback метод для основного метода создания платежной сессии.
      * Вызывается, если основной метод createPaymentSession завершается неудачей.
-     * Логирует причину вызова и выбрасывает исключение
+     * Логирует причину вызова и выбрасывает исключение.
      **/
     private CompletableFuture<PaymentSessionResponse> createPaymentSessionFallback(
             UUID userId, SubscriptionType type, double amount, String description, Throwable t) {
-        log.warn("Fallback triggered for createPaymentSession due to: {}", t.getMessage());
+        log.warn("Вызван fallback для createPaymentSession из-за: {}", t.getMessage());
         throw new PaymentGatewayException("Платежный шлюз временно недоступен. Попробуйте позже. Статус подписки установлен на CANCELLED.", t);
     }
 
@@ -166,10 +213,13 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
                 log.info("Попытка отменить платеж с ID: {}. (Симуляция для sandbox режима платежного шлюза YooKassa)", paymentId);
 
                 /** В Sandbox режиме просто возвращаем true. В реальной интеграции для отмены платежа нужно отправлять запрос
-                 на /refunds, а не просто возвращать true. **/
+                 * на /refunds, а не просто возвращать true.
+                 **/
                 return true; // Временно возвращаем true для sandbox
+            } catch (PaymentGatewayException e) {
+                throw e;
             } catch (Exception e) {
-                log.error("Exception при отмене платежа Yookassa", e);
+                log.error("Исключение при отмене платежа Yookassa", e);
                 throw new PaymentGatewayException("Ошибка отмены платежа", e);
             }
         });
@@ -178,10 +228,10 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
     /**
      * Fallback метод для основного метода отмены платежа.
      * Вызывается, если основной метод завершается неудачей.
-     * Логирует причину вызова и выбрасывает исключение
+     * Логирует причину вызова и выбрасывает исключение.
      **/
     private CompletableFuture<Boolean> cancelPaymentFallback(String paymentId, Throwable t) {
-        log.warn("Fallback triggered for cancelPayment due to: {}", t.getMessage());
+        log.warn("Вызван fallback для cancelPayment из-за: {}", t.getMessage());
         throw new PaymentGatewayException("Платежный шлюз временно недоступен для отмены. Попробуйте позже.", t);
     }
 

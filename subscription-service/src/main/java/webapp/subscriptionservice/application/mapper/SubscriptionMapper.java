@@ -26,7 +26,10 @@ public interface SubscriptionMapper {
 
     default SubscriptionMetaDto mapMeta(JsonNode jsonNode) {
         if (jsonNode == null) {
-            return null;
+            final SubscriptionMetaDto dto = new SubscriptionMetaDto();
+            dto.setError("Метаданные отсутствуют");
+            dto.setDetails("Исходный JsonNode был null.");
+            return dto;
         }
 
         try {
@@ -34,7 +37,7 @@ public interface SubscriptionMapper {
         } catch (JsonProcessingException e) {
             final SubscriptionMetaDto dto = new SubscriptionMetaDto();
             dto.setError("Ошибка конвертации метаданных");
-            dto.setDetails(jsonNode.toString());
+            dto.setDetails(jsonNode.toString() + " | Ошибка: " + e.getMessage());
             return dto;
         }
     }

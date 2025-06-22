@@ -1,5 +1,6 @@
 package webapp.subscriptionservice.domain.service;
 
+import ru.kata.project.model.PaymentStatus;
 import ru.kata.project.model.SubscriptionType;
 import ru.kata.project.subscriptionDto.PaymentSessionResponseDto;
 import ru.kata.project.subscriptionDto.SubscriptionHistoryDto;
@@ -19,5 +20,5 @@ public interface SubscriptionService {
 
     Optional<UserSubscriptionDto> getActiveSubscription(UUID userId);
 
-    void handlePaymentCallback(String paymentId, String status, String metadataJson);
+    void handlePaymentCallback(String paymentId, PaymentStatus status, String metadataJson);
 }

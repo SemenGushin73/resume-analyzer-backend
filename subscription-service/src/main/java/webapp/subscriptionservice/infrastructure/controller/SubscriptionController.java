@@ -46,7 +46,7 @@ public class SubscriptionController {
     @Operation(summary = "Создать новую подписку и платежную сессию",
             description = "Инициирует процесс создания подписки для пользователя, "
                     + "возвращает URL для оплаты или QR-код. "
-                    + "Статус подписки будет 'CANCELLED' до успешного коллбэка от платежного шлюза.")
+                    + "Статус подписки будет 'INACTIVE' до успешного коллбэка от платежного шлюза.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Подписка создана, возвращены данные платежной сессии",
                     content = @Content(mediaType = "application/json",

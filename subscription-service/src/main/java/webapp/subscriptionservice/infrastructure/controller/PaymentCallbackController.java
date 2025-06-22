@@ -16,13 +16,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kata.project.model.PaymentStatus;
 import webapp.subscriptionservice.domain.service.SubscriptionService;
+
 
 /**
  * Контроллер для обработки коллбэков от внешних платежных шлюзов
  **/
 @RestController
-@RequestMapping("/payments")
+@RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Платежные Колбэки (Сервер-сервер)",
@@ -58,11 +60,12 @@ public class PaymentCallbackController {
             final String event = payload.path("event").asText();
             final JsonNode objectNode = payload.path("object");
             final String paymentId = objectNode.path("id").asText();
-            final String status = objectNode.path("status").asText();
+            final String statusString = objectNode.path("status").asText();
             final JsonNode metadataNode = objectNode.path("metadata");
 
-            log.info("Обработка события Yookassa: {}, payment ID: {}, status: {}", event, paymentId, status);
+            log.info("Обработка события Yookassa: {}, payment ID: {}, status: {}", event, paymentId, statusString);
 
+            final PaymentStatus paymentStatus = PaymentStatus.fromString(statusString);
             String metadataJson = "";
             if (metadataNode != null && !metadataNode.isNull() && !metadataNode.isEmpty()) {
                 try {
@@ -73,7 +76,7 @@ public class PaymentCallbackController {
                     metadataJson = "{\"serialization_error\": \"" + e.getMessage() + "\"}";
                 }
             }
-            subscriptionService.handlePaymentCallback(paymentId, status, metadataJson);
+            subscriptionService.handlePaymentCallback(paymentId, paymentStatus, metadataJson);
             return ResponseEntity.ok("Коллбэк успешно обработан");
 
         } catch (Exception e) {

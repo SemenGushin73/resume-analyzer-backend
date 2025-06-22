@@ -19,7 +19,7 @@ import java.util.UUID;
  * после завершения или отмены оплаты. Он предоставляет текстовые сообщения для пользователя.
  **/
 @RestController
-@RequestMapping("/subscriptions")
+@RequestMapping("/api/v1/payment/callback/subscriptions")
 @Slf4j
 @Tag(name = "Подтверждение Платежей (Публичное API)", description = "Эндпоинты для редиректа пользователя от платежного шлюза (без фронтенда).")
 public class ConfirmationController {
