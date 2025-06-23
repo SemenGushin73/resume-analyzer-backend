@@ -13,19 +13,17 @@
     const socket = new SockJS('http://localhost:8085/ws');
     const stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function(frame) {
+    stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-        // Подписываемся на тему для ответов
-        stompClient.subscribe('/user/queue/replies', function(response) {
+        stompClient.subscribe('/topic/replies', function (response) {
             const data = JSON.parse(response.body);
             console.log('Ответ:', data);
             document.getElementById('output').innerHTML +=
                 `<p><strong>Ответ:</strong> ${data.answer} (fallback: ${data.isFallback})</p>`;
         });
 
-        // Подписываемся на тему для ошибок
-        stompClient.subscribe('/user/queue/errors', function(error) {
+        stompClient.subscribe('/topic/errors', function (error) {
             console.error('Ошибка:', error.body);
         });
     });

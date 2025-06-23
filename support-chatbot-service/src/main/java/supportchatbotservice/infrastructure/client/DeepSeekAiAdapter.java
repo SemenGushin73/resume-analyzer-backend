@@ -23,6 +23,7 @@ public class DeepSeekAiAdapter implements AiServicePort {
     public String getAiResponse(String message) {
         log.info("Отправка запроса к DeepSeek: {}", message);
         String prompt = PromptTemplates.formatPrompt(message);
+
         DeepSeekResponseDTO response = deepSeekClient.askAI(new DeepSeekRequestDTO(prompt));
         log.info("Получен ответ от DeepSeek: {}", response.getAnswer());
         return response.getAnswer();

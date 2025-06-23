@@ -37,6 +37,7 @@ public class ChatBotWebSocketController {
     @Operation(summary = "Handle chat message",
             description = "Processes user chat message and returns response via WebSocket")
     public void handleChatMessage(ChatRequestDTO request, Principal principal) {
+        log.info("📨 WebSocket сообщение получено: {}", request.getMessage());
         chatBotAppService.handleUserMessage(request, principal);
     }
 }

@@ -1,6 +1,7 @@
 package supportchatbotservice.application.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import supportchatbotservice.application.dto.ChatRequestDTO;
 import supportchatbotservice.application.dto.ChatResponseDTO;
@@ -14,6 +15,7 @@ import java.security.Principal;
 /**
  * Сервис для обработки сообщений пользователя и координации работы чат-бота.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatBotAppService {
@@ -21,19 +23,19 @@ public class ChatBotAppService {
     private final MessageSenderPort messageSender;
 
     public void handleUserMessage(ChatRequestDTO request, Principal principal) {
+        String sessionId = request.getSessionId(); // используем sessionId как уникальный идентификатор клиента
         try {
-            String username = (principal != null) ? principal.getName() : "anonymous";
-            final BotResponse response = supportBotService.processMessage(
-                    new ChatMessage(request.getMessage(), request.getSessionId())
+            log.info("WebSocket сообщение получено: {}", request.getMessage());
+
+            BotResponse response = supportBotService.processMessage(
+                    new ChatMessage(request.getMessage(), sessionId)
             );
 
-            messageSender.sendResponse(
-                    username,
-                    new ChatResponseDTO(response.getContent(), response.isFallback())
-            );
+            log.info("Ответ пользователю [{}]: {} (fallback: {})", sessionId, response.getContent(), response.isFallback());
+            messageSender.sendResponse(sessionId, new ChatResponseDTO(response.getContent(), response.isFallback()));
+
         } catch (Exception ex) {
-            String username = (principal != null) ? principal.getName() : "anonymous";
-            messageSender.sendError(username, ex.getMessage());
+            messageSender.sendError(sessionId, ex.getMessage());
         }
     }
 }

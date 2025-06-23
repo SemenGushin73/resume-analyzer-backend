@@ -17,19 +17,11 @@ public class WebSocketMessageSender implements MessageSenderPort {
 
     @Override
     public void sendResponse(String user, ChatResponseDTO response) {
-        messagingTemplate.convertAndSendToUser(
-                user,
-                "/queue/replies",
-                response
-        );
+        messagingTemplate.convertAndSend("/topic/replies", response);
     }
 
     @Override
     public void sendError(String user, String error) {
-        messagingTemplate.convertAndSendToUser(
-                user,
-                "/queue/errors",
-                new ErrorResponseDTO(error)
-        );
+        messagingTemplate.convertAndSend("/topic/errors", new ErrorResponseDTO(error));
     }
 }

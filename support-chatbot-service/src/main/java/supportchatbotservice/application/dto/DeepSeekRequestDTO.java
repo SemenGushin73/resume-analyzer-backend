@@ -12,10 +12,11 @@ import java.util.Objects;
  */
 @Getter
 public class DeepSeekRequestDTO {
-    private String model = "deepseek/deepseek-chat";
+    private String model;
     private List<Message> messages;
 
     public DeepSeekRequestDTO(String prompt) {
+        this.model = System.getenv().getOrDefault("DEEPSEEK_MODEL", "deepseek/deepseek-chat");
         this.messages = List.of(new Message("user", prompt));
     }
 

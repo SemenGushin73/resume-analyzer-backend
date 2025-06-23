@@ -52,6 +52,7 @@ docker compose -f docker-compose.yml up -d
 ### 📚 Документация Swagger:
 
 - [http://localhost:8765/swagger-ui/index.html](http://localhost:8765/analyzer/swagger-ui/index.html)
+- ChatBot API: [http://localhost:8085/swagger-ui/index.html](http://localhost:8085/swagger-ui/index.html)
 
 ### 🔧 Примеры запросов:
 
@@ -91,7 +92,7 @@ POST /resumes/files/upload
 #### 2. Документация ChatBot Service API
 
 ```http
-POST /api/chatbot/ask
+POST /api/chat/send
 Content-Type: application/json
 ```
 
@@ -107,6 +108,19 @@ Content-Type: application/json
   "sessionId": "user123"
 }
 ```
+
+WebSocket взаимодействие:
+
+1. Открыть соединение: `ws://localhost:8085/ws`
+2. Отправка сообщения (в формате JSON по каналу `/app/chat`):
+
+```json
+{
+  "message": "question1",
+  "sessionId": "session123"
+}
+```
+Или просто через файл websocket-test.html.
 
 ### Архитектура
 
