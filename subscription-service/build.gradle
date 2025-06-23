@@ -22,7 +22,6 @@ java {
 }
 
 bootJar {
-    archiveFileName = "subscription-service.jar"
     layered {
         enabled = true
         includeLayerTools = true
