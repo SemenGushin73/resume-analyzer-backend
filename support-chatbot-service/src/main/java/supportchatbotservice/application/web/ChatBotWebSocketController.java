@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import supportchatbotservice.application.dto.ChatRequestDTO;
-import supportchatbotservice.application.dto.ErrorResponseDTO;
+import ru.kata.project.chatbotDTO.ChatRequestDTO;
+import ru.kata.project.chatbotDTO.ErrorResponseDTO;
 import supportchatbotservice.application.service.ChatBotAppService;
 import supportchatbotservice.domain.exception.AiServiceException;
 import supportchatbotservice.domain.exception.DomainValidationException;
@@ -37,7 +37,7 @@ public class ChatBotWebSocketController {
     @Operation(summary = "Handle chat message",
             description = "Processes user chat message and returns response via WebSocket")
     public void handleChatMessage(ChatRequestDTO request, Principal principal) {
-        log.info("📨 WebSocket сообщение получено: {}", request.getMessage());
+        log.info("WebSocket сообщение получено: {}", request.getMessage());
         chatBotAppService.handleUserMessage(request, principal);
     }
 }

@@ -2,13 +2,14 @@ package supportchatbotservice.application.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import supportchatbotservice.application.dto.ChatRequestDTO;
+import ru.kata.project.chatbotDTO.ChatRequestDTO;
 import supportchatbotservice.application.service.ChatBotAppService;
 
 import java.security.Principal;
@@ -25,7 +26,7 @@ public class ChatController {
 
     @PostMapping("/send")
     @Operation(summary = "Отправить сообщение в чат и получить ответ")
-    public ResponseEntity<String> sendMessage(@RequestBody ChatRequestDTO request, Principal principal) {
+    public ResponseEntity<String> sendMessage(@Valid @RequestBody ChatRequestDTO request, Principal principal) {
         chatBotAppService.handleUserMessage(request, principal != null ? principal : () -> "rest-user");
         return ResponseEntity.ok("Сообщение обработано");
     }

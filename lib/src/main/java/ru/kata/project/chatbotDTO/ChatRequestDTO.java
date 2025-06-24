@@ -1,6 +1,7 @@
-package supportchatbotservice.application.dto;
+package ru.kata.project.chatbotDTO;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -10,7 +11,11 @@ import java.util.Objects;
  */
 @Getter
 public class ChatRequestDTO {
+
+    @NotBlank(message = "Message cannot be blank")
     private String message;
+
+    @NotBlank(message = "SessionId cannot be blank")
     private String sessionId;
 
     public ChatRequestDTO() {

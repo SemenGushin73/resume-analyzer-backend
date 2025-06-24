@@ -4,10 +4,12 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import supportchatbotservice.application.dto.DeepSeekResponseDTO;
+import ru.kata.project.chatbotDTO.AIRequestDTO;
+import ru.kata.project.chatbotDTO.AIResponseDTO;
 import supportchatbotservice.application.utils.PromptTemplates;
 import supportchatbotservice.domain.ports.AiServicePort;
-import supportchatbotservice.application.dto.DeepSeekRequestDTO;
+
+import java.util.Optional;
 
 /**
  * Адаптер для работы с DeepSeek AI API.
@@ -20,17 +22,17 @@ public class DeepSeekAiAdapter implements AiServicePort {
 
     @Override
     @CircuitBreaker(name = "deepseek", fallbackMethod = "fallback")
-    public String getAiResponse(String message) {
+    public Optional<String> getAiResponse(String message) {
         log.info("Отправка запроса к DeepSeek: {}", message);
         String prompt = PromptTemplates.formatPrompt(message);
 
-        DeepSeekResponseDTO response = deepSeekClient.askAI(new DeepSeekRequestDTO(prompt));
+        AIResponseDTO response = deepSeekClient.askAI(new AIRequestDTO(prompt, "session-default"));
         log.info("Получен ответ от DeepSeek: {}", response.getAnswer());
         return response.getAnswer();
     }
 
-    private String fallback(String message, Exception ex) {
-        log.error("Ошибка при запросе к DeepSeek: {}", ex.getMessage());
-        return "Сервис временно недоступен";
+    public Optional<String> fallback(String userMessage, Throwable t) {
+        log.warn("Fallback сработал из-за ошибки: {}", t.getMessage());
+        return Optional.of("Извините, временно не могу обработать запрос. Попробуйте позже.");
     }
 }

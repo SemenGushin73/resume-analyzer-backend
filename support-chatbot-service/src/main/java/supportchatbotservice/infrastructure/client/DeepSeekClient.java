@@ -3,8 +3,8 @@ package supportchatbotservice.infrastructure.client;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import supportchatbotservice.application.dto.DeepSeekRequestDTO;
-import supportchatbotservice.application.dto.DeepSeekResponseDTO;
+import ru.kata.project.chatbotDTO.AIRequestDTO;
+import ru.kata.project.chatbotDTO.AIResponseDTO;
 
 
 /**
@@ -18,5 +18,5 @@ import supportchatbotservice.application.dto.DeepSeekResponseDTO;
 public interface DeepSeekClient {
 
     @PostMapping("/v1/chat/completions")
-    DeepSeekResponseDTO askAI(@RequestBody DeepSeekRequestDTO request);
+    AIResponseDTO askAI(@RequestBody AIRequestDTO request);
 }

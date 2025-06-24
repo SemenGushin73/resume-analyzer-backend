@@ -3,8 +3,8 @@ package supportchatbotservice.application.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import supportchatbotservice.application.dto.ChatRequestDTO;
-import supportchatbotservice.application.dto.ChatResponseDTO;
+import ru.kata.project.chatbotDTO.ChatRequestDTO;
+import ru.kata.project.chatbotDTO.ChatResponseDTO;
 import supportchatbotservice.domain.model.BotResponse;
 import supportchatbotservice.domain.model.ChatMessage;
 import supportchatbotservice.domain.ports.MessageSenderPort;
@@ -23,7 +23,7 @@ public class ChatBotAppService {
     private final MessageSenderPort messageSender;
 
     public void handleUserMessage(ChatRequestDTO request, Principal principal) {
-        String sessionId = request.getSessionId(); // используем sessionId как уникальный идентификатор клиента
+        String sessionId = request.getSessionId();
         try {
             log.info("WebSocket сообщение получено: {}", request.getMessage());
 

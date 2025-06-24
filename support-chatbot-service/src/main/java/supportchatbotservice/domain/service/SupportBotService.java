@@ -30,7 +30,7 @@ public class SupportBotService {
         }
 
         try {
-            final String aiResponse = aiService.getAiResponse(message.getContent());
+            final String aiResponse = aiService.getAiResponse(message.getContent()).orElse("Ответ не получен");
             if (aiResponse == null || aiResponse.isBlank()) {
                 throw new AiServiceException("Empty response from AI");
             }

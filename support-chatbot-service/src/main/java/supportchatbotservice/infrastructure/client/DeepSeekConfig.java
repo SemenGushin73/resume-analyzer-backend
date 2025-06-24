@@ -22,7 +22,7 @@ public class DeepSeekConfig {
             throw new IllegalStateException("API KEY not provided");
         }
 
-        log.info("✅ Loaded DEEPSEEK_API_KEY: {}...", apiKey.substring(0, 8));
+        log.info("Loaded DEEPSEEK_API_KEY: {}...", apiKey.substring(0, 8));
         return request -> {
             request.header("Authorization", "Bearer " + apiKey);
             request.header("Content-Type", "application/json");

@@ -3,8 +3,8 @@ package supportchatbotservice.infrastructure.websocket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import supportchatbotservice.application.dto.ChatResponseDTO;
-import supportchatbotservice.application.dto.ErrorResponseDTO;
+import ru.kata.project.chatbotDTO.ChatResponseDTO;
+import ru.kata.project.chatbotDTO.ErrorResponseDTO;
 import supportchatbotservice.domain.ports.MessageSenderPort;
 
 /**

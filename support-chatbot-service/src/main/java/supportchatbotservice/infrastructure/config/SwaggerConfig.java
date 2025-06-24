@@ -2,6 +2,7 @@ package supportchatbotservice.infrastructure.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,5 +18,13 @@ public class SwaggerConfig {
                         .title("Support Chatbot Service API")
                         .version("1.0")
                         .description("API documentation for Support Chatbot Service"));
+    }
+
+    @Bean
+    public GroupedOpenApi actuatorApi() {
+        return GroupedOpenApi.builder()
+                .group("actuator")
+                .pathsToMatch("/actuator/**")
+                .build();
     }
 }

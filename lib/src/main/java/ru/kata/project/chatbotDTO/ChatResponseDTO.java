@@ -1,4 +1,4 @@
-package supportchatbotservice.application.dto;
+package ru.kata.project.chatbotDTO;
 
 
 import lombok.Getter;

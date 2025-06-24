@@ -1,6 +1,7 @@
 package supportchatbotservice.domain.ports;
 
-import supportchatbotservice.application.dto.ChatResponseDTO;
+
+import ru.kata.project.chatbotDTO.ChatResponseDTO;
 
 /**
  * Порт для отправки сообщений через WebSocket.
