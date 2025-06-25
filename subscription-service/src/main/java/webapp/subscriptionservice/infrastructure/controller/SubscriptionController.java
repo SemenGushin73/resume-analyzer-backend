@@ -81,24 +81,29 @@ public class SubscriptionController {
             final PaymentSessionResponseDto response = subscriptionService.createSubscription(request.getUserId(), request.getType());
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (ExecutionException e) {
-            log.error("ExecutionException во время создания подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
+            log.error("ExecutionException во время создания подписки для пользователя userId: {}",
+                    LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
             final Throwable cause = e.getCause();
             if (cause instanceof TimeoutException) {
                 return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Платежный шлюз не ответил в срок. Пожалуйста попробуйте позже.");
             } else if (cause != null) {
-                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Платежный шлюз временно недоступен: " + LogSanitizer.sanitizeLogInput(cause.getMessage()));
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Платежный шлюз временно недоступен: "
+                        + LogSanitizer.sanitizeLogInput(cause.getMessage()));
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Неожиданная ошибка во время создания подписки для пользователя.");
         } catch (InterruptedException e) {
-            log.error("InterruptedException во время создания подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
+            log.error("InterruptedException во время создания подписки для пользователя userId: {}",
+                    LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
             Thread.currentThread().interrupt();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Создание подписки прервано.");
         } catch (IllegalArgumentException e) {
-            log.warn("Неверный запрос на создание подписки для пользователя userId: {}: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), LogSanitizer.sanitizeLogInput(e.getMessage()));
+            log.warn("Неверный запрос на создание подписки для пользователя userId: {}: {}",
+                    LogSanitizer.sanitizeLogInput(request.getUserId().toString()), LogSanitizer.sanitizeLogInput(e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             log.error("Ошибка при создании подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла неожиданная ошибка: " + LogSanitizer.sanitizeLogInput(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла неожиданная ошибка: "
+                    + LogSanitizer.sanitizeLogInput(e.getMessage()));
         }
     }
 
@@ -152,7 +157,8 @@ public class SubscriptionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Отмена подписки прервана.");
         } catch (Exception e) {
             log.error("Ошибка при отмене подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(userId.toString()), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла непредвиденная ошибка: " + LogSanitizer.sanitizeLogInput(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла непредвиденная ошибка: "
+                    + LogSanitizer.sanitizeLogInput(e.getMessage()));
         }
     }
 

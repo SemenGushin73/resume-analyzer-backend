@@ -48,11 +48,11 @@ spring:
 
 payment:
   yookassa:
-    shop-id: 1102577 # Заменить на реальный ID магазина
-    secret-key: test_9i8rruDAr_-6SiZPrBvLG1B7-aPgB_m5lCRqXkQwS9Q # Заменить на реальный секретный ключ
+    shop-id: 1113767 # Заменить на реальный ID магазина
+    secret-key: test_5aGQmflF45UDbsAHeL0xsZ4T97fnhX9qX42sxwgzVcI # Заменить на реальный секретный ключ
     base-url: https://api.yookassa.ru/v3 # этот URL одинаковый для всех операций и тестовых и нет
 app:
-  # это URL, по которому платежная система (в данном случае Yookassa) будет отправлять уведомления о статусе платежа. Это должен быть адрес, доступный извне или, в данном случае, внутри вашей Docker-сети, который Yookassa может достичь.
+  # Это URL, по которому платежная система (в данном случае Yookassa) будет отправлять уведомления о статусе платежа. Это должен быть адрес, доступный извне или, в данном случае, внутри вашей Docker-сети, который Yookassa может достичь.
   callback-url: https://yookassa.bruschatka-okt.ru/api/v1/payment/callback # Пример URL, измените по необходимости.
 
 logging:

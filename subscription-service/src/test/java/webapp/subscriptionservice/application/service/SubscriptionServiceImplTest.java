@@ -107,7 +107,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE))
                 .thenReturn(Optional.empty());
 
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -116,13 +116,13 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByUserId(userId)).thenReturn(Optional.empty());
         when(userSubscriptionRepository.save(any())).thenReturn(entity);
 
-        PaymentGatewayService.PaymentSessionResponse response =
+        final PaymentGatewayService.PaymentSessionResponse response =
                 new PaymentGatewayService.PaymentSessionResponse("pay1", "url", "qr");
         when(paymentGatewayService.createPaymentSession(any(), any(), anyDouble(), anyString()))
                 .thenReturn(CompletableFuture.completedFuture(response));
 
         // When
-        PaymentSessionResponseDto result = subscriptionService.createSubscription(userId, type);
+        final PaymentSessionResponseDto result = subscriptionService.createSubscription(userId, type);
 
         // Then
         verify(userSubscriptionRepository, times(2)).save(any());
@@ -140,7 +140,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE))
                 .thenReturn(Optional.empty());
 
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -149,12 +149,12 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByUserId(userId)).thenReturn(Optional.empty());
         when(userSubscriptionRepository.save(any())).thenReturn(entity);
 
-        PaymentGatewayService.PaymentSessionResponse response =
+        final PaymentGatewayService.PaymentSessionResponse response =
                 new PaymentGatewayService.PaymentSessionResponse("pay1", "url", "qr");
         when(paymentGatewayService.createPaymentSession(any(), any(), anyDouble(), anyString()))
                 .thenThrow(new PaymentGatewayException("Gateway error"));
 
-        SubscriptionHistoryEntity historyEntity = new SubscriptionHistoryEntity();
+        final SubscriptionHistoryEntity historyEntity = new SubscriptionHistoryEntity();
         when(subscriptionHistoryPersistenceMapper.toEntity(any())).thenReturn(historyEntity);
 
         // When & Then
@@ -173,7 +173,7 @@ class SubscriptionServiceImplTest {
     @Test
     void cancelSubscription_whenActiveExists_shouldCancel() throws Exception {
         // Given
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -183,7 +183,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE))
                 .thenReturn(Optional.of(entity));
 
-        UserSubscription domain = new UserSubscription();
+        final UserSubscription domain = new UserSubscription();
         domain.setId(entity.getId());
         domain.setUserId(userId);
         domain.setType(type);
@@ -226,7 +226,7 @@ class SubscriptionServiceImplTest {
     @Test
     void cancelSubscription_whenGatewayFails_shouldStillCancel() throws Exception {
         // Given
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -236,7 +236,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE))
                 .thenReturn(Optional.of(entity));
 
-        UserSubscription domain = new UserSubscription();
+        final UserSubscription domain = new UserSubscription();
         domain.setId(entity.getId());
         domain.setUserId(userId);
         domain.setType(type);
@@ -248,7 +248,7 @@ class SubscriptionServiceImplTest {
         when(paymentGatewayService.cancelPayment(any()))
                 .thenThrow(new PaymentGatewayException("Error"));
 
-        SubscriptionHistoryEntity historyEntity = new SubscriptionHistoryEntity();
+        final SubscriptionHistoryEntity historyEntity = new SubscriptionHistoryEntity();
         when(subscriptionHistoryPersistenceMapper.toEntity(any())).thenReturn(historyEntity);
         when(subscriptionHistoryRepository.save(any())).thenReturn(historyEntity);
 
@@ -267,7 +267,7 @@ class SubscriptionServiceImplTest {
     @Test
     void handlePaymentCallback_whenSucceeded_shouldActivate() {
         // Given
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -276,7 +276,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByExternalPaymentId("pay1"))
                 .thenReturn(Optional.of(entity));
 
-        UserSubscription domain = new UserSubscription();
+        final UserSubscription domain = new UserSubscription();
         domain.setId(entity.getId());
         domain.setUserId(userId);
         domain.setType(type);
@@ -300,7 +300,7 @@ class SubscriptionServiceImplTest {
     @Test
     void handlePaymentCallback_whenFailed_shouldDeactivate() {
         // Given
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -309,7 +309,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByExternalPaymentId("pay1"))
                 .thenReturn(Optional.of(entity));
 
-        UserSubscription domain = new UserSubscription();
+        final UserSubscription domain = new UserSubscription();
         domain.setId(entity.getId());
         domain.setUserId(userId);
         domain.setType(type);
@@ -332,7 +332,7 @@ class SubscriptionServiceImplTest {
     @Test
     void handlePaymentCallback_whenUnknownStatus_shouldDeactivate() {
         // Given
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -341,7 +341,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByExternalPaymentId("pay1"))
                 .thenReturn(Optional.of(entity));
 
-        UserSubscription domain = new UserSubscription();
+        final UserSubscription domain = new UserSubscription();
         domain.setId(entity.getId());
         domain.setUserId(userId);
         domain.setType(type);
@@ -364,7 +364,7 @@ class SubscriptionServiceImplTest {
     @Test
     void getActiveSubscription_whenExists_shouldReturnDto() {
         // Given
-        UserSubscriptionEntity entity = new UserSubscriptionEntity();
+        final UserSubscriptionEntity entity = new UserSubscriptionEntity();
         entity.setId(UUID.randomUUID());
         entity.setUserId(userId);
         entity.setType(type);
@@ -373,7 +373,7 @@ class SubscriptionServiceImplTest {
         when(userSubscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE))
                 .thenReturn(Optional.of(entity));
 
-        UserSubscription domain = new UserSubscription();
+        final UserSubscription domain = new UserSubscription();
         domain.setId(entity.getId());
         domain.setUserId(userId);
         domain.setType(type);
@@ -384,7 +384,7 @@ class SubscriptionServiceImplTest {
                 .thenReturn(new UserSubscriptionDto());
 
         // When
-        Optional<UserSubscriptionDto> result = subscriptionService.getActiveSubscription(userId);
+        final Optional<UserSubscriptionDto> result = subscriptionService.getActiveSubscription(userId);
 
         // Then
         assertTrue(result.isPresent());
@@ -397,28 +397,28 @@ class SubscriptionServiceImplTest {
     @Test
     void getHistory_shouldReturnSortedList() {
         // Given
-        SubscriptionHistoryEntity oldEntity = new SubscriptionHistoryEntity();
+        final SubscriptionHistoryEntity oldEntity = new SubscriptionHistoryEntity();
         oldEntity.setId(UUID.randomUUID());
         oldEntity.setUserId(userId);
         oldEntity.setType(type);
         oldEntity.setCreatedAt(now.minusDays(1));
 
-        SubscriptionHistoryEntity newEntity = new SubscriptionHistoryEntity();
+        final SubscriptionHistoryEntity newEntity = new SubscriptionHistoryEntity();
         newEntity.setId(UUID.randomUUID());
         newEntity.setUserId(userId);
         newEntity.setType(type);
         newEntity.setCreatedAt(now);
 
-        List<SubscriptionHistoryEntity> entities = Arrays.asList(newEntity, oldEntity);
+        final List<SubscriptionHistoryEntity> entities = Arrays.asList(newEntity, oldEntity);
 
         when(subscriptionHistoryRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(entities);
 
         when(subscriptionHistoryPersistenceMapper.toDomainModel(any()))
                 .thenAnswer(inv -> {
-                    SubscriptionHistoryEntity e = inv.getArgument(0);
+                    final SubscriptionHistoryEntity e = inv.getArgument(0);
                     // Создаем объект с помощью правильного конструктора
-                    SubscriptionHistory history = new SubscriptionHistory();
+                    final SubscriptionHistory history = new SubscriptionHistory();
                     history.setId(e.getId());
                     history.setUserId(e.getUserId());
                     history.setType(e.getType());
@@ -430,14 +430,14 @@ class SubscriptionServiceImplTest {
 
         when(subscriptionMapper.toHistoryDto(any()))
                 .thenAnswer(inv -> {
-                    SubscriptionHistory history = inv.getArgument(0);
-                    SubscriptionHistoryDto dto = new SubscriptionHistoryDto();
+                    final SubscriptionHistory history = inv.getArgument(0);
+                    final SubscriptionHistoryDto dto = new SubscriptionHistoryDto();
                     dto.setCreatedAt(history.getCreatedAt());
                     return dto;
                 });
 
         // When
-        List<SubscriptionHistoryDto> result = subscriptionService.getSubscriptionHistory(userId);
+        final List<SubscriptionHistoryDto> result = subscriptionService.getSubscriptionHistory(userId);
 
         // Then
         assertEquals(2, result.size());

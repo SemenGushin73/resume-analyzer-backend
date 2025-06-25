@@ -221,7 +221,8 @@ public class PaymentGatewayServiceImpl implements PaymentGatewayService {
             try {
                 final String authHeader = "Basic " + Base64.getEncoder()
                         .encodeToString((yookassaShopId + ":" + yookassaSecretKey).getBytes(StandardCharsets.UTF_8));
-                log.info("Попытка отменить платеж с ID: {}. (Симуляция для sandbox режима платежного шлюза YooKassa)", LogSanitizer.sanitizeLogInput(paymentId));
+                log.info("Попытка отменить платеж с ID: {}. (Симуляция для sandbox режима платежного шлюза YooKassa)",
+                        LogSanitizer.sanitizeLogInput(paymentId));
 
                 /** В Sandbox режиме просто возвращаем true. В реальной интеграции для отмены платежа нужно отправлять запрос
                  * на /refunds, а не просто возвращать true.

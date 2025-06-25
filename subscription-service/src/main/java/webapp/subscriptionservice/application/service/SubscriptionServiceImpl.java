@@ -203,7 +203,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 });
 
         final UserSubscription subscriptionDomain = userSubscriptionPersistenceMapper.toDomainModel(userSubscriptionEntity);
-
         final ObjectNode metaNode = subscriptionMetaJsonHelper.prepareCallbackMetaNode(
                 sanitizeLogInput(paymentId), sanitizeLogInput(status.name()), sanitizeLogInput(metadataJson), subscriptionDomain.getId()
         );
@@ -231,7 +230,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 metaNode.put("action", "Деактивация по неизвестному/необрабатываемому статусу");
                 metaNode.put("reason", "Неизвестный статус: " + status.name());
         }
-
         log.info("{} Пользователь: {}, Подписка: {}",
                 sanitizeLogInput(logMessage),
                 sanitizeLogInput(subscriptionDomain.getUserId().toString()),
@@ -242,7 +240,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         userSubscriptionEntity.setStartedAt(subscriptionDomain.getStartedAt());
 
         userSubscriptionRepository.save(userSubscriptionEntity);
-
         createHistoryEntry(new SubscriptionHistory(subscriptionDomain.getUserId(), subscriptionDomain.getType(), historyEventType, metaNode));
     }
 
@@ -275,11 +272,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @return {@link JsonNode} с метаданными.
      */
     private JsonNode createSubscriptionMeta(String message, String paymentId, String subscriptionType, String confirmationUrl) {
+        String sanitizedPaymentId = null;
+        if (paymentId != null) {
+            sanitizedPaymentId = sanitizeLogInput(paymentId);
+        }
+
+        String sanitizedConfirmationUrl = null;
+        if (confirmationUrl != null) {
+            sanitizedConfirmationUrl = sanitizeLogInput(confirmationUrl);
+        }
+
         return subscriptionMetaJsonHelper.createSubscriptionMetaNode(
                 sanitizeLogInput(message),
-                paymentId != null ? sanitizeLogInput(paymentId) : null,
+                sanitizedPaymentId,
                 sanitizeLogInput(subscriptionType),
-                confirmationUrl != null ? sanitizeLogInput(confirmationUrl) : null
+                sanitizedConfirmationUrl
         );
     }
 
@@ -424,10 +431,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param subscription Доменная модель UserSubscription, которая будет отменена.
      */
     private void logCancelInitiation(UUID userId, UserSubscription subscription) {
+        String sanitizedExternalPaymentId = null;
+        if (subscription != null && subscription.getExternalPaymentId() != null) {
+            sanitizedExternalPaymentId = sanitizeLogInput(subscription.getExternalPaymentId());
+        }
+
         final ObjectNode initialCancelMeta = (ObjectNode) subscriptionMetaJsonHelper.createSubscriptionMetaNode(
                 sanitizeLogInput("Инициирована отмена активной подписки."),
-                subscription.getExternalPaymentId() != null ? sanitizeLogInput(subscription.getExternalPaymentId()) : null,
-                sanitizeLogInput(subscription.getType().name()), null);
+                sanitizedExternalPaymentId,
+                sanitizeLogInput(subscription.getType().name()),
+                null
+        );
         initialCancelMeta.put("subscriptionId", sanitizeLogInput(subscription.getId().toString()));
         createHistoryEntry(new SubscriptionHistory(userId, subscription.getType(), SubscriptionEventType.INITIATED, initialCancelMeta));
     }
