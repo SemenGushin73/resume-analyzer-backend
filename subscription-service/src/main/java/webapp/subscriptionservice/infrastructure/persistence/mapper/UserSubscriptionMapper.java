@@ -11,15 +11,6 @@ import webapp.subscriptionservice.infrastructure.persistence.entity.UserSubscrip
 @Component
 public class UserSubscriptionMapper {
 
-    /**
-     * Преобразует доменную модель UserSubscription в сущность UserSubscriptionEntity.
-     * <p>
-     * Если domainModel.getId() не null, то это существующая сущность, и ID будет установлен.
-     * Если domainModel.getId() null, то это новая сущность, и ID будет сгенерирован JPA при сохранении.
-     *
-     * @param domainModel Доменная модель UserSubscription.
-     * @return Сущность UserSubscriptionEntity.
-     */
     public UserSubscriptionEntity toEntity(UserSubscription domainModel) {
         if (domainModel == null) {
             return null;
@@ -41,11 +32,6 @@ public class UserSubscriptionMapper {
         return entity;
     }
 
-    /**
-     * Преобразует сущность UserSubscriptionEntity в доменную модель UserSubscription.
-     * @param entity Сущность UserSubscriptionEntity.
-     * @return Доменная модель UserSubscription.
-     */
     public UserSubscription toDomainModel(UserSubscriptionEntity entity) {
         if (entity == null) {
             return null;

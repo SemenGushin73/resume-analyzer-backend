@@ -10,7 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Класс для базовой конфигурации микросервиса
+ * Класс для базовой конфигурации микросервиса.
+ * Определяет @Bean методы для предоставления основных компонентов,
+ * таких как OkHttpClient для выполнения HTTP-запросов
+ * и ObjectMapper для работы с JSON.
  **/
 @Configuration
 public class AppConfig {

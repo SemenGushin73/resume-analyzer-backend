@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Класс, представляющий историю событий, связанных с подписками, в доменной модели.
  * Он содержит только бизнес-атрибуты и поведение, без привязки к конкретной технологии хранения данных.
- **/
+ */
 @Data
 @NoArgsConstructor
 public class SubscriptionHistory {
@@ -22,11 +22,11 @@ public class SubscriptionHistory {
     private UUID userId;
     private SubscriptionType type;
     private SubscriptionEventType eventType;
-    private JsonNode meta; // JsonNode остается в домене для гибкости метаданных
+    private JsonNode meta;
     private LocalDateTime createdAt;
 
     public SubscriptionHistory(UUID userId, SubscriptionType type, SubscriptionEventType eventType, JsonNode meta) {
-        this.id = UUID.randomUUID(); // Доменный объект сам генерирует свой ID
+        this.id = UUID.randomUUID();
         this.userId = userId;
         this.type = type;
         this.eventType = eventType;

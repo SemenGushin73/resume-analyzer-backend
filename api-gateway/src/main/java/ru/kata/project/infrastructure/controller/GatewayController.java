@@ -123,6 +123,14 @@ public class GatewayController {
         return ResponseEntity.ok(analysisRequest);
     }
 
+    /**
+     * Эндпоинт для создания новой подписки через Gateway.
+     * Проксирует запрос на создание подписки в микросервис подписок.
+     *
+     * @param request Объект CreateSubscriptionRequest, содержащий данные для создания подписки.
+     * @return Mono с ResponseEntity, содержащим PaymentSessionResponseDto
+     * в случае успеха или соответствующую ошибку.
+     */
     @PostMapping("/subscriptions/create")
     @Operation(summary = "Создать новую подписку через Gateway",
             description = "Проксирует запрос на создание подписки в микросервис подписок.")
@@ -140,6 +148,14 @@ public class GatewayController {
         return apiGatewayService.createSubscription(request);
     }
 
+    /**
+     * Эндпоинт для отмены активной подписки через Gateway.
+     * Проксирует запрос на отмену подписки в микросервис подписок.
+     *
+     * @param userId UUID пользователя, чья подписка должна быть отменена.
+     * @return Mono с ResponseEntity, содержащим строковое сообщение
+     * в случае успеха или соответствующую ошибку.
+     */
     @PostMapping("/subscriptions/cancel")
     @Operation(summary = "Отменить активную подписку через Gateway",
             description = "Проксирует запрос на отмену подписки в микросервис подписок.")
@@ -155,6 +171,14 @@ public class GatewayController {
         return apiGatewayService.cancelSubscription(userId);
     }
 
+    /**
+     * Эндпоинт для получения истории подписок пользователя через Gateway.
+     * Проксирует запрос на получение истории подписок в микросервис подписок.
+     *
+     * @param userId UUID пользователя, чью историю подписок необходимо получить.
+     * @return Mono с ResponseEntity, содержащим список SubscriptionHistoryDto в случае успеха
+     * или соответствующую ошибку.
+     */
     @GetMapping("/subscriptions/history")
     @Operation(summary = "Получить историю подписок пользователя через Gateway",
             description = "Проксирует запрос на получение истории подписок в микросервис подписок.")
@@ -169,6 +193,14 @@ public class GatewayController {
         return apiGatewayService.getSubscriptionHistory(userId);
     }
 
+    /**
+     * Эндпоинт для получения активной подписки пользователя через Gateway.
+     * Проксирует запрос на получение активной подписки в микросервис подписок.
+     *
+     * @param userId UUID пользователя, чью активную подписку необходимо получить.
+     * @return Mono с ResponseEntity, содержащим UserSubscriptionDto
+     * в случае успеха или соответствующую ошибку (например, 404 Not Found).
+     */
     @GetMapping("/subscriptions/active")
     @Operation(summary = "Получить активную подписку пользователя через Gateway",
             description = "Проксирует запрос на получение активной подписки в микросервис подписок.")

@@ -9,8 +9,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Интерфейс для работы с активными подписками пользователей с методами для взаимодействия с БД
- **/
+ * Интерфейс репозитория для взаимодействия с БД для управления текущими и прошлыми подписками пользователей.
+ */
 @Repository
 public interface UserSubscriptionRepository extends JpaRepository<UserSubscriptionEntity, UUID> {
     Optional<UserSubscriptionEntity> findByUserId(UUID userId);

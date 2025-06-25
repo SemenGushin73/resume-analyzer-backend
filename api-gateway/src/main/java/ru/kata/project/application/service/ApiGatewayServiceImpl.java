@@ -110,7 +110,10 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     /**
      * Метод для создания подписки, отправляет данные в subscription-service.
-     * @param request содержит userId и тип подписки.
+     * Проксирует запрос на создание подписки в микросервис подписок,
+     * используя HTTP POST-запрос к эндпоинту /internal/subscriptions/create.
+     *
+     * @param request Объект CreateSubscriptionRequest, содержащий userId и тип подписки.
      * @return Mono, содержащий ResponseEntity с PaymentSessionResponseDto,
      * включающим данные для инициации платежной сессии.
      */
@@ -126,6 +129,10 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     /**
      * Метод для отмены активной подписки пользователя в subscription-service.
+     * Проксирует запрос на отмену подписки в микросервис подписок,
+     * используя HTTP POST-запрос к эндпоинту /internal/subscriptions/cancel
+     * с userId в качестве параметра запроса.
+     *
      * @param userId UUID пользователя, чья подписка должна быть отменена.
      * @return Mono, содержащий ResponseEntity со строковым сообщением о результате отмены.
      */
@@ -143,6 +150,10 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     /**
      * Метод на получение истории подписок пользователя в subscription-service.
+     * Проксирует запрос на получение истории подписок в микросервис подписок,
+     * используя HTTP GET-запрос к эндпоинту /internal/subscriptions/history
+     * с userId в качестве параметра запроса.
+     *
      * @param userId UUID пользователя, чью историю подписок необходимо получить.
      * @return Mono, содержащий ResponseEntity со списком SubscriptionHistoryDto.
      */
@@ -160,8 +171,13 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     /**
      * Метод на получение активной подписки пользователя в subscription-service.
+     * Проксирует запрос на получение активной подписки в микросервис подписок,
+     * используя HTTP GET-запрос к эндпоинту /internal/subscriptions/active
+     * с userId в качестве параметра запроса.
+     *
      * @param userId UUID пользователя, чью активную подписку необходимо получить.
-     * @return Mono, содержащий ResponseEntity с UserSubscriptionDto, показывающий активную подписку.
+     * @return Mono, содержащий ResponseEntity с UserSubscriptionDto,
+     * показывающий активную подписку.
      */
     @Override
     public Mono<ResponseEntity<UserSubscriptionDto>> getActiveSubscription(UUID userId) {

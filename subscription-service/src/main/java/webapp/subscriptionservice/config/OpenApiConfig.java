@@ -8,7 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 
 /**
- * Класс для настройки документации API (Swagger)
+ * Класс для настройки документации API с использованием OpenAPI (Swagger UI).
+ * Использует аннотацию @OpenAPIDefinition для базовой конфигурации
+ * и предоставляет OpenAPI Bean для определения пользовательских элементов,
+ * таких как серверы, информация о приложении, теги и т.д.
  **/
 @OpenAPIDefinition
 @Configuration

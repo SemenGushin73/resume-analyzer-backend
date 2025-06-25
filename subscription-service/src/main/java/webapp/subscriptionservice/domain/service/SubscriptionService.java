@@ -11,6 +11,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Интерфейс, определяющий основной контракт бизнес-логики для управления подписками пользователей.
+ * Этот интерфейс служит "портом" из слоя контроллеров (API) к слою бизнес-логики (Use Cases),
+ * инкапсулируя все операции, связанные с подписками.
+ */
 public interface SubscriptionService {
     PaymentSessionResponseDto createSubscription(UUID userId, SubscriptionType type) throws ExecutionException, InterruptedException;
 

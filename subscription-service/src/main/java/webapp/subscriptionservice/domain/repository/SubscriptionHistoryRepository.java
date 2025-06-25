@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Интерфейс с методами, связанными с историей подписок, для взаимодействия с БД.
- * Теперь работает с сущностью персистентности SubscriptionHistoryEntity.
- **/
+ * Интерфейс репозитория для взаимодействия с БД и получения/сохранения записей истории подписок.
+ */
 @Repository
 public interface SubscriptionHistoryRepository extends JpaRepository<SubscriptionHistoryEntity, UUID> {
     List<SubscriptionHistoryEntity> findByUserIdOrderByCreatedAtDesc(UUID userId);

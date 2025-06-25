@@ -18,6 +18,7 @@ import ru.kata.project.subscriptionDto.CreateSubscriptionRequest;
 import ru.kata.project.subscriptionDto.PaymentSessionResponseDto;
 import ru.kata.project.subscriptionDto.SubscriptionHistoryDto;
 import ru.kata.project.subscriptionDto.UserSubscriptionDto;
+import webapp.subscriptionservice.application.util.LogSanitizer;
 import webapp.subscriptionservice.domain.service.SubscriptionService;
 import jakarta.validation.Valid;
 
@@ -27,7 +28,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Контроллер для взаимодействия с сервисом подписок
+ * Контроллер для взаимодействия с сервисом подписок.
+ * Предоставляет внутренние API-эндпоинты для управления подписками пользователей,
+ * включая создание, отмену и получение информации о подписках.
+ * Эндпоинты используются через API Gateway.
  **/
 @RestController
 @RequestMapping("/internal/subscriptions")
@@ -40,8 +44,15 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     /**
-     * Метод для создания подписки
-     **/
+     * Эндпоинт для создания новой подписки и инициирования платежной сессии.
+     * Принимает запрос на создание подписки, проверяет наличие активных подписок у пользователя,
+     * взаимодействует с платежным шлюзом для создания платежной сессии и возвращает
+     * информацию для клиента, необходимую для завершения оплаты.
+     *
+     * @param request Объект CreateSubscriptionRequest, содержащий ID пользователя и тип подписки.
+     * @return ResponseEntity с PaymentSessionResponseDto (статус 201 Created)
+     * в случае успеха или соответствующим статусом ошибки (400, 503, 504, 500).
+     */
     @PostMapping("/create")
     @Operation(summary = "Создать новую подписку и платежную сессию",
             description = "Инициирует процесс создания подписки для пользователя, "
@@ -64,35 +75,42 @@ public class SubscriptionController {
                     content = @Content(schema = @Schema(implementation = CreateSubscriptionRequest.class)))
             @org.springframework.web.bind.annotation.RequestBody @Valid CreateSubscriptionRequest request) {
 
-        log.info("Получен запрос на создание подписки для пользователя userId: {}, type: {}", request.getUserId(), request.getType());
+        log.info("Получен запрос на создание подписки для пользователя userId: {}, type: {}",
+                LogSanitizer.sanitizeLogInput(request.getUserId().toString()), LogSanitizer.sanitizeLogInput(request.getType().name()));
         try {
             final PaymentSessionResponseDto response = subscriptionService.createSubscription(request.getUserId(), request.getType());
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (ExecutionException e) {
-            log.error("ExecutionException во время создания подписки для пользователя userId: {}", request.getUserId(), e);
+            log.error("ExecutionException во время создания подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
             final Throwable cause = e.getCause();
             if (cause instanceof TimeoutException) {
                 return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Платежный шлюз не ответил в срок. Пожалуйста попробуйте позже.");
             } else if (cause != null) {
-                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Платежный шлюз временно недоступен: " + cause.getMessage());
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Платежный шлюз временно недоступен: " + LogSanitizer.sanitizeLogInput(cause.getMessage()));
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Неожиданная ошибка во время создания подписки для пользователя.");
         } catch (InterruptedException e) {
-            log.error("InterruptedException во время создания подписки для пользователя userId: {}", request.getUserId(), e);
+            log.error("InterruptedException во время создания подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
             Thread.currentThread().interrupt();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Создание подписки прервано.");
         } catch (IllegalArgumentException e) {
-            log.warn("Неверный запрос на создание подписки для пользователя userId: {}: {}", request.getUserId(), e.getMessage());
+            log.warn("Неверный запрос на создание подписки для пользователя userId: {}: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), LogSanitizer.sanitizeLogInput(e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            log.error("Ошибка при создании подписки для пользователя userId: {}", request.getUserId(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла неожиданная ошибка: " + e.getMessage());
+            log.error("Ошибка при создании подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(request.getUserId().toString()), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла неожиданная ошибка: " + LogSanitizer.sanitizeLogInput(e.getMessage()));
         }
     }
 
     /**
-     * Метод для отмены подписки
-     **/
+     * Эндпоинт для отмены активной подписки пользователя.
+     * Находит и деактивирует текущую активную подписку для указанного пользователя.
+     * Если подписка не найдена, возвращает статус 404.
+     *
+     * @param userId UUID пользователя, чья подписка должна быть отменена.
+     * @return ResponseEntity со статусом 200 OK в случае успешной отмены
+     * или соответствующим статусом ошибки (404, 503, 504, 500).
+     */
     @PostMapping("/cancel")
     @Operation(summary = "Отменить активную подписку пользователя",
             description = "Отменяет текущую активную подписку для указанного пользователя. "
@@ -110,37 +128,43 @@ public class SubscriptionController {
             @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чья подписка должна быть отменена",
                     required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId) {
-        log.info("Получен запрос на отмену подписки для пользователя userId: {}", userId);
+        log.info("Получен запрос на отмену подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(userId.toString()));
         try {
             subscriptionService.cancelSubscription(userId);
             return ResponseEntity.ok("Подписка успешно отменена.");
         } catch (ResourceNotFoundException e) {
-            log.warn("Не найдена активная подписка для отмены для пользователя {}", userId);
+            log.warn("Не найдена активная подписка для отмены для пользователя {}", LogSanitizer.sanitizeLogInput(userId.toString()));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (ExecutionException e) {
-            log.error("ExecutionException во время отмены подписки для пользователя userId: {}", userId, e);
+            log.error("ExecutionException во время отмены подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(userId.toString()), e);
             final Throwable cause = e.getCause();
             if (cause instanceof TimeoutException) {
                 return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT)
                         .body("Платежный шлюз не ответил вовремя при отмене подписки. Пожалуйста, попробуйте позже.");
             } else if (cause != null) {
                 return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Платежный шлюз временно не доступен для отмены: "
-                        + cause.getMessage());
+                        + LogSanitizer.sanitizeLogInput(cause.getMessage()));
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("При отмене подписки возникла непредвиденная ошибка.");
         } catch (InterruptedException e) {
-            log.error("InterruptedException во время отмены подписки для пользователя userId: {}", userId, e);
+            log.error("InterruptedException во время отмены подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(userId.toString()), e);
             Thread.currentThread().interrupt();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Отмена подписки прервана.");
         } catch (Exception e) {
-            log.error("Ошибка при отмене подписки для пользователя userId: {}", userId, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла непредвиденная ошибка: " + e.getMessage());
+            log.error("Ошибка при отмене подписки для пользователя userId: {}", LogSanitizer.sanitizeLogInput(userId.toString()), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Возникла непредвиденная ошибка: " + LogSanitizer.sanitizeLogInput(e.getMessage()));
         }
     }
 
     /**
-     * Метод для получения истории подписок
-     **/
+     * Эндпоинт для получения истории подписок пользователя.
+     * Возвращает список всех прошлых и текущих подписок для указанного пользователя,
+     * отсортированных по дате создания в обратном хронологическом порядке (от новой к старой).
+     *
+     * @param userId UUID пользователя, чью историю подписок необходимо получить.
+     * @return ResponseEntity со списком SubscriptionHistoryDto (статус 200 OK)
+     * или статусом 500 INTERNAL_SERVER_ERROR в случае внутренней ошибки.
+     */
     @GetMapping("/history")
     @Operation(summary = "Получить историю подписок пользователя",
             description = "Возвращает список всех прошлых и текущих подписок для указанного пользователя, "
@@ -155,14 +179,20 @@ public class SubscriptionController {
             @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чью историю подписок необходимо получить",
                     required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId) {
-        log.info("Получен запрос на получение истории подписок для пользователя userId: {}", userId);
+        log.info("Получен запрос на получение истории подписок для пользователя userId: {}", LogSanitizer.sanitizeLogInput(userId.toString()));
         final List<SubscriptionHistoryDto> history = subscriptionService.getSubscriptionHistory(userId);
         return ResponseEntity.ok(history);
     }
 
     /**
-     * Метод для получения активной подписки
-     **/
+     * Эндпоинт для получения текущей активной подписки пользователя.
+     * Возвращает детали активной подписки пользователя, если она имеется.
+     * Если активная подписка не найдена, возвращает статус 404 Not Found.
+     *
+     * @param userId UUID пользователя, чью активную подписку необходимо получить.
+     * @return ResponseEntity с UserSubscriptionDto (статус 200 OK)
+     * или статусом 404 Not Found, если активная подписка не найдена.
+     */
     @GetMapping("/active")
     @Operation(summary = "Получить активную подписку пользователя",
             description = "Возвращает детали текущей активной подписки пользователя, если таковая имеется.")
@@ -179,7 +209,7 @@ public class SubscriptionController {
             @Parameter(in = ParameterIn.QUERY, description = "UUID пользователя, чью активную подписку необходимо получить",
                     required = true, example = "a1b2c3d4-e5f6-7890-1234-567890abcdef")
             @RequestParam UUID userId) {
-        log.info("Получен запрос на информацию об активной подписке для пользователя userId: {}", userId);
+        log.info("Получен запрос на информацию об активной подписке для пользователя userId: {}", LogSanitizer.sanitizeLogInput(userId.toString()));
         return subscriptionService.getActiveSubscription(userId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
