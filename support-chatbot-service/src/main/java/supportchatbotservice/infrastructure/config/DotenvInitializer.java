@@ -17,6 +17,11 @@ public class DotenvInitializer implements ApplicationContextInitializer<Configur
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
+        String appName = applicationContext.getEnvironment().getProperty("spring.application.name");
+        if (!"support-chatbot-service".equals(appName)) {
+            return; // игнорируем для других микросервисов
+        }
+
         File localEnv = new File(System.getProperty("user.dir"), ".env");
         File rootEnv = new File(System.getProperty("user.dir")).getParentFile();
 
