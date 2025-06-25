@@ -1,15 +1,92 @@
-spring:
-  application:
-    name: support-chatbot-service
-  config:
-    import: "configserver:http://config-server:8888"
-  cloud:
-    config:
-      fail-fast: true
-      retry:
-        initial-interval: 1000
-        max-interval: 2000
-        max-attempts: 10
+#spring:
+#  application:
+#    name: support-chatbot-service
+#  config:
+#    import: "configserver:http://config-server:8888"
+#  cloud:
+#    config:
+#      fail-fast: true
+#      retry:
+#        initial-interval: 1000
+#        max-interval: 2000
+#        max-attempts: 10
 
 server:
   port: 8085
+
+openrouter:
+  api-key: ${DEEPSEEK_API_KEY}
+  model-name: ${DEEPSEEK_MODEL:mistralai/mistral-7b-instruct}
+  base-url: ${DEEPSEEK_BASE_URL:https://openrouter.ai/api}
+
+spring:
+  application:
+    name: support-chatbot-service
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: true
+    compatibility-verifier:
+      enabled: false
+
+  springdoc:
+    show-actuator: true
+    paths-to-match:
+      - /api/**
+      - /actuator/**
+
+  logging:
+    level:
+      root: info
+      org.springframework.web: debug
+      supportchatbotservice: debug
+      feign: warn
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %logger{36} - %msg%n%ex"
+    file:
+      name: logs/app.log
+      max-history: 7
+      max-size: 10MB
+
+  resilience4j:
+    circuitbreaker:
+      instances:
+        deepseek:
+          registerHealthIndicator: true
+          failureRateThreshold: 50%
+          minimumNumberOfCalls: 5
+          waitDurationInOpenState: 10s
+          slidingWindowType: COUNT_BASED
+          slidingWindowSize: 10
+
+faq:
+  answers:
+    question1: "Загрузите ваше резюме в формате PDF или DOCX, и система автоматически проведёт анализ"
+    question2: "Мы поддерживаем PDF, DOCX и TXT форматы"
+    question3: "1. Укажите конкретные достижения с цифрами 2. Используйте ключевые слова из вакансии 3. Соблюдайте четкую структуру 4. Держите объем 1-2 страницы"
+    question4: "1. Проверьте формат файла 2. Убедитесь, что размер не превышает 5MB 3. Попробуйте другой браузер. Если проблема осталась, свяжитесь с поддержкой"
+    question5: "Загрузите резюме и текст вакансии, система покажет процент соответствия и даст рекомендации"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  tracing:
+    enabled: false
+metrics:
+  export:
+    prometheus:
+      enabled: true
+
+redis:
+  host: ${SPRING_REDIS_HOST:localhost}
+  port: ${SPRING_REDIS_PORT:6379}
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000
+
+otel:
+  exporter.otlp.enabled: false

@@ -31,7 +31,7 @@ public class ChatBotAppService {
                     new ChatMessage(request.getMessage(), sessionId)
             );
 
-            log.info("Ответ пользователю [{}]: {} (fallback: {})", sessionId, response.getContent(), response.isFallback());
+            log.info("Ответ пользователю [{}]: {} (FAQ: {})", sessionId, response.getContent(), response.isFallback());
             messageSender.sendResponse(sessionId, new ChatResponseDTO(response.getContent(), response.isFallback()));
 
         } catch (Exception ex) {
