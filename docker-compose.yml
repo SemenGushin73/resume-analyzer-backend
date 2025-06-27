@@ -50,6 +50,7 @@ services:
       - resume-analyzer
       - resume-generator
       - api-gateway
+      #- subscription-service # Добавить когда настройки зальются в репозиторий
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -121,7 +122,7 @@ services:
     cpus: 0.25
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.6.0
     container_name: kafka
     ports:
       - "29092:29092"
@@ -275,6 +276,7 @@ services:
       - otel-collector
       - resume-analyzer
       - resume-generator
+      #- subscription-service # Добавить когда настройки зальются в репозиторий
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -313,3 +315,51 @@ services:
       - SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=${GIT_USER}
       - SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${GIT_PASS}
 
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel
+    command: tunnel --protocol auto run
+    volumes:
+      - ./config/cloudflared/config.yml:/etc/cloudflared/config.yml
+      - ./config/cloudflared/creds.json:/etc/cloudflared/creds.json
+    restart: always
+    networks:
+      - default
+
+  subscription-service:
+    image: subscription-service
+    container_name: subscription-service
+    build:
+      context: .
+      dockerfile: subscription-service/Dockerfile
+    ports:
+      - "8086:8086"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    depends_on:
+      #- config-server # убрать комментарий, когда настройки зальются в репозиторий
+      - otel-collector
+      - postgres
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      APP_CALLBACK_URL: https://yookassa.bruschatka-okt.ru/api/v1/payment/callback
+      OTEL_SERVICE_NAME: "subscription-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_METRICS_EXPORTER: "otlp"
+      OTEL_LOGS_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_PROPAGATORS: "tracecontext,baggage,b3"
+      OTEL_RESOURCE_ATTRIBUTES: "service.version=1.0,deployment.environment=production"
+      OTEL_INSTRUMENTATION_KAFKA_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED: "true"
+      OTEL_INSTRUMENTATION_LOGBACK_ENABLED: "true"
+      OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED: "true"
+      OTEL_INSTRUMENTATION_SYSTEM_METRICS_ENABLED: "true"
+      OTEL_LOG_LEVEL: "info"
+      OTEL_METRIC_EXPORT_INTERVAL: 60000
+      OTEL_BSP_SCHEDULE_DELAY: 5000
+      OTEL_EXPERIMENTAL_CORRELATION_CONTEXT_ENABLED: "true"

@@ -44,3 +44,4 @@ out/
 
 # Игнорировать файл с SMTP-паролем
 smtp-password.txt
+/config/cloudflared/creds.json

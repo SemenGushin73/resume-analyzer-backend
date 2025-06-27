@@ -2,6 +2,7 @@ package ru.kata.project.application.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,10 @@ import ru.kata.project.domain.service.ApiGatewayService;
 import ru.kata.project.model.Department;
 import ru.kata.project.resumeDto.ResumeDto;
 import ru.kata.project.resumeDto.TemplateDTO;
+import ru.kata.project.subscriptionDto.CreateSubscriptionRequest;
+import ru.kata.project.subscriptionDto.PaymentSessionResponseDto;
+import ru.kata.project.subscriptionDto.SubscriptionHistoryDto;
+import ru.kata.project.subscriptionDto.UserSubscriptionDto;
 
 /**
  * Сервис для получения Резюме с соответствующими Шаблонами
@@ -25,6 +30,7 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
 
     private final WebClient analyzerClient;
     private final WebClient builderClient;
+    private final WebClient subscriptionClient;
 
     public ApiGatewayServiceImpl(WebClient.Builder webClientBuilder) {
         this.analyzerClient = webClientBuilder
@@ -33,6 +39,10 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
                 .build();
         this.builderClient = webClientBuilder
                 .baseUrl("http://resume-generator:8082")
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+        this.subscriptionClient = webClientBuilder
+                .baseUrl("http://subscription-service:8086")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }
@@ -96,5 +106,88 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
                             .retrieve()
                             .toEntity(JsonNode.class);
                 });
+    }
+
+    /**
+     * Метод для создания подписки, отправляет данные в subscription-service.
+     * Проксирует запрос на создание подписки в микросервис подписок,
+     * используя HTTP POST-запрос к эндпоинту /internal/subscriptions/create.
+     *
+     * @param request Объект CreateSubscriptionRequest, содержащий userId и тип подписки.
+     * @return Mono, содержащий ResponseEntity с PaymentSessionResponseDto,
+     * включающим данные для инициации платежной сессии.
+     */
+    @Override
+    public Mono<ResponseEntity<PaymentSessionResponseDto>> createSubscription(CreateSubscriptionRequest request) {
+        log.info("Проксируем запрос на создание подписки для userId: {}, type: {}", request.getUserId(), request.getType());
+        return subscriptionClient.post()
+                .uri("/internal/subscriptions/create")
+                .bodyValue(request)
+                .retrieve()
+                .toEntity(PaymentSessionResponseDto.class);
+    }
+
+    /**
+     * Метод для отмены активной подписки пользователя в subscription-service.
+     * Проксирует запрос на отмену подписки в микросервис подписок,
+     * используя HTTP POST-запрос к эндпоинту /internal/subscriptions/cancel
+     * с userId в качестве параметра запроса.
+     *
+     * @param userId UUID пользователя, чья подписка должна быть отменена.
+     * @return Mono, содержащий ResponseEntity со строковым сообщением о результате отмены.
+     */
+    @Override
+    public Mono<ResponseEntity<String>> cancelSubscription(UUID userId) {
+        log.info("Проксируем запрос на отмену подписки для userId: {}", userId);
+        return subscriptionClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/internal/subscriptions/cancel")
+                        .queryParam("userId", userId)
+                        .build())
+                .retrieve()
+                .toEntity(String.class);
+    }
+
+    /**
+     * Метод на получение истории подписок пользователя в subscription-service.
+     * Проксирует запрос на получение истории подписок в микросервис подписок,
+     * используя HTTP GET-запрос к эндпоинту /internal/subscriptions/history
+     * с userId в качестве параметра запроса.
+     *
+     * @param userId UUID пользователя, чью историю подписок необходимо получить.
+     * @return Mono, содержащий ResponseEntity со списком SubscriptionHistoryDto.
+     */
+    @Override
+    public Mono<ResponseEntity<List<SubscriptionHistoryDto>>> getSubscriptionHistory(UUID userId) {
+        log.info("Проксируем запрос на получение истории подписок для userId: {}", userId);
+        return subscriptionClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/internal/subscriptions/history")
+                        .queryParam("userId", userId)
+                        .build())
+                .retrieve()
+                .toEntityList(SubscriptionHistoryDto.class);
+    }
+
+    /**
+     * Метод на получение активной подписки пользователя в subscription-service.
+     * Проксирует запрос на получение активной подписки в микросервис подписок,
+     * используя HTTP GET-запрос к эндпоинту /internal/subscriptions/active
+     * с userId в качестве параметра запроса.
+     *
+     * @param userId UUID пользователя, чью активную подписку необходимо получить.
+     * @return Mono, содержащий ResponseEntity с UserSubscriptionDto,
+     * показывающий активную подписку.
+     */
+    @Override
+    public Mono<ResponseEntity<UserSubscriptionDto>> getActiveSubscription(UUID userId) {
+        log.info("Проксируем запрос на получение активной подписки для userId: {}", userId);
+        return subscriptionClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/internal/subscriptions/active")
+                        .queryParam("userId", userId)
+                        .build())
+                .retrieve()
+                .toEntity(UserSubscriptionDto.class);
     }
 }

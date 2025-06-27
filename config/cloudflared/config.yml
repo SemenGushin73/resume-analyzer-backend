@@ -1,0 +1,24 @@
+tunnel: f5e103ab-b75c-48d2-9f03-88ff4284ab02
+protocol: http2
+transport-loglevel: debug
+loglevel: debug
+grace-period: 30s
+credentials-file: /etc/cloudflared/creds.json
+ingress:
+  - hostname: yookassa.bruschatka-okt.ru
+    service: http://subscription-service:8086  # Имя сервиса в Docker сети
+    originRequest:
+      connectTimeout: 30s
+      noTLSVerify: true
+  - service: http_status:404
+retries: 10
+ha-connections: 4
+connection-retries: 10
+originRequest:
+  connectTimeout: 60s
+  noTLSVerify: true
+  http2Origin: true
+  # разные комбинации портов
+  originServerName: "198.41.200.63:443"
+  # ИЛИ
+  # originServerName: "198.41.200.63:80"

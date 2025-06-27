@@ -2,6 +2,8 @@ package ru.kata.project.infrastructure.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +22,12 @@ import ru.kata.project.kafka.AnalysisRequest;
 import ru.kata.project.kafka.ResumeScoreResult;
 import ru.kata.project.kafka.config.KafkaTopics;
 import ru.kata.project.resumeDto.ResumeDto;
+import ru.kata.project.subscriptionDto.CreateSubscriptionRequest;
+import ru.kata.project.subscriptionDto.PaymentSessionResponseDto;
+import ru.kata.project.subscriptionDto.SubscriptionHistoryDto;
+import ru.kata.project.subscriptionDto.UserSubscriptionDto;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -114,5 +121,98 @@ public class GatewayController {
         kafkaProducerService.sendAnalysisRequest(UUID.randomUUID().toString(), analysisRequest);
 
         return ResponseEntity.ok(analysisRequest);
+    }
+
+    /**
+     * Эндпоинт для создания новой подписки через Gateway.
+     * Проксирует запрос на создание подписки в микросервис подписок.
+     *
+     * @param request Объект CreateSubscriptionRequest, содержащий данные для создания подписки.
+     * @return Mono с ResponseEntity, содержащим PaymentSessionResponseDto
+     * в случае успеха или соответствующую ошибку.
+     */
+    @PostMapping("/subscriptions/create")
+    @Operation(summary = "Создать новую подписку через Gateway",
+            description = "Проксирует запрос на создание подписки в микросервис подписок.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Подписка создана",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PaymentSessionResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Некорректный запрос"),
+            @ApiResponse(responseCode = "503", description = "Сервис подписок или платежный шлюз недоступен"),
+            @ApiResponse(responseCode = "504", description = "Таймаут сервиса подписок или платежного шлюза"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка шлюза")
+    })
+    public Mono<ResponseEntity<PaymentSessionResponseDto>> createSubscription(@RequestBody CreateSubscriptionRequest request) {
+        log.info("Получен запрос на создание подписки для userId: {}, type: {} через API Gateway.", request.getUserId(), request.getType());
+        return apiGatewayService.createSubscription(request);
+    }
+
+    /**
+     * Эндпоинт для отмены активной подписки через Gateway.
+     * Проксирует запрос на отмену подписки в микросервис подписок.
+     *
+     * @param userId UUID пользователя, чья подписка должна быть отменена.
+     * @return Mono с ResponseEntity, содержащим строковое сообщение
+     * в случае успеха или соответствующую ошибку.
+     */
+    @PostMapping("/subscriptions/cancel")
+    @Operation(summary = "Отменить активную подписку через Gateway",
+            description = "Проксирует запрос на отмену подписки в микросервис подписок.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Подписка успешно отменена"),
+            @ApiResponse(responseCode = "404", description = "Активная подписка не найдена"),
+            @ApiResponse(responseCode = "503", description = "Сервис подписок или платежный шлюз недоступен"),
+            @ApiResponse(responseCode = "504", description = "Таймаут сервиса подписок или платежного шлюза"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка шлюза")
+    })
+    public Mono<ResponseEntity<String>> cancelSubscription(@RequestParam UUID userId) {
+        log.info("Получен запрос на отмену подписки для userId: {} через API Gateway.", userId);
+        return apiGatewayService.cancelSubscription(userId);
+    }
+
+    /**
+     * Эндпоинт для получения истории подписок пользователя через Gateway.
+     * Проксирует запрос на получение истории подписок в микросервис подписок.
+     *
+     * @param userId UUID пользователя, чью историю подписок необходимо получить.
+     * @return Mono с ResponseEntity, содержащим список SubscriptionHistoryDto в случае успеха
+     * или соответствующую ошибку.
+     */
+    @GetMapping("/subscriptions/history")
+    @Operation(summary = "Получить историю подписок пользователя через Gateway",
+            description = "Проксирует запрос на получение истории подписок в микросервис подписок.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список записей истории подписок",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(type = "array", implementation = SubscriptionHistoryDto.class))),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка шлюза")
+    })
+    public Mono<ResponseEntity<List<SubscriptionHistoryDto>>> getSubscriptionHistory(@RequestParam UUID userId) {
+        log.info("Получен запрос на получение истории подписок для userId: {} через API Gateway.", userId);
+        return apiGatewayService.getSubscriptionHistory(userId);
+    }
+
+    /**
+     * Эндпоинт для получения активной подписки пользователя через Gateway.
+     * Проксирует запрос на получение активной подписки в микросервис подписок.
+     *
+     * @param userId UUID пользователя, чью активную подписку необходимо получить.
+     * @return Mono с ResponseEntity, содержащим UserSubscriptionDto
+     * в случае успеха или соответствующую ошибку (например, 404 Not Found).
+     */
+    @GetMapping("/subscriptions/active")
+    @Operation(summary = "Получить активную подписку пользователя через Gateway",
+            description = "Проксирует запрос на получение активной подписки в микросервис подписок.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Активная подписка найдена",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserSubscriptionDto.class))),
+            @ApiResponse(responseCode = "404", description = "Активная подписка не найдена"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка шлюза")
+    })
+    public Mono<ResponseEntity<UserSubscriptionDto>> getActiveSubscription(@RequestParam UUID userId) {
+        log.info("Получен запрос на получение активной подписки для userId: {} через API Gateway.", userId);
+        return apiGatewayService.getActiveSubscription(userId);
     }
 }
