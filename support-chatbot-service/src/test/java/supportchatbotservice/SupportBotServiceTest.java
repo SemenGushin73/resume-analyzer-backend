@@ -31,7 +31,7 @@ public class SupportBotServiceTest {
     @Test
     void testFaqAnswerReturned() {
         when(faqService.findAnswer("faq")).thenReturn(Optional.of("FAQ ответ"));
-        BotResponse response = supportBotService.processMessage(new ChatMessage("faq", "session-1"));
+        final BotResponse response = supportBotService.processMessage(new ChatMessage("faq", "session-1"));
         assertEquals("FAQ ответ", response.getContent());
         assertTrue(response.isFallback());
     }
@@ -40,7 +40,7 @@ public class SupportBotServiceTest {
     void testAiAnswerReturned() {
         when(faqService.findAnswer("вопрос")).thenReturn(Optional.empty());
         when(aiService.getAiResponse("вопрос")).thenReturn(Optional.of("AI ответ"));
-        BotResponse response = supportBotService.processMessage(new ChatMessage("вопрос", "session-1"));
+        final BotResponse response = supportBotService.processMessage(new ChatMessage("вопрос", "session-1"));
         assertEquals("AI ответ", response.getContent());
         assertFalse(response.isFallback());
     }
@@ -49,14 +49,14 @@ public class SupportBotServiceTest {
     void testAiServiceThrowsException() {
         when(faqService.findAnswer("ошибка")).thenReturn(Optional.empty());
         when(aiService.getAiResponse("ошибка")).thenThrow(new AiServiceException("Ошибка"));
-        BotResponse response = supportBotService.processMessage(new ChatMessage("ошибка", "session-1"));
+        final BotResponse response = supportBotService.processMessage(new ChatMessage("ошибка", "session-1"));
         assertEquals("Сервис поддержки временно недоступен, повторите позже", response.getContent());
         assertTrue(response.isFallback());
     }
 
     @Test
     void testValidationExceptionThrownOnEmptyMessage() {
-        ChatMessage msg = new ChatMessage(" ", "session-1");
+        final ChatMessage msg = new ChatMessage(" ", "session-1");
         assertThrows(IllegalArgumentException.class, msg::validate);
     }
 }

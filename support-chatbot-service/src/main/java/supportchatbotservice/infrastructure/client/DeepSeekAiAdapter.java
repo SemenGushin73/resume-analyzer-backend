@@ -24,9 +24,9 @@ public class DeepSeekAiAdapter implements AiServicePort {
     @CircuitBreaker(name = "deepseek", fallbackMethod = "fallback")
     public Optional<String> getAiResponse(String message) {
         log.info("Отправка запроса к DeepSeek: {}", message);
-        String prompt = PromptTemplates.formatPrompt(message);
+        final String prompt = PromptTemplates.formatPrompt(message);
 
-        AIResponseDTO response = deepSeekClient.askAI(new AIRequestDTO(prompt, "session-default"));
+        final AIResponseDTO response = deepSeekClient.askAI(new AIRequestDTO(prompt, "session-default"));
         log.info("Получен ответ от DeepSeek: {}", response.getAnswer());
         return response.getAnswer();
     }

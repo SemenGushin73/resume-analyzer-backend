@@ -22,7 +22,7 @@ import supportchatbotservice.infrastructure.faq.FAQProperties;
 public class SupportChatbotServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(SupportChatbotServiceApplication.class);
+        final SpringApplication app = new SpringApplication(SupportChatbotServiceApplication.class);
         app.addInitializers(new DotenvInitializer());
         app.run(args);
     }

@@ -27,7 +27,13 @@ public class ChatController {
     @PostMapping("/send")
     @Operation(summary = "Отправить сообщение в чат и получить ответ")
     public ResponseEntity<String> sendMessage(@Valid @RequestBody ChatRequestDTO request, Principal principal) {
-        chatBotAppService.handleUserMessage(request, principal != null ? principal : () -> "rest-user");
+        final Principal safePrincipal;
+        if (principal != null) {
+            safePrincipal = principal;
+        } else {
+            safePrincipal = () -> "rest-user";
+        }
+        chatBotAppService.handleUserMessage(request, safePrincipal);
         return ResponseEntity.ok("Сообщение обработано");
     }
 }

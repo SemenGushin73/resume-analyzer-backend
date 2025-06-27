@@ -29,8 +29,8 @@ public class ChatBotAppServiceTest {
 
     @Test
     void testSuccessfulUserMessageHandling() {
-        ChatRequestDTO request = ChatRequestDTO.create("Привет", "s1");
-        Principal principal = () -> "user";
+        final ChatRequestDTO request = ChatRequestDTO.create("Привет", "s1");
+        final Principal principal = () -> "user";
 
         when(supportBotService.processMessage(any(ChatMessage.class)))
                 .thenReturn(new BotResponse("Ответ", false));
@@ -43,8 +43,8 @@ public class ChatBotAppServiceTest {
 
     @Test
     void testFallbackOnServiceException() {
-        ChatRequestDTO request = ChatRequestDTO.create("Ошибка", "s2");
-        Principal principal = () -> "user";
+        final ChatRequestDTO request = ChatRequestDTO.create("Ошибка", "s2");
+        final Principal principal = () -> "user";
 
         when(supportBotService.processMessage(any(ChatMessage.class)))
                 .thenThrow(new RuntimeException("AI error"));

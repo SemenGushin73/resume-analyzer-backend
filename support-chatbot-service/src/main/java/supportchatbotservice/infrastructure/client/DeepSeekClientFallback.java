@@ -18,7 +18,7 @@ public class DeepSeekClientFallback implements DeepSeekClient {
     public AIResponseDTO askAI(AIRequestDTO request) {
         log.warn("⚠️ Fallback: DeepSeek API недоступен");
 
-        AIResponseDTO fallbackResponse = new AIResponseDTO();
+        final AIResponseDTO fallbackResponse = new AIResponseDTO();
 
         return fallbackResponse;
     }

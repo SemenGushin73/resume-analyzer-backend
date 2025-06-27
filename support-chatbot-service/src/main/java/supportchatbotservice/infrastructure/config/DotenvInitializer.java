@@ -17,22 +17,29 @@ public class DotenvInitializer implements ApplicationContextInitializer<Configur
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
-        String appName = applicationContext.getEnvironment().getProperty("spring.application.name");
+        final String appName = applicationContext.getEnvironment().getProperty("spring.application.name");
         if (!"support-chatbot-service".equals(appName)) {
-            return; // игнорируем для других микросервисов
+            return;
         }
 
-        File localEnv = new File(System.getProperty("user.dir"), ".env");
-        File rootEnv = new File(System.getProperty("user.dir")).getParentFile();
+        final File localEnv = new File(System.getProperty("user.dir"), ".env");
+        final File rootEnv = new File(System.getProperty("user.dir")).getParentFile();
 
-        Dotenv dotenv = Dotenv.configure()
-                .directory(localEnv.exists() ? System.getProperty("user.dir") : rootEnv.getAbsolutePath())
+        final String dotenvPath;
+        if (localEnv.exists()) {
+            dotenvPath = System.getProperty("user.dir");
+        } else {
+            dotenvPath = rootEnv.getAbsolutePath();
+        }
+
+        final Dotenv dotenv = Dotenv.configure()
+                .directory(dotenvPath)
                 .filename(".env")
                 .ignoreIfMissing()
                 .load();
 
-        ConfigurableEnvironment env = applicationContext.getEnvironment();
-        Map<String, Object> propertyMap = new HashMap<>();
+        final ConfigurableEnvironment env = applicationContext.getEnvironment();
+        final Map<String, Object> propertyMap = new HashMap<>();
         dotenv.entries().forEach(entry -> propertyMap.put(entry.getKey(), entry.getValue()));
         env.getPropertySources().addFirst(new MapPropertySource("dotenv", propertyMap));
     }

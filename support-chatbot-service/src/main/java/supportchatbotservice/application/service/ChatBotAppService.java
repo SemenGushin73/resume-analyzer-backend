@@ -23,11 +23,11 @@ public class ChatBotAppService {
     private final MessageSenderPort messageSender;
 
     public void handleUserMessage(ChatRequestDTO request, Principal principal) {
-        String sessionId = request.getSessionId();
+        final String sessionId = request.getSessionId();
         try {
             log.info("WebSocket сообщение получено: {}", request.getMessage());
 
-            BotResponse response = supportBotService.processMessage(
+            final BotResponse response = supportBotService.processMessage(
                     new ChatMessage(request.getMessage(), sessionId)
             );
 

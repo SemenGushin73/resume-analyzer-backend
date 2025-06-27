@@ -17,8 +17,8 @@ public class FAQServiceTest {
 
     @BeforeEach
     void setup() {
-        FAQProperties props = new FAQProperties();
-        HashMap<String, String> map = new HashMap<>();
+        final FAQProperties props = new FAQProperties();
+        final HashMap<String, String> map = new HashMap<>();
         map.put("вопрос1", "ответ1");
         map.put("как загрузить", "загрузите PDF");
         props.setAnswers(map);
@@ -27,14 +27,14 @@ public class FAQServiceTest {
 
     @Test
     void testFindAnswerExists() {
-        Optional<String> result = faqService.findAnswer("загрузить");
+        final Optional<String> result = faqService.findAnswer("загрузить");
         assertTrue(result.isPresent());
         assertEquals("загрузите PDF", result.get());
     }
 
     @Test
     void testFindAnswerNotExists() {
-        Optional<String> result = faqService.findAnswer("несуществующий вопрос");
+        final Optional<String> result = faqService.findAnswer("несуществующий вопрос");
         assertTrue(result.isEmpty());
     }
 }

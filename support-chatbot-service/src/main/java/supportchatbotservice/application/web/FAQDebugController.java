@@ -35,7 +35,7 @@ public class FAQDebugController {
 
     @GetMapping("/{questionKey}")
     public ResponseEntity<String> getFaqAnswer(@PathVariable String questionKey) {
-        String answer = faqAnswers.get(questionKey);
+        final String answer = faqAnswers.get(questionKey);
         if (answer == null) {
             return ResponseEntity.notFound().build();
         }
