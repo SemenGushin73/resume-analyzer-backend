@@ -47,9 +47,7 @@ public class AIMessageSenderFeighClientImpl implements AIMessageSender {
     }
     
     private OpenRouterRequest createRequest(String message) {
-        final OpenRouterRequest request = new OpenRouterRequest();
-        request.setModel(aiModel);
-        request.setMessages(List.of(new ChatMessage("user", message)));
+        final OpenRouterRequest request = new OpenRouterRequest(aiModel, List.of(new ChatMessage("user", message)));
         return request;
     }
 

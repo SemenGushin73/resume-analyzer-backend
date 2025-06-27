@@ -1,5 +1,6 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import ru.kata.project.exception.ResourceNotFoundException;
  */
 @RestController
 @RequestMapping("/test")
+@SuppressFBWarnings("SPRING_ENDPOINT")
 public class GlobalExceptionTestController {
 
     @GetMapping("/resource-not-found")

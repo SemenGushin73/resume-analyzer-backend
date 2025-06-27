@@ -1,11 +1,14 @@
 package webapp.resumeanalyzer.domain.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
@@ -18,10 +21,12 @@ import java.util.UUID;
 @Table(name = "resume_file")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "Сущность: ResumeFile для хранения " +
         "файлов резюме в базе данных.")
-public class ResumeFile {
+public class ResumeFile implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -54,11 +59,48 @@ public class ResumeFile {
     @JoinColumn(name = "owner_id", nullable = false)
     @Schema(description = "Владелец резюме файла",
             implementation = ResumeOwner.class)
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     private ResumeOwner owner;
+
+    public ResumeFile(UUID id, String filename, String fileType, long size, byte[] data, LocalDateTime createdAt, ResumeOwner owner) {
+        this.id = id;
+        this.filename = filename;
+        this.fileType = fileType;
+        this.size = size;
+        this.createdAt = createdAt;
+        this.owner = owner;
+        if (data != null) {
+            this.data = data.clone();
+        } else {
+            this.data = new byte[0];
+        }
+    }
 
     public ResumeFile(String filename, ResumeOwner owner) {
         this.filename = filename;
         this.owner = owner;
+        this.data = new byte[0];
+        this.fileType = null;
+        this.size = 0;
+        this.createdAt = null;
+    }
+
+    @SuppressFBWarnings("EI_EXPOSE_REP")
+    public byte[] getData() {
+        if (data != null) {
+            return data.clone();
+        } else {
+            return new byte[0];
+        }
+    }
+
+    @SuppressFBWarnings("EI_EXPOSE_REP")
+    public void setData(byte[] data) {
+        if (data != null) {
+            this.data = data.clone();
+        } else {
+            this.data = new byte[0];
+        }
     }
 
     @Override
@@ -71,15 +113,15 @@ public class ResumeFile {
         }
         final ResumeFile that = (ResumeFile) o;
         return size == that.size && Objects.equals(id, that.id) &&
-               Objects.equals(filename, that.filename) &&
-               Objects.equals(fileType, that.fileType) &&
-               Objects.deepEquals(data, that.data) &&
-               Objects.equals(createdAt, that.createdAt) &&
-               Objects.equals(owner, that.owner);
+                Objects.equals(filename, that.filename) &&
+                Objects.equals(fileType, that.fileType) &&
+                Arrays.equals(data, that.data) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(owner, that.owner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, filename, fileType, size, Arrays.hashCode(data), createdAt, owner);
+        return Objects.hash(id, filename, fileType, size, Arrays.hashCode(data), createdAt, owner); // Используем Arrays.hashCode
     }
 }

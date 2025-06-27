@@ -3,6 +3,8 @@ package webapp.resumeanalyzer.domain.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -22,8 +24,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Hobby {
+public class Hobby implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(unique = true)
     private UUID id = UUID.randomUUID();
